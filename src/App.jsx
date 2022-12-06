@@ -7,6 +7,11 @@ import './index.css'
 
 
 function App() {
+  const [dropdownActive, setDropdownActive] = useState(false);
+
+  function dropdown(event){
+    setDropdownActive(prevDrop => !prevDrop);
+  }
   
   return (
     <div className = "App">
@@ -14,7 +19,7 @@ function App() {
       <main>
         <Sidebar number = {5} />
         <div className="task-section">
-          <CreateTask />
+          <CreateTask dropdown={dropdown} dropdownActive={dropdownActive} />
           <GroupedTask />
         </div>
       </main>

@@ -2,7 +2,7 @@ import React from 'react'
 import '../styling/Task.css'
 
 export default function Task(){
-  console.log(new Date());
+  // hard coded text and values is meant to be replaced by state data.
   return(
     <div className="created-task">
       <input className="input" defaultValue="Task that was added" type="text" />
