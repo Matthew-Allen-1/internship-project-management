@@ -1,25 +1,22 @@
 import { useState } from 'react'
-import './App.css'
 import Navbar from './Components/Navbar'
-import Groups from './Components/Groups'
-import Tasks from './Components/Tasks'
+import Sidebar from './Components/Sidebar'
+import CreateTask from './Components/CreateTask'
+import GroupedTask from './Components/GroupedTask'
+import './index.css'
 
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  
   return (
     <div className = "App">
       <Navbar />
-
       <main>
-        <Groups 
-          number = {5}
-        />
-        <Tasks 
-          number = {5}
-        />
-          
+        <Sidebar number = {5} />
+        <div className="task-section">
+          <CreateTask />
+          <GroupedTask />
+        </div>
       </main>
       
     </div>
