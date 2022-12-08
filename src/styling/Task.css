@@ -1,0 +1,80 @@
+.created-task{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  height: 60px;
+  border: 1px solid  rgb(215, 215, 215);
+  margin: 0px 20px 0px 20px;
+}
+
+.created-task .input{
+  height: 35px;
+  margin: 5px;
+  border: 1px solid transparent;
+}
+.created-task .input:hover{
+  border-color: rgb(215, 215, 215);
+}
+.created-task .input:focus{
+  outline: none;
+  border-color: #333;
+}
+
+.created-task .group{
+  display: flex;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.created-task .group img{
+  margin-right: 5px;
+}
+
+.created-task .group p{
+  color: #03a9f4;
+}
+
+.created-task .time{
+  display: flex;
+  align-items: center;
+}
+
+.created-task .time input{
+  height: 35px;
+  margin: 5px;
+  width: 90px;
+  border: none;
+  cursor: text;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.created-task button {
+  background-color: #03a9f4;
+  color: white;
+  height: 40px;
+  width: 100px;
+  margin: 5px;
+  border: none;
+}
+.created-task button:hover{
+  background-color:#0192d6;
+  cursor: pointer;
+}
+
+.date{
+  height: 35px;
+  border: none;
+  cursor: text;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.options{
+  margin-right: 10px;
+}
+
+.line-divider{
+  width: 1px;
+  height: 40px;
+  border-right: 1px dotted rgb(215, 215, 215);
+}

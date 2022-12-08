@@ -1,4 +1,6 @@
-export default function Groups(props) {
+import '../styling/Sidebar.css'
+
+export default function Sidebar(props) {
     const groupElements = []
 
     for (let i = 0; i < props.number; i++)

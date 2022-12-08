@@ -1,3 +1,5 @@
+import '../styling/Navbar.css'
+
 export default function NavBar (props) {
     return (
         <nav id = "nav">

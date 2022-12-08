@@ -1,194 +1,25 @@
-body {
+html, body {
   margin: 0;
-  min-height: 100vh;
-  width: 98.8vw;
-  border: 2px solid blue;
+  padding: 0;
+  background-color: rgb(242, 246, 248);
 }
 
-#root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 256;
-  color: black;
-  background-color: white;
-  width: 100%;
-  padding: 5px;
-  border: solid yellow 2px;
-}
-
-nav {
-  height: 68px;
+.App{
+  height: 100vh;
   display: flex;
-  align-items: center;
-  padding: 5px 5px;
-  border: 2px solid grey;
+  flex-direction: column;
 }
 
-  nav img {
-    width: 48px; 
-    height: 48px; 
-    margin: 0 16px 0 0;
-    cursor: pointer;
-  }
-
-  .nav-menu-button {
-    width: 96px;
-    height: 44px;
-    margin: 0px 8px;
-    display: flex;
-    align-items: center;
-  }
-
-    .nav-menu-button::before{content: "Menu"; margin: 4px 4px 4px 0px;}
-
-  .nav-title {
-    color: black;
-    font-weight: bold;
-    flex: 1 1 100px;
-    min-width: 320px;
-  }
-
-    .nav-title-url {
-      font-size: 24px; 
-      line-height: 24px;
-    }
-
-  .nav-buttons {
-    display: flex;
-    /* border: 2px dashed brown; */
-  }
-
-    .nav-button {
-      width: 80px;
-      height: 40px;
-      margin: auto 10px;
-      text-align: center;
-      white-space: nowrap;
-      border: 1px solid black;
-    }
+#root{
+  text-align: center;
+}
 
 main {
   display: flex;
-  border: 2px solid black;
   width: 100%;
-}
-
-#groups {
-  width: 20%;
   height: 100%;
-  border: 2px solid yellow;
 }
 
-  .group {
-    height: 40px;
-    width: 100%;
-    border: 1px solid grey;
-  }
-
-#tasks {
-  display: flex;
-  flex-direction: column;
-  width: 80%;
-  height: 100%;
-  border: 2px solid green;
-}
-
-#tasks form {
-  width: 90%;
-  border: 1px solid cyan;
-  align-self: center;
-  margin-top: 15px;
-}
-
-#tasks input {
-  width: 90%;
-  height: 24px;
-  margin-right: 10px;
-  font-size: 18px;
-}
-
-#tasks-header {
-  display: flex;
-  align-items: center;
-}
-
-#tasks-header h2 {
-  margin-right: 10px;
-}
-
-#task-table {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border: 2px solid red;
+.task-section{
   width: 100%;
 }
-
-#task-table-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border: 1px solid yellow;
-  width: 100%;
-}
-
-.task {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border: 1px solid grey;
-  width: 100%;
-  height: 40px;
-  padding: 5px;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  font-size: 1em;
-  font-weight: 512;
-  font-family: Helvetica, sans-serif;
-  background-color: #f5f5f5;
-  margin: 0px 0px 8px 0px;
-  padding: 8px;
-  box-shadow: 2px 2px 4px 0px rgba(41, 41, 41, 0.9);
-  border: 2px solid lightgrey;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: border-color 0.16s;
-}
-  button:hover {
-    border-color: black;
-    transform: scale(1.04);
-  }
-
-/* button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-} */
-
-/* @media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-} */

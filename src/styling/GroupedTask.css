@@ -1,0 +1,19 @@
+.task-header{
+  margin: 20px 20px 0px 20px;
+  display: flex;
+  justify-content: space-between;
+  background-color: #e4eaee;
+  border: 1px solid #C6D2D9;
+}
+
+.task-header .left{
+  margin-left: 5px;
+}
+
+.task-header .right{
+  display: flex;
+}
+
+.task-header .right img{
+  margin: 10px;
+}
