@@ -5,9 +5,18 @@ import CreateTask from './Components/CreateTask'
 import GroupedTask from './Components/GroupedTask'
 import './index.css'
 
+let defaultInputState = {
+  title: "",
+  group: "",
+  startTime: "",
+  endTime: "",
+  date: ""
+}
+
 export default function App() {
   const [dropdownActive, setDropdownActive] = useState(false); //controls dropdown state
   const [dropdownSearch, setDropdownSearch] = useState(""); //stores search bar on dropdown value
+  const [input, setInput] = useState(defaultInputState);
   const [groupData, setGroupData] = useState([
     {
       id: 0, 
@@ -26,6 +35,7 @@ export default function App() {
 
 // adds group to list if enter key is pressed and checks repeats
   function dropdownEnter(event){
+    const {name, value} = event.target
     if(event.key !== "Enter") return;
     
     let noMatches = true;
@@ -37,6 +47,10 @@ export default function App() {
     }
 
     if(noMatches){
+      setInput(prevValues => ({
+        ...prevValues,
+        [name]: value
+      }))
       setGroupData(prevData => prevData.map(group => ({...group, selected: false})))
       setGroupData(prevData => [...prevData, {id: id, title: dropdownSearch, tasks: [], selected: true}])
     }
@@ -48,6 +62,21 @@ export default function App() {
   function dropdownFilter(event) {
     setDropdownSearch(event.target.value);
   };
+
+// handles input changes except group
+  function handleInputChange(event){
+    const{name, value} = event.target;
+    setInput(prevValues => ({
+      ...prevValues,
+      [name]: value
+    }))
+  }
+
+// This function needs adds the 'input' state into the 
+// correct group in 'groupData' state.
+  function addTask(){
+    
+  }
   
   return (
     <div className = "App">
@@ -62,6 +91,9 @@ export default function App() {
             search={dropdownSearch} 
             groupData={groupData} 
             enter={dropdownEnter}
+            handleChange={handleInputChange}
+            input={input}
+            addTask={addTask}
           />
           <GroupedTask data={groupData} />
         </div>
