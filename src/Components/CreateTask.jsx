@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {startTransition, useState} from 'react'
 import '../styling/CreateTask.css'
 
 export default function CreateTask(props){
@@ -21,7 +21,14 @@ export default function CreateTask(props){
   // hard coded text and values is meant to be replaced by state data.
   return(
     <div className="create-task">
-      <input className="input" placeholder="Input task here..."type="text" onChange={() => props.title(event)}/>
+      <input 
+        className="input" 
+        placeholder="Input task here..."
+        type="text"
+        name="title"
+        value={props.input.title}
+        onChange={() => props.handleChange(event)} 
+      />
 
       <div className="dropdown">
         <div className="group dropbtn" onClick={() => props.dropdown(event)}>
@@ -33,7 +40,8 @@ export default function CreateTask(props){
             type="text" 
             value={props.search} 
             placeholder="Search/Create..." 
-            id="myInput" 
+            id="myInput"
+            name="group" 
             onChange={() => props.filter(event)} 
             onKeyDown={() => props.enter(event)}
           />
@@ -43,13 +51,29 @@ export default function CreateTask(props){
 
       <span className="line-divider"></span>
       <div className="time">
-        <input type="time" />
+        <input 
+          type="time" 
+          name="startTime"
+          value={props.input.startTime}
+          onChange={() => props.handleChange(event)}
+        />
         <div className="time-divider">-</div>
-        <input type="time" />
+        <input 
+          type="time"
+          name="endTime"
+          value={props.input.endTime}
+          onChange={() => props.handleChange(event)} 
+        />
       </div>
-      <input className="date" type="date" />
+      <input 
+        className="date" 
+        type="date" 
+        name="date"
+        value={props.input.date}
+        onChange={() => props.handleChange(event)} 
+      />
       <span className="line-divider"></span>
-      <button>ADD</button>
+      <button onClick={() => props.addTask()}>ADD</button>
       <img className="options" src="https://app.clockify.me/assets/ui-icons/menu-dots-vertical.svg" alt="" />
     </div>
   )
