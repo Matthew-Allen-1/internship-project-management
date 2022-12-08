@@ -2,7 +2,7 @@ import React from 'react'
 import '../styling/GroupedTask.css'
 import Task from './Task'
 
-export default function GroupedTask(){
+export default function GroupedTask(props){
   return(
     <div>
       <div className="task-header">

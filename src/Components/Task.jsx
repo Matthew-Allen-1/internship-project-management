@@ -1,7 +1,7 @@
 import React from 'react'
 import '../styling/Task.css'
 
-export default function Task(){
+export default function Task(props){
   // hard coded text and values is meant to be replaced by state data.
   return(
     <div className="created-task">
