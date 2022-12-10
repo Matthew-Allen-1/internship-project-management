@@ -14,6 +14,7 @@ let defaultInputState = {
 }
 
 export default function App() {
+  const btnRef = useRef();
   const [dropdownActive, setDropdownActive] = useState(false); //controls dropdown state
   const [dropdownSearch, setDropdownSearch] = useState(""); //stores search bar on dropdown value
   const [input, setInput] = useState(defaultInputState);
@@ -26,8 +27,6 @@ export default function App() {
     }
   ]);//stores all task data. I don't think this will work in the long run. 
     //probably need form tag around all the data in CreateTask jsx
-
-    const btnRef = useRef();
 
 // switches dropdown to active on click
   function dropdown(){
@@ -79,6 +78,7 @@ export default function App() {
     return () => document.body.removeEventListener('click', closeDropdown);
   }, [])
 
+  // makes options clickable in dropdown and Selects them to show
   function groupSelected(groupTitle){
     setGroupData(prevData => prevData.map(group => {
       if(group.title.toUpperCase() === groupTitle.toUpperCase()){
