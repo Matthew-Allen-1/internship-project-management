@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef} from 'react'
 import Navbar from './Components/Navbar'
 import Sidebar from './Components/Sidebar'
 import CreateTask from './Components/CreateTask'
@@ -14,6 +14,7 @@ let defaultInputState = {
 }
 
 export default function App() {
+  const btnRef = useRef();
   const [dropdownActive, setDropdownActive] = useState(false); //controls dropdown state
   const [dropdownSearch, setDropdownSearch] = useState(""); //stores search bar on dropdown value
   const [input, setInput] = useState(defaultInputState);
@@ -63,6 +64,32 @@ export default function App() {
     setDropdownSearch(event.target.value);
   };
 
+  // handles click outside dropdown menu
+  useEffect(() =>{
+
+    const closeDropdown = e => {
+      if(e.path[0] !== btnRef.current && e.target.name !== 'group'){
+        setDropdownActive(prevDrop => false);
+      }
+    }
+
+    document.body.addEventListener('click', closeDropdown);
+
+    return () => document.body.removeEventListener('click', closeDropdown);
+  }, [])
+
+  // makes options clickable in dropdown and Selects them to show
+  function groupSelected(groupTitle){
+    setGroupData(prevData => prevData.map(group => {
+      if(group.title.toUpperCase() === groupTitle.toUpperCase()){
+        return {...group, selected: true}
+      } else{
+        return {...group, selected: false}
+      }
+    }))
+    setDropdownActive(prevDrop => !prevDrop);
+  }
+
 // handles input changes except group
   function handleInputChange(event){
     const{name, value} = event.target;
@@ -94,6 +121,8 @@ export default function App() {
             handleChange={handleInputChange}
             input={input}
             addTask={addTask}
+            groupSelected={groupSelected}
+            btnRef={btnRef}
           />
           <GroupedTask data={groupData} />
         </div>
