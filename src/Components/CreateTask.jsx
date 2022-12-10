@@ -7,15 +7,15 @@ export default function CreateTask(props){
   // displays elements in dropdown
   const groupListElements = props.groupData.map(group => {
     if(props.search == "" && group.title != "Group"){
-      return <p>{group.title}</p>
+      return <p onClick={() => props.groupSelected(group.title)}>{group.title}</p>
     } else if (group.title.toUpperCase().indexOf(props.search.toUpperCase()) === 0 && group.title != "Group"){
-      return <p>{group.title}</p>
+      return <p onClick={() => props.groupSelected(group.title)}>{group.title}</p>
     }
   })
 
   // switches group name to name of current group selected
   const groupElement = props.groupData.map(group => {
-    if(group.selected == true){ return <p>{group.title}</p>}
+    if(group.selected == true){ return <p ref={props.btnRef}>{group.title}</p>}
   })
  
   // hard coded text and values is meant to be replaced by state data.
@@ -30,12 +30,12 @@ export default function CreateTask(props){
         onChange={() => props.handleChange(event)} 
       />
 
-      <div className="dropdown">
+      <div className="dropdown" >
         <div className="group dropbtn" onClick={() => props.dropdown(event)}>
           <img src="https://app.clockify.me/assets/ui-icons/plus-blue-req.svg" alt="" />
           {groupElement}
         </div>
-        <div id="myDropdown" className={classList}>
+        <div id="myDropdown" className={classList} >
           <input 
             type="text" 
             value={props.search} 

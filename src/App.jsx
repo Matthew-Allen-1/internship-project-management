@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef} from 'react'
 import Navbar from './Components/Navbar'
 import Sidebar from './Components/Sidebar'
 import CreateTask from './Components/CreateTask'
@@ -26,6 +26,8 @@ export default function App() {
     }
   ]);//stores all task data. I don't think this will work in the long run. 
     //probably need form tag around all the data in CreateTask jsx
+
+    const btnRef = useRef();
 
 // switches dropdown to active on click
   function dropdown(){
@@ -63,6 +65,31 @@ export default function App() {
     setDropdownSearch(event.target.value);
   };
 
+  // handles click outside dropdown menu
+  useEffect(() =>{
+
+    const closeDropdown = e => {
+      if(e.path[0] !== btnRef.current && e.target.name !== 'group'){
+        setDropdownActive(prevDrop => false);
+      }
+    }
+
+    document.body.addEventListener('click', closeDropdown);
+
+    return () => document.body.removeEventListener('click', closeDropdown);
+  }, [])
+
+  function groupSelected(groupTitle){
+    setGroupData(prevData => prevData.map(group => {
+      if(group.title.toUpperCase() === groupTitle.toUpperCase()){
+        return {...group, selected: true}
+      } else{
+        return {...group, selected: false}
+      }
+    }))
+    setDropdownActive(prevDrop => !prevDrop);
+  }
+
 // handles input changes except group
   function handleInputChange(event){
     const{name, value} = event.target;
@@ -94,6 +121,8 @@ export default function App() {
             handleChange={handleInputChange}
             input={input}
             addTask={addTask}
+            groupSelected={groupSelected}
+            btnRef={btnRef}
           />
           <GroupedTask data={groupData} />
         </div>

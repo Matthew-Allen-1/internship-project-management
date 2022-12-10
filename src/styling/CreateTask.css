@@ -122,6 +122,7 @@
   text-decoration: none;
   display: block;
   margin: 0px;
+  cursor: pointer;
 }
 .dropdown-content p:hover {
   background-color: #e4eaee;
