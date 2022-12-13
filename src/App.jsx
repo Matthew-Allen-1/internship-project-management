@@ -13,29 +13,31 @@ let defaultInputState = {
   date: ""
 }
 
+let defaultGroupObject = {
+  id: 0, 
+  title: "Group", 
+  tasks: [], 
+  selected: true
+}
+
 export default function App() {
   const btnRef = useRef();
   const [dropdownActive, setDropdownActive] = useState(false); //controls dropdown state
   const [dropdownSearch, setDropdownSearch] = useState(""); //stores search bar on dropdown value
   const [input, setInput] = useState(defaultInputState);
-  const [groupData, setGroupData] = useState([
-    {
-      id: 0, 
-      title: "Group", 
-      tasks: [{title:"", group:"", startTime:"", endTime:"", date: ""}], 
-      selected: true
-    }
-  ]);//stores all task data. I don't think this will work in the long run. 
+  const [groupData, setGroupData] = useState([defaultGroupObject]);//stores all task data. I don't think this will work in the long run. 
     //probably need form tag around all the data in CreateTask jsx
 
 // switches dropdown to active on click
   function dropdown(){
+    // console.log("dropdown function called");
     setDropdownSearch("");
     setDropdownActive(prevDrop => !prevDrop);
   };
 
 // adds group to list if enter key is pressed and checks repeats
   function dropdownEnter(event){
+    // console.log("dropdownEnter function called");
     const {name, value} = event.target
     if(event.key !== "Enter") return;
     
@@ -54,6 +56,7 @@ export default function App() {
       }))
       setGroupData(prevData => prevData.map(group => ({...group, selected: false})))
       setGroupData(prevData => [...prevData, {id: id, title: dropdownSearch, tasks: [], selected: true}])
+      console.log('Group Data After Drop Down Enter: ', groupData)
     }
 
     setDropdownActive(prevDrop => !prevDrop);
@@ -61,12 +64,13 @@ export default function App() {
 
 //updates search bar state
   function dropdownFilter(event) {
+    // console.log("dropdownFilter function called");
     setDropdownSearch(event.target.value);
   };
 
-  // handles click outside dropdown menu
+// handles click outside dropdown menu
   useEffect(() =>{
-
+    // console.log("useEffect function called");
     const closeDropdown = e => {
       if(e.path[0] !== btnRef.current && e.target.name !== 'group'){
         setDropdownActive(prevDrop => false);
@@ -79,38 +83,57 @@ export default function App() {
   }, [])
 
   // makes options clickable in dropdown and Selects them to show
-  function groupSelected(groupTitle){
-    setGroupData(prevData => prevData.map(group => {
-      if(group.title.toUpperCase() === groupTitle.toUpperCase()){
-        return {...group, selected: true}
-      } else{
-        return {...group, selected: false}
+    function groupSelected(groupTitle){
+      // console.log("groupSelected function called");
+      setGroupData(prevData => prevData.map(group => {
+        if(group.title.toUpperCase() === groupTitle.toUpperCase()){
+          return {...group, selected: true}
+        } else{
+          return {...group, selected: false}
+        }
+      }))
+      setDropdownActive(prevDrop => !prevDrop);
+    }
+
+  // handles input changes except group
+    function handleInputChange(event){
+      // console.log("handleInputChange function called");
+      const{name, value} = event.target;
+      setInput(prevValues => ({
+        ...prevValues,
+        [name]: value
+      }))
+    }
+
+  // adds the 'input' state into the currently selected group in 'groupData' state.
+    function addTask(){
+      console.log("addTask function called");
+      if(input.title == '') {
+        alert('You must enter a task description.')
       }
-    }))
-    setDropdownActive(prevDrop => !prevDrop);
-  }
+      else {
+        setGroupData(prevGroupData => prevGroupData.map(group => {
+          if (!group.selected) {return group}
+          else {
+            const taskList = [...group.tasks, input]
+            return ({...group, tasks: taskList})
+          }
+        }))
+        console.log('Group Data After Add Task: ', groupData)
+      }
+    }
 
-// handles input changes except group
-  function handleInputChange(event){
-    const{name, value} = event.target;
-    setInput(prevValues => ({
-      ...prevValues,
-      [name]: value
-    }))
-  }
-
-// This function needs adds the 'input' state into the 
-// correct group in 'groupData' state.
-  function addTask(){
-    
-  }
   
   return (
     <div className = "App">
       <Navbar />
       <main>
-        <Sidebar number = {5} />
+        <Sidebar 
+          number = {5} 
+          groupData = {groupData}
+        />
         <div className="task-section">
+          {/* <h1>Create Task Component</h1> */}
           <CreateTask 
             dropdown={dropdown} 
             dropdownActive={dropdownActive} 
@@ -124,7 +147,7 @@ export default function App() {
             groupSelected={groupSelected}
             btnRef={btnRef}
           />
-          <GroupedTask data={groupData} />
+          <GroupedTask groupData={groupData} />
         </div>
       </main>
       
