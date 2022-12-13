@@ -21,6 +21,7 @@ export default function CreateTask(props){
   // hard coded text and values is meant to be replaced by state data.
   return(
     <div className="create-task">
+      
       <input 
         className="input" 
         placeholder="Input task here..."
