@@ -6,22 +6,18 @@ export default function GroupedTask(props){
 
   const defaultTaskData = {
     title: 'Task that was added',
-    group: 'Group that was chosen',
+    groupTitle: 'Group that was chosen',
+    groupId: 0,
     startTime: '12:00',
     endTime: '12:00',
     date: '1/1/00'
   }
 
-  // console.log('Props.data: ', props.groupData)
 
   //create an array of task elements corresponding to inputted tasks
-  const taskElements = []
-  props.groupData.forEach(group => {
-    const newTaskElements = group.tasks.map(task => {
-      return(<Task taskData = {task}/>)
-    })
-    taskElements.push(...newTaskElements)
-  })
+
+  const taskElements = props.taskData.map(task => <Task task = {task} />)
+
 
   return(
     <div>
