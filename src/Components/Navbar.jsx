@@ -1,4 +1,5 @@
 import '../styling/Navbar.css'
+import {Link} from 'react-router-dom'
 
 export default function NavBar (props) {
     return (
@@ -18,8 +19,8 @@ export default function NavBar (props) {
                 <h4 className = "nav-title-url">BVTCA Task Manager</h4>
             </div>
             <div className = "nav-buttons">
-                <button className = "nav-button" id = "sign-up-button">Sign Up</button>
-                <button className = "nav-button" id = "login-button">Login</button>
+                <Link to="/SignUp"><button className = "nav-button" id = "sign-up-button">Sign Up</button></Link>
+                <Link to="/Login"><button className = "nav-button" id = "login-button">Login</button></Link>
             </div>
         </nav>
     )
