@@ -1,8 +1,16 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Link} from 'react-router-dom'
 import '../styling/SignUp.css'
+import eyeSlash from '../assets/eye-slash.svg'
+import eye from '../assets/eye.svg'
 
 export default function Login(){
+  const [showPassword, setShowPassword] = useState(false);
+
+  function password(event){setShowPassword(prevPass => !prevPass);}
+  const styles = { backgroundImage: showPassword ? `url(${eye})` : `url(${eyeSlash})`}
+  const types = showPassword ? 'text' : 'password';
+  
   return (
     <div className="sign-up">
       <header>
@@ -21,8 +29,10 @@ export default function Login(){
           <label htmlFor="email">Email</label>
           <input id="email" name="email" type="email" placeholder="Enter your email" />
 
-          <label htmlFor="password">Password</label>
-          <input id="password" name="password" type="password" placeholder="Enter Password" />
+          <div className="password-input">
+            <input id="password" name="password" type={types} placeholder="Enter Password" />
+            <button style={styles} onClick={() => password(event)}></button>
+          </div>
 
           <button>Register</button>
         </div>
