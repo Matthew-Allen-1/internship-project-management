@@ -1,8 +1,10 @@
-import { useState, useEffect, useRef} from 'react'
-import Navbar from './Components/Navbar'
-import Sidebar from './Components/Sidebar'
-import CreateTask from './Components/CreateTask'
-import GroupedTask from './Components/GroupedTask'
+import React, { useState, useEffect, useRef} from 'react'
+import {Routes, Route} from "react-router-dom"
+import Home from './pages/Home'
+import Login from './pages/Login'
+import SignUp from './pages/SignUp'
+import {nanoid} from 'nanoid'
+
 import './index.css'
 
 let defaultInputState = {
@@ -141,38 +143,29 @@ export default function App() {
       console.log('Task Data After Add Task: ', taskData)
       console.log('Group Data After Add Task: ', groupData)
     }
-
   
   return (
-    <div className = "App">
-      <Navbar />
-      <main>
-        <Sidebar 
-          number = {5} 
-          groupData = {groupData}
-        />
-        <div className="task-section">
-          {/* <h1>Create Task Component</h1> */}
-          <CreateTask 
-            dropdown={dropdown} 
-            dropdownActive={dropdownActive} 
-            filter={dropdownFilter} 
-            search={dropdownSearch} 
-            groupData={groupData} 
-            enter={dropdownEnter}
-            handleChange={handleInputChange}
-            input={input}
-            addTask={addTask}
-            groupSelected={groupSelected}
-            btnRef={btnRef}
-          />
-          <GroupedTask 
-            taskData={taskData}
-            groupData={groupData}
-          />
-        </div>
-      </main>
-      
-    </div>
+    <React.Fragment>
+      <Routes>
+        <Route path="/" element={<Home
+          dropdown={dropdown} 
+          dropdownActive={dropdownActive} 
+          dropdownFilter={dropdownFilter} 
+          dropdownSearch={dropdownSearch} 
+          groupData={groupData} 
+          dropdownEnter={dropdownEnter}
+          handleInputChange={handleInputChange}
+          input={input}
+          addTask={addTask}
+          groupSelected={groupSelected}
+          btnRef={btnRef}
+          taskData={taskData}
+          />}
+         />
+        <Route path="/Login" element={<Login />} />
+        <Route path="/SignUp" element={<SignUp />} />
+      </Routes>
+    </React.Fragment>
   )
 }
+

@@ -1,14 +1,15 @@
 import React from 'react';
+import {Link} from 'react-router-dom'
 import '../styling/SignUp.css'
 
 export default function Login(){
   return (
     <div className="sign-up">
       <header>
-        <img className="logo" src = "https://upload.wikimedia.org/wikipedia/commons/8/84/Alternate_Task_Manager_icon.png" ></img>
+        <Link to="/"><img className="logo" src = "https://upload.wikimedia.org/wikipedia/commons/8/84/Alternate_Task_Manager_icon.png" ></img></Link>
         <div className="log-in">
           <p>Already have an account?</p>
-          <button>Log in</button>
+          <Link to="/Login"><button>Log in</button></Link>
         </div>
       </header>
       <div className="input-field-container">
@@ -25,7 +26,7 @@ export default function Login(){
 
           <button>Register</button>
         </div>
-        <p className="link">Already have an account? <a href="">Log in</a></p>
+        <p className="link">Already have an account? <Link to="/Login">Log in</Link></p>
       </div>
     </div>
   )
