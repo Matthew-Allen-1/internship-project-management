@@ -29,6 +29,7 @@ export default function Login(){
           <label htmlFor="email">Email</label>
           <input id="email" name="email" type="email" placeholder="Enter your email" />
 
+          <label htmlFor="password">password</label>
           <div className="password-input">
             <input id="password" name="password" type={types} placeholder="Enter Password" />
             <button style={styles} onClick={() => password(event)}></button>
