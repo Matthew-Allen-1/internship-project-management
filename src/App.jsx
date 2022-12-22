@@ -85,7 +85,7 @@ export default function App() {
   useEffect(() =>{
     // console.log("useEffect function called");
     const closeDropdown = e => {
-      if(e.path[0] !== btnRef.current && e.target.name !== 'group'){
+      if(e.composedPath()[0] !== btnRef.current && e.target.name !== 'group'){
         setDropdownActive(prevDrop => false);
       }
     }
