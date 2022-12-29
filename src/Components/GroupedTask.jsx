@@ -1,9 +1,19 @@
 import React from 'react'
+import { useQuery, useMutation } from 'react-query'
+
+import { fetchTasks } from '../ApiServices/TasksService'
+
+
 import '../styling/GroupedTask.css'
 import Task from './Task'
 import {nanoid} from 'nanoid'
 
 export default function GroupedTask(props){
+  const { data, isLoading, isError } = useQuery('tasks', fetchTasks);
+
+  if(isLoading) return <p>Loading...</p>
+
+  if(isError) return <p>An Error occurred</p>
 
   const defaultTaskData = {
     title: 'Task that was added',

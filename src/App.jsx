@@ -1,5 +1,11 @@
-import React, { useState, useEffect, useRef} from 'react'
-import {Routes, Route} from "react-router-dom"
+import React, { useState, useEffect, useRef } from 'react'
+import { Routes, Route, BrowserRouter as Router } from "react-router-dom"
+import { QueryClientProvider, QueryClient } from 'react-query'
+import { useQuery, useMutation } from 'react-query'
+
+
+// import { addTask } from '../ApiServices/TasksService'
+
 import Home from './pages/Home'
 import Login from './pages/Login'
 import SignUp from './pages/SignUp'
@@ -28,6 +34,9 @@ let defaultTaskState = {
   ...defaultInputState,
   id: 0,
 }
+
+const queryClient = new QueryClient();
+
 
 export default function App() {
   const btnRef = useRef();
@@ -162,30 +171,32 @@ export default function App() {
     }
   
   return (
-    <React.Fragment>
-      <Routes>
-        <Route path="/" element={<Home
-          dropdown={dropdown} 
-          dropdownActive={dropdownActive} 
-          dropdownFilter={dropdownFilter} 
-          dropdownSearch={dropdownSearch} 
-          groupData={groupData} 
-          dropdownEnter={dropdownEnter}
-          handleInputChange={handleInputChange}
-          input={input}
-          addTask={addTask}
-          groupSelected={groupSelected}
-          btnRef={btnRef}
-          taskData={taskData}
-          groupSelection={groupSelection}
-          groupSidebarStyles={groupSidebarStyles}
-          handleGroupSelection={handleGroupSelection}
-          />}
-        />
-        <Route path="/Login" element={<Login />} />
-        <Route path="/SignUp" element={<SignUp />} />
-      </Routes>
-    </React.Fragment>
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home
+            dropdown={dropdown} 
+            dropdownActive={dropdownActive} 
+            dropdownFilter={dropdownFilter} 
+            dropdownSearch={dropdownSearch} 
+            groupData={groupData} 
+            dropdownEnter={dropdownEnter}
+            handleInputChange={handleInputChange}
+            input={input}
+            addTask={addTask}
+            groupSelected={groupSelected}
+            btnRef={btnRef}
+            taskData={taskData}
+            groupSelection={groupSelection}
+            groupSidebarStyles={groupSidebarStyles}
+            handleGroupSelection={handleGroupSelection}
+            />}
+          />
+          <Route path="/Login" element={<Login />} />
+          <Route path="/SignUp" element={<SignUp />} />
+        </Routes>
+      </Router>
+    </QueryClientProvider>
   )
 }
 
