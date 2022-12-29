@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom"
-import { QueryClientProvider, QueryClient, useQuery, useMutation } from 'react-query'
+import { QueryClientProvider, QueryClient } from 'react-query'
 import { useQuery, useMutation } from 'react-query'
 
 
-import { addTask } from '../ApiServices/TasksService'
+// import { addTask } from '../ApiServices/TasksService'
 
 import Home from './pages/Home'
 import Login from './pages/Login'
