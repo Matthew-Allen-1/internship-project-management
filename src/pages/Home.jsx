@@ -13,8 +13,10 @@ export default function Home(props){
     <Navbar />
     <main>
       <Sidebar 
-        number = {5} 
         groupData = {groupData}
+        handleGroupSelection = {props.handleGroupSelection}
+        groupSelection = {props.groupSelection}
+        groupSidebarStyles = {props.groupSidebarStyles}
       />
       <div className="task-section">
         {/* <h1>Create Task Component</h1> */}
@@ -34,6 +36,7 @@ export default function Home(props){
         <GroupedTask 
           taskData={taskData}
           groupData={groupData}
+          groupSelection = {props.groupSelection}
         />
       </div>
     </main>

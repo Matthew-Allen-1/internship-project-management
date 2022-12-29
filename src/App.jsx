@@ -26,7 +26,8 @@ let defaultGroupState = {
   id: 0, 
   title: "Group", 
   taskIds: [], 
-  selected: true
+  selected: true,
+  activeSidebar: true
 }
 
 let defaultTaskState = {
@@ -45,6 +46,26 @@ export default function App() {
   const [groupData, setGroupData] = useState([defaultGroupState]);//stores all task data. I don't think this will work in the long run. 
     //probably need form tag around all the data in CreateTask jsx
   const [taskData, setTaskData] = useState([defaultTaskState]);
+  const [groupSelection, setGroupSelection] = useState(0)
+  const [groupSidebarStyles, setGroupSideBarStyles] = useState([])
+
+
+// Changes the group selection in the sidebar on click.
+  function handleGroupSelection(event, index) {
+    //Set the newly selected group in the sidebar
+    setGroupSelection(index)
+
+    //Construct an array of group id's representing groups in the sidebar along with an extra element for 'Unscheduled Tasks'
+    const sidebarGroups = groupData.map(group => group.id)
+    sidebarGroups.push(groupData.length)
+
+    //Assign background color styles to the sidebar groups.
+    setGroupSideBarStyles(sidebarGroups.map((groupIndex) => {
+      if (index == groupIndex) {return {backgroundColor: '#c4eaee'}}
+      else {return {backgroundColor: 'white'}}
+    }))
+  }
+
 
 // switches dropdown to active on click
   function dropdown(){
@@ -75,10 +96,8 @@ export default function App() {
       }))
       setGroupData(prevData => prevData.map(group => ({...group, selected: false})))
       setGroupData(prevData => [...prevData, {id: id, title: dropdownSearch, taskIds: [], selected: true}])
-
       setInput(prevInput => ({...prevInput, groupId: id, groupTitle: dropdownSearch}))
-
-      console.log('Group Data After Drop Down Enter: ', groupData)
+      if (id <= groupSelection) {handleGroupSelection(event, groupSelection + 1)} 
     }
 
     setDropdownActive(prevDrop => !prevDrop);
@@ -106,7 +125,7 @@ export default function App() {
 
   // makes options clickable in dropdown and Selects them to show
     function groupSelected(groupTitle){
-      console.log("groupSelected function called");
+      // console.log("groupSelected function called");
       setGroupData(prevGroupData => prevGroupData.map(group => {
         if(group.title.toUpperCase() === groupTitle.toUpperCase()){
           setInput({...input, groupTitle: group.title, groupId: group.id})
@@ -116,7 +135,6 @@ export default function App() {
         }
       }))
       setDropdownActive(prevDrop => !prevDrop);
-      console.log('input: ', input)
     }
 
   // handles input changes except group
@@ -131,13 +149,12 @@ export default function App() {
 
   // adds the 'input' state into the currently selected group in 'groupData' state.
     function addTask(){
-      console.log("addTask function called");
+      // console.log("addTask function called");
       if(input.title == '') {
         alert('You must enter a task description.')
       }
       else {
         const newId = taskData.length
-        console.log('newId', newId)
         setTaskData(prevTaskData => {
 
           return([...prevTaskData, {...input, id: newId}])
@@ -170,6 +187,9 @@ export default function App() {
             groupSelected={groupSelected}
             btnRef={btnRef}
             taskData={taskData}
+            groupSelection={groupSelection}
+            groupSidebarStyles={groupSidebarStyles}
+            handleGroupSelection={handleGroupSelection}
             />}
           />
           <Route path="/Login" element={<Login />} />

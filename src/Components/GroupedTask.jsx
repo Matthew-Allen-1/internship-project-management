@@ -6,6 +6,7 @@ import { fetchTasks } from '../ApiServices/TasksService'
 
 import '../styling/GroupedTask.css'
 import Task from './Task'
+import {nanoid} from 'nanoid'
 
 export default function GroupedTask(props){
   const { data, isLoading, isError } = useQuery('tasks', fetchTasks);
@@ -23,25 +24,85 @@ export default function GroupedTask(props){
     date: '1/1/00'
   }
 
+  //converts date object to a displayable date string
+  function convertDateToString(date) {
+    const newDate = new Date(date);
+    const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][newDate.getDay()]
+    const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][newDate.getMonth()];
+    const day = newDate.getDate()
+    var dayStr = ''
 
-  //create an array of task elements corresponding to inputted tasks
+    switch(parseInt(day) % 10) {
+      case 1: dayStr = day + 'st'; break;
+      case 2: dayStr = day + 'nd'; break;
+      case 3: dayStr = day + 'rd'; break;
+      default: dayStr = day + 'th'; break;
+    }
+    switch(day){
+      case 11: dayStr = day + 'th'
+      case 12: dayStr = day + 'th'
+      case 13: dayStr = day + 'th'
+    }    
+    return (weekday + ', ' + month + ' ' + dayStr + ' ' + newDate.getFullYear())
+  }
 
-  const taskElements = props.taskData.map(task => <Task task = {task} />)
+  //Filter task list according to the group selected in the sidebar.
+  const filteredTasks = props.taskData.filter((task, index) => {
+      if (props.groupSelection == 0 || index == 0) {return true}
+      else if (props.groupSelection < props.groupData.length) {return task.groupId == props.groupSelection}
+      else {return task.date == ''}
+   })
 
+  //Sort filtered task list in ascending order by date.
+  const sortedTasks = filteredTasks.sort(function(a,b){
+    if (new Date(a.date) - new Date(b.date) == 0) {
+      if (a.startTime < b.startTime) {return -1}
+      else return 1
+    }
+    else {return new Date(a.date) - new Date(b.date)};
+  });
+
+  //Create an array of dates for which displayed tasks are assigned (if any).
+  const dateList = sortedTasks.filter((task, index) => {
+    if (index > 0 && task.date) {return(task.date != sortedTasks[index - 1].date)}
+    else {return false}
+  })
+  .map(task => task.date)
+
+  //Create an array of task element arrays with one array of tasks for each date in dateList and one additional array for unscheduled tasks.
+  const taskElementArrays = dateList.map(date => [])
+  taskElementArrays.push([])
+
+  //Push the tasks corresponding to each date in dateList to the corresponding array element of taskElements
+  sortedTasks.forEach((task, index) => {
+    if(index > 0 && dateList.indexOf(task.date) >= 0 ) {taskElementArrays[dateList.indexOf(task.date)].push(<Task key = {task.id} task = {task} />)}
+    else if (index > 0) {taskElementArrays[taskElementArrays.length - 1].push(<Task key = {task.id} task = {task} />)}
+  })
+
+  //Create an array of divs corresponding to the dates in dateList
+  const dateTaskElements = taskElementArrays.filter(taskElementArray => taskElementArray.length != 0)
+  .map((taskElementArray, index) => {
+
+    //Convert the date to a string to display
+    var dateStr = index <= dateList.length - 1 ? convertDateToString(dateList[index]) : 'Unscheduled Tasks'
+
+    return(
+      <div>
+        <div className="task-header">
+          <p className="left" >{dateStr}</p>
+          <div className="right">
+            <p>Total: 00:01:00</p>
+            <img src="https://app.clockify.me/assets/ui-icons/bulk-edit.svg" alt="" />
+          </div>
+        </div>
+        {taskElementArray}
+      </div>
+    )
+  })
 
   return(
     <div>
-      {/* <h1>Grouped Task Component</h1> */}
-      <div className="task-header">
-        <p className="left" >Fri, Dec 2</p>
-        <div className="right">
-          <p>Total: 00:01:00</p>
-          <img src="https://app.clockify.me/assets/ui-icons/bulk-edit.svg" alt="" />
-        </div>
-      </div>
-      {/* <Task taskData = {defaultTaskData}/>
-      <Task taskData = {defaultTaskData}/> */}
-      {taskElements}
+      {dateTaskElements}
     </div>
   )
 }
