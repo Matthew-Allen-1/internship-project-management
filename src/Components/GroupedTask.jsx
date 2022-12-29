@@ -1,6 +1,7 @@
 import React from 'react'
 import '../styling/GroupedTask.css'
 import Task from './Task'
+import {nanoid} from 'nanoid'
 
 export default function GroupedTask(props){
 
@@ -64,8 +65,8 @@ export default function GroupedTask(props){
 
   //Push the tasks corresponding to each date in dateList to the corresponding array element of taskElements
   sortedTasks.forEach((task, index) => {
-    if(index > 0 && dateList.indexOf(task.date) >= 0 ) {taskElementArrays[dateList.indexOf(task.date)].push(<Task task = {task} />)}
-    else if (index > 0) {taskElementArrays[taskElementArrays.length - 1].push(<Task task = {task} />)}
+    if(index > 0 && dateList.indexOf(task.date) >= 0 ) {taskElementArrays[dateList.indexOf(task.date)].push(<Task key = {task.id} task = {task} />)}
+    else if (index > 0) {taskElementArrays[taskElementArrays.length - 1].push(<Task key = {task.id} task = {task} />)}
   })
 
   //Create an array of divs corresponding to the dates in dateList
