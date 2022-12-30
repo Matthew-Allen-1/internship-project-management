@@ -7,10 +7,13 @@ export default function CreateTask(props){
   
   // displays elements in dropdown
   const groupListElements = props.groupData.map(group => {
-    if(props.search == "" && group.title != "Group"){
-      return <p key = {group.id} onClick={() => props.groupSelected(group.title)}>{group.title}</p>
-    } else if (group.title.toUpperCase().indexOf(props.search.toUpperCase()) === 0 && group.title != "Group"){
-      return <p key = {group.id} onClick={() => props.groupSelected(group.title)}>{group.title}</p>
+    if(group.id != 1) {
+      if(props.search == "" && group.title != "Group") {
+        return <p key = {group.id} onClick={() => props.groupSelected(group.title)}>{group.title}</p>
+      } 
+      else if (group.title.toUpperCase().indexOf(props.search.toUpperCase()) === 0 && group.title != "Group") {
+        return <p key = {group.id} onClick={() => props.groupSelected(group.title)}>{group.title}</p>
+      }
     }
   })
 

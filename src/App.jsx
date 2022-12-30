@@ -3,14 +3,12 @@ import { Routes, Route, BrowserRouter as Router } from "react-router-dom"
 import { QueryClientProvider, QueryClient } from 'react-query'
 import { useQuery, useMutation } from 'react-query'
 
-
 // import { addTask } from '../ApiServices/TasksService'
 
 import Home from './pages/Home'
 import Login from './pages/Login'
 import SignUp from './pages/SignUp'
 import {nanoid} from 'nanoid'
-
 import './index.css'
 
 let defaultInputState = {
@@ -22,12 +20,20 @@ let defaultInputState = {
   date: ""
 }
 
-let defaultGroupState = {
+let allTasksGroupState = {
   id: 0, 
   title: "Group", 
   taskIds: [], 
   selected: true,
   activeSidebar: true
+}
+
+let unscheduledTasksGroupState = {
+  id: 1, 
+  title: "Unscheduled Tasks", 
+  taskIds: [], 
+  selected: false,
+  activeSidebar: false
 }
 
 let defaultTaskState = {
@@ -37,35 +43,34 @@ let defaultTaskState = {
 
 const queryClient = new QueryClient();
 
-
 export default function App() {
   const btnRef = useRef();
   const [dropdownActive, setDropdownActive] = useState(false); //controls dropdown state
   const [dropdownSearch, setDropdownSearch] = useState(""); //stores search bar on dropdown value
   const [input, setInput] = useState(defaultInputState);
-  const [groupData, setGroupData] = useState([defaultGroupState]);//stores all task data. I don't think this will work in the long run. 
-    //probably need form tag around all the data in CreateTask jsx
-  const [taskData, setTaskData] = useState([defaultTaskState]);
+  const [groupData, setGroupData] = useState([allTasksGroupState, unscheduledTasksGroupState]);//stores all group data. 
+  const [taskData, setTaskData] = useState([defaultTaskState]); //stores all task data.  I don't think this will work in the long run. 
+  //probably need form tag around all the data in CreateTask jsx
   const [groupSelection, setGroupSelection] = useState(0)
   const [groupSidebarStyles, setGroupSideBarStyles] = useState([])
 
-
+  
 // Changes the group selection in the sidebar on click.
   function handleGroupSelection(event, index) {
-    //Set the newly selected group in the sidebar
-    setGroupSelection(index)
 
-    //Construct an array of group id's representing groups in the sidebar along with an extra element for 'Unscheduled Tasks'
+    //Set the newly selected group in the sidebar
+    const selectedGroupId = groupData[index].id
+    setGroupSelection(selectedGroupId)
+
+    //Construct an array of group id's representing groups in the sidebar.
     const sidebarGroups = groupData.map(group => group.id)
-    sidebarGroups.push(groupData.length)
 
     //Assign background color styles to the sidebar groups.
-    setGroupSideBarStyles(sidebarGroups.map((groupIndex) => {
-      if (index == groupIndex) {return {backgroundColor: '#c4eaee'}}
+    setGroupSideBarStyles(sidebarGroups.map((groupId) => {
+      if (groupId == selectedGroupId) {return {backgroundColor: '#c4eaee'}}
       else {return {backgroundColor: 'white'}}
     }))
   }
-
 
 // switches dropdown to active on click
   function dropdown(){
@@ -76,12 +81,12 @@ export default function App() {
 
 // adds group to list if enter key is pressed and checks repeats
   function dropdownEnter(event){
+
     // console.log("dropdownEnter function called");
     const {name, value} = event.target
     if(event.key !== "Enter") return;
     
     let noMatches = true;
-    let id = groupData.length; // will need to add nanoid to deal with id
     for(let i = 0; i < groupData.length; i++){
       if(groupData[i].title.toUpperCase() === dropdownSearch.toUpperCase()){
         noMatches = false;
@@ -89,17 +94,16 @@ export default function App() {
     }
 
     if(noMatches){
+      let newGroupId = nanoid(); 
       setInput(prevValues => ({
         ...prevValues,
         [name]: value,
-        groupId: id
+        groupId: newGroupId
       }))
       setGroupData(prevData => prevData.map(group => ({...group, selected: false})))
-      setGroupData(prevData => [...prevData, {id: id, title: dropdownSearch, taskIds: [], selected: true}])
-      setInput(prevInput => ({...prevInput, groupId: id, groupTitle: dropdownSearch}))
-      if (id <= groupSelection) {handleGroupSelection(event, groupSelection + 1)} 
+      setGroupData(prevData => [...prevData, {id: newGroupId, title: dropdownSearch, taskIds: [], selected: true}])
+      setInput(prevInput => ({...prevInput, groupId: newGroupId, groupTitle: dropdownSearch}))
     }
-
     setDropdownActive(prevDrop => !prevDrop);
   };
 
@@ -117,9 +121,7 @@ export default function App() {
         setDropdownActive(prevDrop => false);
       }
     }
-
     document.body.addEventListener('click', closeDropdown);
-
     return () => document.body.removeEventListener('click', closeDropdown);
   }, [])
 
@@ -154,15 +156,17 @@ export default function App() {
         alert('You must enter a task description.')
       }
       else {
-        const newId = taskData.length
+        const newTaskId = nanoid()
         setTaskData(prevTaskData => {
-
-          return([...prevTaskData, {...input, id: newId}])
+          return([...prevTaskData, {...input, id: newTaskId}])
         })
         setGroupData(prevGroupData => prevGroupData.map(group => {
-          if (!group.selected) {return group}
+          if (group.id == 1 && input.date == '') {
+            return ({...group, taskIds: [...group.taskIds, newTaskId]})
+          }
+          else if (!group.selected) {return group}
           else {
-            return ({...group, taskIds: [...group.taskIds, newId]})
+            return ({...group, taskIds: [...group.taskIds, newTaskId]})
           }
         }))
       }

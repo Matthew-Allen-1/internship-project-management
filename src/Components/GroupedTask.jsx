@@ -1,18 +1,13 @@
 import React from 'react'
 import { useQuery, useMutation } from 'react-query'
-
 import { fetchTasks } from '../ApiServices/TasksService'
-
-
 import '../styling/GroupedTask.css'
 import Task from './Task'
 import {nanoid} from 'nanoid'
 
 export default function GroupedTask(props){
   const { data, isLoading, isError } = useQuery('tasks', fetchTasks);
-
   if(isLoading) return <p>Loading...</p>
-
   if(isError) return <p>An Error occurred</p>
 
   const defaultTaskData = {
@@ -46,12 +41,12 @@ export default function GroupedTask(props){
     return (weekday + ', ' + month + ' ' + dayStr + ' ' + newDate.getFullYear())
   }
 
-  //Filter task list according to the group selected in the sidebar.
+//Filter task list according to the group selected in the sidebar.
   const filteredTasks = props.taskData.filter((task, index) => {
-      if (props.groupSelection == 0 || index == 0) {return true}
-      else if (props.groupSelection < props.groupData.length) {return task.groupId == props.groupSelection}
-      else {return task.date == ''}
-   })
+    const indexOfGroupSelection = props.groupData.map(group => group.id).indexOf(props.groupSelection)
+    if (props.groupSelection == 0 || index == 0) {return true}
+    else {return props.groupData[indexOfGroupSelection].taskIds.indexOf(task.id) >= 0}
+ })
 
   //Sort filtered task list in ascending order by date.
   const sortedTasks = filteredTasks.sort(function(a,b){
@@ -87,7 +82,7 @@ export default function GroupedTask(props){
     var dateStr = index <= dateList.length - 1 ? convertDateToString(dateList[index]) : 'Unscheduled Tasks'
 
     return(
-      <div>
+      <div key={index}>
         <div className="task-header">
           <p className="left" >{dateStr}</p>
           <div className="right">
