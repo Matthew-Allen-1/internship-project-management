@@ -6,9 +6,14 @@ import Task from './Task'
 import {nanoid} from 'nanoid'
 
 export default function GroupedTask(props){
+
   const { data, isLoading, isError } = useQuery('tasks', fetchTasks);
   if(isLoading) return <p>Loading...</p>
   if(isError) return <p>An Error occurred</p>
+
+  const { groupData, setGroupData, taskData, setTaskData, groupSelection, handleInputChange, 
+    dropdown, dropdownEnter, dropdownFilter, dropdownSelected, 
+    taskDropdownActive, setTaskDropdownActive, taskDropdownSearch, setTaskDropdownSearch} = props;
 
   const defaultTaskData = {
     title: 'Task that was added',
@@ -42,10 +47,10 @@ export default function GroupedTask(props){
   }
 
 //Filter task list according to the group selected in the sidebar.
-  const filteredTasks = props.taskData.filter((task, index) => {
-    const indexOfGroupSelection = props.groupData.map(group => group.id).indexOf(props.groupSelection)
-    if (props.groupSelection == 0 || index == 0) {return true}
-    else {return props.groupData[indexOfGroupSelection].taskIds.indexOf(task.id) >= 0}
+  const filteredTasks = taskData.filter((task, index) => {
+    const indexOfGroupSelection = groupData.map(group => group.id).indexOf(groupSelection)
+    if (groupSelection == 0 || index == 0) {return true}
+    else {return groupData[indexOfGroupSelection].taskIds.indexOf(task.id) >= 0}
  })
 
   //Sort filtered task list in ascending order by date.
@@ -65,13 +70,33 @@ export default function GroupedTask(props){
   .map(task => task.date)
 
   //Create an array of task element arrays with one array of tasks for each date in dateList and one additional array for unscheduled tasks.
-  const taskElementArrays = dateList.map(date => [])
+  const taskElementArrays = dateList.map((date, index) => [])
   taskElementArrays.push([])
+
+  function TaskComponent (task) {
+    return(
+      <Task 
+        key = {task.id} 
+        task = {task} 
+        groupData = {groupData}
+        handleInputChange = {handleInputChange}
+        dropdown = {dropdown}
+        dropdownFilter = {dropdownFilter}
+        dropdownEnter = {dropdownEnter}
+        dropdownSelected={dropdownSelected}
+        taskDropdownSearch={taskDropdownSearch}
+      />
+    )
+  }
 
   //Push the tasks corresponding to each date in dateList to the corresponding array element of taskElements
   sortedTasks.forEach((task, index) => {
-    if(index > 0 && dateList.indexOf(task.date) >= 0 ) {taskElementArrays[dateList.indexOf(task.date)].push(<Task key = {task.id} task = {task} />)}
-    else if (index > 0) {taskElementArrays[taskElementArrays.length - 1].push(<Task key = {task.id} task = {task} />)}
+    if(index > 0 && dateList.indexOf(task.date) >= 0 ) {taskElementArrays[dateList.indexOf(task.date)].push(
+      TaskComponent(task)
+    )}
+    else if (index > 0) {taskElementArrays[taskElementArrays.length - 1].push(
+      TaskComponent(task)
+    )}
   })
 
   //Create an array of divs corresponding to the dates in dateList
@@ -82,12 +107,12 @@ export default function GroupedTask(props){
     var dateStr = index <= dateList.length - 1 ? convertDateToString(dateList[index]) : 'Unscheduled Tasks'
 
     return(
-      <div key={index}>
-        <div className="task-header">
-          <p className="left" >{dateStr}</p>
-          <div className="right">
+      <div key = {index}>
+        <div className = "task-header">
+          <p className = "left" >{dateStr}</p>
+          <div className = "right">
             <p>Total: 00:01:00</p>
-            <img src="https://app.clockify.me/assets/ui-icons/bulk-edit.svg" alt="" />
+            <img src = "https://app.clockify.me/assets/ui-icons/bulk-edit.svg" alt = "" />
           </div>
         </div>
         {taskElementArray}

@@ -5,8 +5,9 @@ import CreateTask from '../Components/CreateTask'
 import GroupedTask from '../Components/GroupedTask'
 
 export default function Home(props){
-  const {dropdown, dropdownActive, dropdownFilter, dropdownSearch, groupData, dropdownEnter, 
-  handleInputChange, input, addTask, groupSelected, btnRef, taskData} = props;
+  const {groupData, setGroupData, taskData, setTaskData, input, handleInputChange, addTask, groupSelection, handleGroupSelection, 
+    groupSidebarStyles, btnRef, dropdown, dropdownActive, dropdownFilter, dropdownSearch,dropdownEnter, dropdownSelected, 
+    taskDropdownActive, setTaskDropdownActive, taskDropdownSearch, setTaskDropdownSearch} = props;
 
   return (
     <div className = "App">
@@ -14,33 +15,46 @@ export default function Home(props){
     <main>
       <Sidebar 
         groupData = {groupData}
-        handleGroupSelection = {props.handleGroupSelection}
-        groupSelection = {props.groupSelection}
-        groupSidebarStyles = {props.groupSidebarStyles}
+        handleGroupSelection = {handleGroupSelection}
+        groupSelection = {groupSelection}
+        groupSidebarStyles = {groupSidebarStyles}
       />
-      <div className="task-section">
-        {/* <h1>Create Task Component</h1> */}
+      <div className = "task-section">
         <CreateTask 
-          dropdown={dropdown} 
-          dropdownActive={dropdownActive} 
-          filter={dropdownFilter} 
-          search={dropdownSearch} 
-          groupData={groupData} 
-          enter={dropdownEnter}
-          handleChange={handleInputChange}
-          input={input}
-          addTask={addTask}
-          groupSelected={groupSelected}
-          btnRef={btnRef}
+          groupData = {groupData} 
+          input = {input}
+          handleInputChange = {handleInputChange}
+          addTask = {addTask}
+
+          btnRef = {btnRef}
+          dropdown = {dropdown} 
+          dropdownActive = {dropdownActive} 
+          dropdownEnter = {dropdownEnter}
+          dropdownFilter = {dropdownFilter} 
+          dropdownSearch = {dropdownSearch} 
+          dropdownSelected = {dropdownSelected}
         />
         <GroupedTask 
-          taskData={taskData}
-          groupData={groupData}
-          groupSelection = {props.groupSelection}
+          groupData = {groupData}
+          setGroupData = {setGroupData}
+          taskData = {taskData}
+          setTaskData = {setTaskData}
+
+          groupSelection = {groupSelection}
+          handleInputChange = {handleInputChange}
+
+          dropdown = {dropdown}
+          dropdownEnter = {dropdownEnter}
+          dropdownFilter = {dropdownFilter}
+          dropdownSelected = {dropdownSelected}
+
+          taskDropdownSearch = {taskDropdownSearch}
+          setTaskDropdownSearch = {setTaskDropdownSearch}
+          taskDropdownActive = {taskDropdownActive}
+          setTaskDropdownActive = {setTaskDropdownActive}
         />
       </div>
     </main>
-    
   </div>
   )
 }
