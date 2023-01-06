@@ -1,8 +1,13 @@
 import {SlOptionsVertical} from 'react-icons/sl'
+import {useState} from 'react'
 
 const OptionsDropDown = () => {
+    const [optionsOpen, setOptionOpen] = useState(false);
+
     return (
-        <SlOptionsVertical size='20px' color='gray' />
+        <SlOptionsVertical size='20px' color='gray'
+            onClick={() => setOptionOpen(!optionsOpen)}
+         />
     );
 }
 
