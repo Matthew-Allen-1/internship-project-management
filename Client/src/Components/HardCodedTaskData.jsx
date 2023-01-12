@@ -6,10 +6,10 @@ export const HardCodedTaskData = [
         title: "Task #1",
         groupTitle: "New Group",
         groupId: "def789",
-        startTime: "",
-        endTime: "",
+        startTime: "02:49",
+        endTime: "16:12",
         date: "",
-        dropdownActive: false,
+        dropdownActive: false
     },
     {
         id:"456",
@@ -19,27 +19,27 @@ export const HardCodedTaskData = [
         startTime: "",
         endTime: "",
         date: "1212-12-12",
-        dropdownActive: false,
+        dropdownActive: false
     },
     {
         id:"789",
         title: "Task #3",
         groupTitle: "Other Group",
         groupId: "xyz456",
-        startTime: "",
-        endTime: "",
+        startTime: "14:00",
+        endTime: "06:45",
         date: "1212-12-14",
-        dropdownActive: false,
+        dropdownActive: false
     },
     {
         id:"444",
         title: "Task #4",
         groupTitle: "Newest Group",
         groupId: "abc123",
-        startTime: "",
-        endTime: "",
+        startTime: "12:00",
+        endTime: "21:00",
         date: "",
-        dropdownActive: false,
+        dropdownActive: false
     },
     {
         id:"555",
@@ -49,7 +49,7 @@ export const HardCodedTaskData = [
         startTime: "",
         endTime: "",
         date: "1212-12-16",
-        dropdownActive: false,
+        dropdownActive: false
     }
 ]
 

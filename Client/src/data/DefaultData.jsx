@@ -18,7 +18,7 @@ export let allTasksGroupState = {
 export let unscheduledTasksGroupState = {
   id: 1, 
   title: "Unscheduled Tasks", 
-  taskIds: ['000', '123'], 
+  taskIds: ['444', '123'], 
   selected: false,
   activeSidebar: false
 }
@@ -26,5 +26,5 @@ export let unscheduledTasksGroupState = {
 export let defaultTaskState = {
   ...defaultInputState,
   id: 0,
-  dropdownActive: false,
+  dropdownActive: false
 }
