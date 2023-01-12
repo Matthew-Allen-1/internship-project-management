@@ -12,7 +12,7 @@ import GroupedTask from '../../Components/GroupedTask/GroupedTask'
 // other Data
 import {HardCodedTaskData} from '../../Components/HardCodedTaskData'
 import {HardCodedGroupData} from '../../Components/HardCodedGroupData'
-import { defaultInputState, allTasksGroupState, unscheduledTasksGroupState, defaultTaskState} from '../../Data/DefaultData'
+import { defaultInputState, allTasksGroupState, unscheduledTasksGroupState, defaultTaskState} from '../../data/DefaultData'
 
 // Requests functions
 import { fetchTasks,  addTaskRequest  } from '../../ApiServices/TasksService'
