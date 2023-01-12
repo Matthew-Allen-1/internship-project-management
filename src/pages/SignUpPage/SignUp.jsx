@@ -1,49 +1,76 @@
+// Libraries
 import React, {useState} from 'react';
-import {Link, useNavigate} from 'react-router-dom'
 import { useQuery } from 'react-query';
-import '../styling/SignUp.css'
-import eyeSlash from '../assets/eye-slash.svg'
-import eye from '../assets/eye.svg'
-import { registerUser } from '../ApiServices/AuthService';
-import { setJwt } from '../ApiServices/JwtService';
+import {Link, useNavigate} from 'react-router-dom'
+
+// API Services
+import { setJwt } from '../../ApiServices/JwtService';
+import { registerUser } from '../../ApiServices/AuthService';
+
+// Image Assets
+import eye from '../../assets/eye.svg'
+import eyeSlash from '../../assets/eye-slash.svg'
+
+// Styling
+import './SignUp.css'
+
 
 export default function Login(){
+  // initialize, states, destructuring
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [responseMessage, setResponseMessage] = useState({state: false, error:'', msg: ''});
   const [registerForm, setRegisterForm] = useState({
     name: '',
     email: '',
     password: '',
   });
-
   const { name, email, password} = registerForm;
-  const { refetch, isRefetching } = useQuery(
-    ['authentication', registerForm], 
-    () => registerUser({ name, email, password }), {
-    enabled: false,
-    refetchOnWindowFocus: false
-  });
 
-  const navigate = useNavigate();
+
+// stores backend call that registers user in refetch
+  const { refetch, isRefetching } = useQuery(
+    ['register', registerForm], 
+    () => registerUser({ name, email, password }), 
+    {
+      enabled: false,
+      refetchOnWindowFocus: false,
+    }
+  );
+
+
+// handles Input changes
+  const handleFormChange = (event) => {
+    const { name, value } = event.target;
+    setRegisterForm((prevForm) => ({ ...prevForm, [name]: value }));
+  };
+
 
   // const passwordMatchMsg = password !== confirmPassword ? 'Passwords must match' : '';
 
+
+ // calls register refetch on Login Click 
   const handleRegisterClick = async () => {
-    const registerResponse = await refetch();
-
-    if (registerResponse?.data && !registerResponse?.error) {
-      setJwt(registerResponse.data.jwt);
-      navigate('/');
+    // checks for missing inputs and valid email
+    if(Object.values(registerForm).indexOf('') > -1){
+      setResponseMessage({state: true, error:'missing', msg: 'Missing Input Fields'})
+      return;
+    } else if(registerForm.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) == null){
+      setResponseMessage({state: true, error: 'invalid', msg: 'Email is Invalid'})
+      return;
     }
-  }
+    // refetch call
+    const registerResponse = await refetch();
+    if (!registerResponse.isError && registerResponse.data.jwt) {
+      setJwt(registerResponse.data.jwt);
+      navigate('/task-manager');
+    } else{
+      setResponseMessage({state: true, error: 'error', msg: 'This email is already in use.'})
+    }
+  };
 
-  const handleFormChange = (event) => {
-    const { name, value } = event.target;
-
-    setRegisterForm((prevForm) => { 
-     return { ...prevForm, [name]: value }
-    });
-  }
-
+  
+// show password button styling
   function showPasswordBtn(event){setShowPassword(prevPass => !prevPass);}
   const styles = { backgroundImage: showPassword ? `url(${eye})` : `url(${eyeSlash})`}
   const types = showPassword ? 'text' : 'password';
@@ -60,15 +87,39 @@ export default function Login(){
       <div className="input-field-container">
         <div className="input-field">
           <h1>Sign Up</h1>
+          {
+            responseMessage.state && 
+              <div className="register-response-message">
+                <p>{responseMessage.msg}</p>
+              </div>
+          }
           <label htmlFor="name">Name</label>
-          <input onChange={(event) => handleFormChange(event)} id="name" name="name" type="text" placeholder="Enter your name" />
+          <input 
+            onChange={(event) => handleFormChange(event)} 
+            id={(responseMessage.error === 'missing' && name === '') ? 'error' : 'name'} 
+            name="name" 
+            type="text" 
+            placeholder="Enter your name" 
+          />
 
           <label htmlFor="email">Email</label>
-          <input onChange={(event) => handleFormChange(event)} id="email" name="email" type="email" placeholder="Enter your email" />
+          <input 
+            onChange={(event) => handleFormChange(event)} 
+            id={(responseMessage.error === 'error' || responseMessage.error === 'invalid') ? 'error' : (responseMessage.error === 'missing' && email === '') ? 'error' : 'email'} 
+            name="email" 
+            type="email" 
+            placeholder="Enter your email" 
+          />
 
           <label htmlFor="password">password</label>
           <div className="password-input">
-            <input onChange={(event) => handleFormChange(event)} id="password" name="password" type={types} placeholder="Enter Password" />
+            <input 
+              onChange={(event) => handleFormChange(event)} 
+              id={(responseMessage.error === 'missing' && password === '') ? 'error' : 'password'}
+              name="password" 
+              type={types} 
+              placeholder="Enter Password" 
+            />
             <button style={styles} onClick={(event) => showPasswordBtn(event)}></button>
           </div>
 
