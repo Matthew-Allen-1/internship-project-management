@@ -1,5 +1,12 @@
-import '../styling/Navbar.css'
+// Libraries
 import {Link} from 'react-router-dom'
+
+// Api Services
+import { clearJwt } from '../../ApiServices/JwtService'
+
+// Styling
+import './Navbar.css'
+
 
 export default function NavBar (props) {
     return (
@@ -18,9 +25,9 @@ export default function NavBar (props) {
             <div className = "nav-title">
                 <h4 className = "nav-title-url">BVTCA Task Manager</h4>
             </div>
-            <div className = "nav-buttons">
-                <Link to="/SignUp"><button className = "nav-button" id = "sign-up-button">Sign Up</button></Link>
-                <Link to="/Login"><button className = "nav-button" id = "login-button">Login</button></Link>
+            <div className = "user-info">
+                <p>Welcome, {props.user}</p>
+                <Link className="user-info-link" to="/Login" onClick={clearJwt}>Sign Out</Link>
             </div>
         </nav>
     )

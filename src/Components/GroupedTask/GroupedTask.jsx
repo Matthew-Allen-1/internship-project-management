@@ -1,9 +1,17 @@
+// Libraries
 import React from 'react'
-import { useQuery, useMutation } from 'react-query'
-import { fetchTasks } from '../ApiServices/TasksService'
-import '../styling/GroupedTask.css'
-import Task from './Task'
 import {nanoid} from 'nanoid'
+import { useQuery, useMutation } from 'react-query'
+
+// Api Services
+import { fetchTasks } from '../../ApiServices/TasksService'
+
+// Components
+import Task from '../Task/Task'
+
+//Styling
+import './GroupedTask.css'
+
 
 export default function GroupedTask(props){
 

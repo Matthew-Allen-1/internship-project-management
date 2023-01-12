@@ -1,11 +1,12 @@
 nav {
   height: 60px;
+  width: 100%;
   display: flex;
   align-items: center;
   padding: 5px 5px;
   border-bottom: 1px solid  rgb(215, 215, 215);
   background-color: white;
-  position: sticky;
+  position: fixed;
   top: 0px;
   z-index: 2;
 }
@@ -39,9 +40,16 @@ nav img {
   line-height: 24px;
 }
 
-.nav-buttons {
+.user-info {
   display: flex;
-  /* border: 2px dashed brown; */
+  justify-content: center;
+  align-items: center;
+}
+.user-info p {
+  margin: 0px 5px 0px 5px;
+}
+.user-info-link{
+  margin: 0px 20px 0px 5px;
 }
 
 .nav-button {
