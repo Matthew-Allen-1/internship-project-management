@@ -46,6 +46,23 @@ export default function GroupedTask(props){
     return (weekday + ', ' + month + ' ' + dayStr + ' ' + newDate.getFullYear())
   }
 
+  function calcElapsedTime(task) {
+    if (!task.startTime || !task.endTime ) {return 0}
+    else {
+      const endTimeInMinutes = parseInt(task.endTime.slice(0, 2)) * 60 + parseInt(task.endTime.slice(3, 5))
+      const startTimeInMinutes = parseInt(task.startTime.slice(0, 2)) * 60 + parseInt(task.startTime.slice(3, 5))
+      const duration = endTimeInMinutes - startTimeInMinutes
+      return duration < 0 ? (duration + Math.ceil(Math.abs(duration) / 1440) * 1440) : duration
+    }
+  }
+
+  function convertElapsedToText(duration) {
+    const hoursElapsed = Math.floor(duration / 60)
+    const minutesElapsed = ''.concat((duration % 60) < 10 ? '0' : '', (duration % 60).toString())
+    return (hoursElapsed.toString() + ":" + minutesElapsed.toString())
+  }
+
+
 //Filter task list according to the group selected in the sidebar.
   const filteredTasks = taskData.filter((task, index) => {
     const indexOfGroupSelection = groupData.map(group => group.id).indexOf(groupSelection)
@@ -78,6 +95,7 @@ export default function GroupedTask(props){
       <Task 
         key = {task.id} 
         task = {task} 
+        elapsedTime = {convertElapsedToText(calcElapsedTime(task))}
         groupData = {groupData}
         handleInputChange = {handleInputChange}
         dropdown = {dropdown}
@@ -99,19 +117,34 @@ export default function GroupedTask(props){
     )}
   })
 
+  console.log('taskElementArrays', taskElementArrays)
+  //Create an array of total times corresponding to the dates in dateList.
+  const timeTotals = taskElementArrays.map((taskArray, index) => {
+    console.log('taskArray', taskArray)
+    return taskArray.reduce((runningTotal, currentTask) => {
+      console.log('runningTotal', runningTotal)
+      console.log('currentTask', currentTask)
+      console.log('elapsed current', calcElapsedTime(currentTask))
+      return (runningTotal + calcElapsedTime(currentTask.props.task))
+    }, 0)
+  })
+
+  console.log('timeTotals', timeTotals)
+
   //Create an array of divs corresponding to the dates in dateList
   const dateTaskElements = taskElementArrays.filter(taskElementArray => taskElementArray.length != 0)
   .map((taskElementArray, index) => {
 
     //Convert the date to a string to display
     var dateStr = index <= dateList.length - 1 ? convertDateToString(dateList[index]) : 'Unscheduled Tasks'
+    // var timeStr = 
 
     return(
       <div key = {index}>
         <div className = "task-header">
           <p className = "left" >{dateStr}</p>
           <div className = "right">
-            <p>Total: 00:01:00</p>
+            <p>Total Time: {convertElapsedToText(timeTotals[index])}</p>
             <img src = "https://app.clockify.me/assets/ui-icons/bulk-edit.svg" alt = "" />
           </div>
         </div>

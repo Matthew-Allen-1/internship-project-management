@@ -35,7 +35,7 @@ let allTasksGroupState = {
 let unscheduledTasksGroupState = {
   id: 1, 
   title: "Unscheduled Tasks", 
-  taskIds: ['000', '123'], 
+  taskIds: ['444', '123'], 
   selected: false,
   activeSidebar: false
 }
@@ -43,7 +43,7 @@ let unscheduledTasksGroupState = {
 let defaultTaskState = {
   ...defaultInputState,
   id: 0,
-  dropdownActive: false,
+  dropdownActive: false
 }
 
 export default function App() {
@@ -62,6 +62,8 @@ export default function App() {
   const [groupSidebarStyles, setGroupSideBarStyles] = useState([])
   const [taskDropdownSearch, setTaskDropdownSearch] = useState('')
   const [taskDropdownActive, setTaskDropdownActive] = useState(false)
+
+  const [newTaskMessage, setNewTaskMessage] = useState(false)
 
   // Changes the group selection in the sidebar on click.
   function handleGroupSelection(event, index) {
@@ -96,7 +98,11 @@ export default function App() {
     //handles input changes on a task from the task list
     else {
       setTaskData(prevTaskData => prevTaskData.map(prevTask => {
-        if (event.target.id == name + '#' + prevTask.id) {return ({...prevTask, [name]: value})}
+        console.log('event.target.id', event.target.id)
+        if (event.target.id == name + '#' + prevTask.id) {
+          console.log(`Updating Task#${prevTask.id} ${name} to ${value}`)
+          return ({...prevTask, [name]: value})
+        }
         else {return prevTask}
       }))
     }
@@ -156,6 +162,7 @@ export default function App() {
         setGroupData(prevGroupData => prevGroupData.map(group => ({...group, selected: false})))
         setGroupData(prevGroupData => [...prevGroupData, {id: newGroupId, title: dropdownSearch, taskIds: [], selected: true}])
         setInput(prevInput => ({...prevInput, groupId: newGroupId, groupTitle: dropdownSearch}))
+        createTaskDropdown ? setDropdownActive(prevDropdownActive => !prevDropdownActive) : setTaskDropdownActive(prevTaskDropdownActive => !prevTaskDropdownActive)
       }
 
       //handles the addition of a new group on a task list dropdown
@@ -182,7 +189,59 @@ export default function App() {
         }))
       }
     }
-    createTaskDropdown ? setDropdownActive(prevDropdownActive => !prevDropdownActive) : setTaskDropdownActive(prevTaskDropdownActive => !prevTaskDropdownActive)
+
+  //else if the entered group name matches an existing group, select the entered group name
+    else {
+      // gets the current group id from the event.target.id
+      const currGroup = groupData.filter(group => group.title == value)[0]
+      const currGroupId = currGroup.id
+      console.log('currGroup', currGroup)
+
+      // handles a selection in the create task dropdown
+      if (createTaskDropdown) {
+        setGroupData(prevGroupData => prevGroupData.map(group => {
+          if(group.title.toUpperCase() === currGroup.title.toUpperCase()){
+            setInput({...input, groupTitle: group.title, groupId: group.id})
+            return {...group, selected: true}
+          } else {
+            return {...group, selected: false}
+          }
+        }))
+        createTaskDropdown ? setDropdownActive(prevDropdownActive => !prevDropdownActive) : setTaskDropdownActive(prevTaskDropdownActive => !prevTaskDropdownActive)
+      }
+
+      // handles a selection in a task list dropdown 
+      else {
+       // slices off "drop-down-enter#" from the event.target.id to get the current task id
+        const currTaskId = event.target.id.slice(15)
+        const currTask = taskData.filter(task => task.id == currTaskId)[0]
+        console.log('currTask', currTask)
+
+        setGroupData(prevGroupData => prevGroupData.map(prevGroup => {
+          // if the current task belongs to this group and this group was not selected, delete the current task from this group
+          if (currTask.groupId == prevGroup.id && currGroupId != prevGroup.id) {
+            const prevTaskIds = prevGroup.taskIds
+            prevTaskIds.splice(prevTaskIds.indexOf(currTaskId), 1)
+            return ({...prevGroup, taskIds: [...prevTaskIds]})
+          }
+          // else if the current task does not belong to this group, and this is the selected group
+          else if (currTask.groupId != prevGroup.id && currGroupId == prevGroup.id) {
+            setTaskData(prevTaskData => prevTaskData.map(prevTask => {
+              //if this is the current task, switch its dropdownActiveState and update its group info to the selected group
+              if (currTaskId == prevTask.id) {
+                const newDropdownActive = !prevTask.dropdownActive
+                return {...prevTask, dropdownActive: newDropdownActive, groupId: prevGroup.id, groupTitle: prevGroup.title}
+              }
+              else {return prevTask} 
+            }))
+            // also, add the current task id to the taskIds array for this selected group
+            const newTaskIds = prevGroup.taskIds
+            return({...prevGroup, taskIds: [...newTaskIds, currTaskId]})
+          }
+          else {return prevGroup}
+        }))
+      }
+    }
   };
 
   //updates search bar state
@@ -266,7 +325,13 @@ export default function App() {
   function addTask(){
     // console.log("addTask function called");
     if (input.title == '') {alert('You must enter a task description.')}
+    else if ((input.startTime != '' || input.endTime != '') && input.date == '') {
+      alert('You may not enter a start or end time without entering a date.')
+    }
     else {
+      console.log('inputStartTime', input.startTime)
+      console.log('inputEndTime', input.endTime)
+      console.log('inputDate', input.date)
       const newTaskId = nanoid()
       setTaskData(prevTaskData => {
         return([...prevTaskData, {...input, id: newTaskId, dropdownActive: false}])
@@ -279,10 +344,18 @@ export default function App() {
         else {
           return ({...group, taskIds: [...group.taskIds, newTaskId]})
         }
+        
       }))
+      setNewTaskMessage(true)
+      console.log('NewTaskMessage set to true')
     }
     console.log('Task Data After Add Task: ', taskData)
     console.log('Group Data After Add Task: ', groupData)
+    
+    setTimeout(() => {
+      setNewTaskMessage(false)
+      console.log('NewTaskMessage set to false')
+      }, 5000)
   }
   
   return (
@@ -314,6 +387,9 @@ export default function App() {
             setTaskDropdownActive = {setTaskDropdownActive}
             taskDropdownSearch = {taskDropdownSearch}
             setTaskDropdownSearch = {setTaskDropdownSearch}
+
+            newTaskMessage = {newTaskMessage}
+            
             />}
           />
           <Route path = "/Login" element = {<Login />} />

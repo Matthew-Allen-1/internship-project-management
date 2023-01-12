@@ -8,20 +8,20 @@ export default function Task(props){
 
   const taskBtnRef = React.useRef();
   const newClassList = task.dropdownActive ? "task-dropdown-content task-dropdown-show" : "task-dropdown-content";
-  let elapsedTime = ''
+  
+  // let elapsedTime = ''
 
-  function calcElapsedTime(task) {
-    const endTimeInMinutes = parseInt(task.endTime.slice(0, 2)) * 60 + parseInt(task.endTime.slice(3, 5))
-    const startTimeInMinutes = parseInt(task.startTime.slice(0, 2)) * 60 + parseInt(task.startTime.slice(3, 5))
-    const duration = endTimeInMinutes - startTimeInMinutes
-    const absDuration = duration < 0 ? (duration + 24 * 60) : duration
-    const hoursElapsed = Math.floor(absDuration / 60)
-    const minutesElapsed = ''.concat((absDuration % 60) < 10 ? '0' : '', (absDuration % 60).toString())
-    return (hoursElapsed.toString() + ":" + minutesElapsed.toString())
-  }
+  // function calcElapsedTime(task) {
+  //   const endTimeInMinutes = parseInt(task.endTime.slice(0, 2)) * 60 + parseInt(task.endTime.slice(3, 5))
+  //   const startTimeInMinutes = parseInt(task.startTime.slice(0, 2)) * 60 + parseInt(task.startTime.slice(3, 5))
+  //   const duration = endTimeInMinutes - startTimeInMinutes
+  //   const absDuration = duration < 0 ? (duration + 24 * 60) : duration
+  //   const hoursElapsed = Math.floor(absDuration / 60)
+  //   const minutesElapsed = ''.concat((absDuration % 60) < 10 ? '0' : '', (absDuration % 60).toString())
+  //   return (hoursElapsed.toString() + ":" + minutesElapsed.toString())
+  // }
  
-  if(task.startTime && task.endTime) {elapsedTime = calcElapsedTime(task)}
-  // console.log(`Time Elapsed for ${task.title} is ${elapsedTime}`)
+  // if(task.startTime && task.endTime) {elapsedTime = calcElapsedTime(task)}
 
   // displays elements in dropdown
   const newGroupListElements = groupData.map(group => {
@@ -51,7 +51,7 @@ export default function Task(props){
     <div className="created-task">
       <input 
         className = "input"
-        id = {'input#' + task.id}
+        id = {'title#' + task.id}
         defaultValue = {task.title}
         type = "text" 
         name = "title"
@@ -103,7 +103,7 @@ export default function Task(props){
         onChange = {() => handleInputChange(event)} 
       />
       <span className="line-divider"></span>
-      <span>Time: {elapsedTime}</span>
+      <span>Time: {props.elapsedTime}</span>
       <img className="options" src="https://app.clockify.me/assets/ui-icons/menu-dots-vertical.svg" alt="" />
     </div>
   )

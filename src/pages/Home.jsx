@@ -33,6 +33,8 @@ export default function Home(props){
           dropdownFilter = {dropdownFilter} 
           dropdownSearch = {dropdownSearch} 
           dropdownSelected = {dropdownSelected}
+
+          newTaskMessage = {props.newTaskMessage}
         />
         <GroupedTask 
           groupData = {groupData}
