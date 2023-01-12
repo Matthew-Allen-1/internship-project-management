@@ -11,6 +11,10 @@ export const fetchTasks = async () => {
 }
 
 
-export const addTask = async (newTask) => {
-  return post(`${API_URL}/add-task`, newTask);
+export const addTaskRequest = async (newTask) => {
+  try{
+    return post(`${API_URL}/add-task`, newTask);
+  } catch(err){
+    return { data: [], error: err }
+  }
 }
