@@ -1,0 +1,18 @@
+.App{
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  display: flex;
+  margin-left: 20%;
+  margin-top: 60px;
+  width: 80%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.task-section{
+  width: 100%;
+}

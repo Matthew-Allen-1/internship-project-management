@@ -1,0 +1,138 @@
+.sign-up{
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+}
+
+.sign-up header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+  margin: 0px 34px 0px 34px;
+}
+
+.sign-up header .log-in{
+  display: flex;
+  align-items: center;
+}
+.sign-up header .log-in button{
+  width: 90px;
+  height: 40px;
+  margin-left: 20px;
+  border: 0px;
+  border-radius: 8px;
+  background-color: #03a9f4;
+  box-shadow: 0px 5px 12px #03a9f480;
+  color: white;
+  font-size: 15px;
+}
+.sign-up header .log-in button:hover{
+  background-color:#0192d6;
+  cursor: pointer;
+}
+
+.sign-up .logo{
+  width: 48px;
+  height: 48px;
+}
+
+.sign-up .input-field-container{
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 80px;
+}
+
+.sign-up .register-response-message{
+  background-color: rgb(214, 178, 1);
+  padding: 10px 20px 10px 20px;
+  border-radius: 20px;
+  color: white;
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sign-up .input-field{
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  align-items: center;
+  padding: 30px 60px 30px 60px;
+  width: 380px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0px 12px 32px #26214a1a;
+  margin-bottom: 34px;
+}
+.sign-up .input-field label{
+  align-self: flex-start;
+  font-size: 12px;
+  letter-spacing: .3px;
+}
+.sign-up .input-field input{
+  width: 100%;
+  height: 40px;
+  padding: 0 20px 0 36px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  border: 1px solid black;
+  margin-bottom: 30px;
+}
+.sign-up #name{
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='currentColor' class='bi bi-person' viewBox='0 0 16 16'%3E%3Cpath d='M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 8px 9px;
+}
+.sign-up #email{
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='currentColor' class='bi bi-envelope' viewBox='0 0 16 16'%3E%3Cpath d='M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 8px 9px;
+}
+.sign-up #password{
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='currentColor' class='bi bi-key' viewBox='0 0 16 16'%3E%3Cpath d='M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .354.146l1.5 1.5a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0L13 9.207l-.646.647a.5.5 0 0 1-.708 0L11 9.207l-.646.647a.5.5 0 0 1-.708 0L9 9.207l-.646.647A.5.5 0 0 1 8 10h-.535A4 4 0 0 1 0 8zm4-3a3 3 0 1 0 2.712 4.285A.5.5 0 0 1 7.163 9h.63l.853-.854a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.793-.793-1-1h-6.63a.5.5 0 0 1-.451-.285A3 3 0 0 0 4 5z'/%3E%3Cpath d='M4 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 8px 9px;
+}
+.sign-up #error {
+  border: 1px solid red;
+}
+
+.sign-up .password-input{
+  width: 100%;
+  display: flex;
+}
+.sign-up .input-field .password-input input{
+  border-radius: 8px 0px 0px 8px;
+  margin-right: 4px;
+}
+.sign-up .input-field .password-input button{
+  width: 50px;
+  height: 40px;
+  border-radius: 0px 8px 8px 0px;
+  background-image: url('../assets/eye.svg');
+  background-repeat: no-repeat;
+  background-position: 9px 7px;
+}
+.sign-up .input-field button{
+  width: 100%;
+  height: 50px;
+  border: 0px;
+  border-radius: 8px;
+  background-color: #03a9f4;
+  box-shadow: 0px 5px 12px #03a9f480;
+  color: white;
+  font-size: 18px;
+}
+.sign-up .input-field button:hover{
+  background-color:#0192d6;
+  cursor: pointer;
+}
+
+.sign-up .link{
+  align-self: center;
+}
