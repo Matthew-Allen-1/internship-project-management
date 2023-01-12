@@ -12,7 +12,7 @@ export const get = async (url, headers) => {
 
     return res.json();
   } catch (err) {
-
+    return({auth: false})
   }
 }
 
@@ -31,7 +31,7 @@ export const post = async (url, body, headers) => {
 
     return res.json();
   } catch (err) {
-    
+    return ({auth: false})
   }
 }
 

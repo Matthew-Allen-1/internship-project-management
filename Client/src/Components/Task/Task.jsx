@@ -1,6 +1,10 @@
+// Libraries
 import React from 'react'
-import '../styling/Task.css'
 import {nanoid} from 'nanoid'
+
+// Styling
+import './Task.css'
+
 
 export default function Task(props){
 

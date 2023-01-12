@@ -1,54 +1,29 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { Routes, Route, BrowserRouter as Router } from "react-router-dom"
-import { QueryClientProvider, QueryClient } from 'react-query'
-import { useQuery, useMutation } from 'react-query'
-
-// import { addTask } from '../ApiServices/TasksService'
-
-import Home from './pages/Home'
-import Login from './pages/Login'
-import SignUp from './pages/SignUp'
+// Libraries
 import {nanoid} from 'nanoid'
-import './index.css'
-import {HardCodedGroupData} from './Components/HardCodedGroupData'
-import {HardCodedTaskData} from './Components/HardCodedTaskData'
+import { useQuery, useMutation } from 'react-query'
+import React, { useState, useEffect, useRef } from 'react'
 
-const queryClient = new QueryClient();
+// Components
+import Navbar from '../../Components/Navbar/Navbar'
+import Sidebar from '../../Components/Sidebar/Sidebar'
+import CreateTask from '../../Components/CreateTask/CreateTask'
+import GroupedTask from '../../Components/GroupedTask/GroupedTask'
 
-let defaultInputState = {
-  title: "",
-  groupTitle: "",
-  groupId: 0,
-  startTime: "",
-  endTime: "",
-  date: ""
-}
+// other Data
+import {HardCodedTaskData} from '../../Components/HardCodedTaskData'
+import {HardCodedGroupData} from '../../Components/HardCodedGroupData'
+import { defaultInputState, allTasksGroupState, unscheduledTasksGroupState, defaultTaskState} from '../../data/DefaultData'
 
-let allTasksGroupState = {
-  id: 0, 
-  title: "Group", 
-  taskIds: [], 
-  selected: true,
-  activeSidebar: true
-}
+// Requests functions
+import { fetchTasks,  addTaskRequest  } from '../../ApiServices/TasksService'
 
-let unscheduledTasksGroupState = {
-  id: 1, 
-  title: "Unscheduled Tasks", 
-  taskIds: ['444', '123'], 
-  selected: false,
-  activeSidebar: false
-}
+// Styling
+import './HomePage.css'
 
-let defaultTaskState = {
-  ...defaultInputState,
-  id: 0,
-  dropdownActive: false
-}
-
-export default function App() {
+export default function Home(){
 
   const btnRef = useRef();
+  const firstRender = useRef(true);
   const [dropdownActive, setDropdownActive] = useState(false); //controls dropdown state
   const [dropdownSearch, setDropdownSearch] = useState(""); //stores search bar on dropdown value
   const [input, setInput] = useState(defaultInputState);
@@ -62,8 +37,20 @@ export default function App() {
   const [groupSidebarStyles, setGroupSideBarStyles] = useState([])
   const [taskDropdownSearch, setTaskDropdownSearch] = useState('')
   const [taskDropdownActive, setTaskDropdownActive] = useState(false)
-
   const [newTaskMessage, setNewTaskMessage] = useState(false)
+  
+  const { mutate } = useMutation((newTask) => addTaskRequest(newTask));
+// sends task and group data to backend when either is changed.
+  useEffect(() =>{
+    if(firstRender.current){
+      firstRender.current = false;
+    } else{
+      console.log('backend updated')
+      const task_ = { task_data: JSON.stringify(taskData), group_data: JSON.stringify(groupData) }
+      mutate(task_)
+    }
+  }, [taskData, groupData])
+
 
   // Changes the group selection in the sidebar on click.
   function handleGroupSelection(event, index) {
@@ -86,9 +73,9 @@ export default function App() {
   function handleInputChange(event){
     // console.log("handleInputChange function called");
     const{name, value} = event.target;
-    console.log('eventTargetId', event.target.id)
-    console.log('eventTargetClassName', event.target.className)
-    console.log(event.target.className.indexOf("create-task-input"))
+    // console.log('eventTargetId', event.target.id)
+    // console.log('eventTargetClassName', event.target.className)
+    // console.log(event.target.className.indexOf("create-task-input"))
 
     //handles input changes on the create task
     if(event.target.className.indexOf("create-task-input") >= 0) {
@@ -266,14 +253,14 @@ export default function App() {
 
   // makes options clickable in dropdown and selects them to show
   function dropdownSelected(event){
-    console.log('eventTargetId', event.target.id)
-    console.log('eventTargetClassName', event.target.className)
+    // console.log('eventTargetId', event.target.id)
+    // console.log('eventTargetClassName', event.target.className)
     const createDropdown = (event.target.className == 'create-dropdown-group')
 
     // gets the current group id from the event.target.id
     const currGroupId = event.target.id
     const currGroup = groupData.filter(group => group.id == currGroupId)[0]
-    console.log('currGroup', currGroup)
+    // console.log('currGroup', currGroup)
 
     // handles a selection in the create task dropdown
     if (createDropdown) {
@@ -357,24 +344,36 @@ export default function App() {
       console.log('NewTaskMessage set to false')
       }, 5000)
   }
-  
+
+  const { data, isLoading } = useQuery(
+    '/tasks', 
+    ()=> fetchTasks(),
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  if(isLoading){
+    return <h1>Loading...</h1>
+  }
+
   return (
-    <QueryClientProvider client = {queryClient}>
-      <Router>
-        <Routes>
-          <Route path = "/" element = {<Home
+    <div className = "App">
+      <Navbar user={data?.name} />
+      <Sidebar 
+        groupData = {groupData}
+        handleGroupSelection = {handleGroupSelection}
+        groupSelection = {groupSelection}
+        groupSidebarStyles = {groupSidebarStyles}
+      />
+      <main>
+        <div className = "task-section">
+          <CreateTask 
             groupData = {groupData} 
-            setGroupData = {setGroupData}
-            taskData = {taskData}
-            setTaskData = {setTaskData}
             input = {input}
             handleInputChange = {handleInputChange}
             addTask = {addTask}
 
-            groupSelection = {groupSelection}
-            handleGroupSelection = {handleGroupSelection}
-            groupSidebarStyles = {groupSidebarStyles}
-          
             btnRef = {btnRef}
             dropdown = {dropdown} 
             dropdownActive = {dropdownActive} 
@@ -382,21 +381,28 @@ export default function App() {
             dropdownFilter = {dropdownFilter} 
             dropdownSearch = {dropdownSearch} 
             dropdownSelected = {dropdownSelected}
+          />
+          <GroupedTask 
+            groupData = {groupData}
+            setGroupData = {setGroupData}
+            taskData = {taskData}
+            setTaskData = {setTaskData}
 
-            taskDropdownActive = {taskDropdownActive}
-            setTaskDropdownActive = {setTaskDropdownActive}
+            groupSelection = {groupSelection}
+            handleInputChange = {handleInputChange}
+
+            dropdown = {dropdown}
+            dropdownEnter = {dropdownEnter}
+            dropdownFilter = {dropdownFilter}
+            dropdownSelected = {dropdownSelected}
+
             taskDropdownSearch = {taskDropdownSearch}
             setTaskDropdownSearch = {setTaskDropdownSearch}
 
             newTaskMessage = {newTaskMessage}
-            
-            />}
           />
-          <Route path = "/Login" element = {<Login />} />
-          <Route path = "/SignUp" element = {<SignUp />} />
-        </Routes>
-      </Router>
-    </QueryClientProvider>
+        </div>
+      </main>
+    </div>
   )
 }
-

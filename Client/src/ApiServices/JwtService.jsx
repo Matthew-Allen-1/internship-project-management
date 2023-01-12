@@ -10,5 +10,5 @@ export const getJwt = () => {
 }
 
 export const clearJwt = () => {
-  localStorage.dele
+  localStorage.removeItem(jwtProp)
 }

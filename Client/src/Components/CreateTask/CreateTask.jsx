@@ -1,6 +1,8 @@
+// Libraries
 import React, {startTransition, useState} from 'react'
 
-import '../styling/CreateTask.css'
+// styling
+import './CreateTask.css'
 
 export default function CreateTask(props){
 

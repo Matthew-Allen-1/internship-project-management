@@ -1,4 +1,5 @@
-import '../styling/Sidebar.css'
+// Styling
+import './Sidebar.css'
 
 export default function Sidebar(props) {
 
