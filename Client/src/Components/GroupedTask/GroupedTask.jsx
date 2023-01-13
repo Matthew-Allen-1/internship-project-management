@@ -13,7 +13,7 @@ import Task from '../Task/Task'
 import './GroupedTask.css'
 
 
-export default function GroupedTask(props){
+export default function GroupedTask(props, deleteTaskById){
 
   const { data, isLoading, isError } = useQuery('tasks', fetchTasks);
   if(isLoading) return <p>Loading...</p>
@@ -101,6 +101,7 @@ export default function GroupedTask(props){
   function TaskComponent (task) {
     return(
       <Task 
+        deleteTaskById = {deleteTaskById}
         key = {task.id} 
         task = {task} 
         elapsedTime = {convertElapsedToText(calcElapsedTime(task))}

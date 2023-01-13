@@ -308,6 +308,15 @@ export default function Home(){
     createDropdown ? setDropdownActive(prevDrop => !prevDrop) : setTaskDropdownActive(prevTaskDropDownActive => !prevTaskDropDownActive)
   }
 
+  // delete task by id? Am i filtering through tasks or groups?
+  const deleteTaskById = (id) => {
+    const updatedTask = tasks.filter((task) => {
+        return task.id !== id;
+    });
+
+    setTaskData(updatedTask);
+  };
+
   // adds the 'input' state into the currently selected task in 'taskData' state.
   function addTask(){
     // console.log("addTask function called");
@@ -357,6 +366,7 @@ export default function Home(){
     return <h1>Loading...</h1>
   }
 
+  
   return (
     <div className = "App">
       <Navbar user={data?.name} />
@@ -387,6 +397,7 @@ export default function Home(){
             setGroupData = {setGroupData}
             taskData = {taskData}
             setTaskData = {setTaskData}
+            deleteTaskById = {deleteTaskById}
 
             groupSelection = {groupSelection}
             handleInputChange = {handleInputChange}

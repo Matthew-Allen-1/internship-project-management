@@ -60,10 +60,10 @@ export default function Task(props){
         defaultValue = {task.title}
         type = "text" 
         name = "title"
-        onChange = {() => handleInputChange(event)} 
+        onChange = {(event) => handleInputChange(event)} 
       />
       <div className="task-dropdown">
-        <div className="group task-drop-btn" onClick={() => dropdown(event)}>
+        <div className="group task-drop-btn" onClick={(event) => dropdown(event)}>
           <p key = {task.groupId} id = {'group#' + task.id} ref = {taskBtnRef}>{task.groupTitle}</p>
         </div>
         <div id="task-group-dropdown" className={newClassList} >
@@ -74,8 +74,8 @@ export default function Task(props){
             className = "task-dropdown-input"
             id = {'dropdown-input#' + task.id}
             name = "group" 
-            onChange = {() => dropdownFilter(event)} 
-            onKeyDown = {() => dropdownEnter(event)}
+            onChange = {(event) => dropdownFilter(event)} 
+            onKeyDown = {(event) => dropdownEnter(event)}
           />
           {newGroupListElements}
         </div>
