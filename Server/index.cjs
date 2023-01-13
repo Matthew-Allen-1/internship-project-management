@@ -15,7 +15,7 @@ const corsOptions = {
    origin: '*', 
    credentials: true,  // access-control-allow-credentials:true
    optionSuccessStatus: 200,
-}
+};
 
 const pool = mysql.createPool({
     host: process.env.DB_HOST,
@@ -58,9 +58,9 @@ app.post('/register', async function (req, res) {
     let encodedUser;
     if(Object.values(req.body).indexOf('') > -1){
       throw new Error('missing fields');
-    } else if(registerForm.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) == null){
-      throw new Error('Invalid Email');
-    }
+    } //else if(registerForm.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) == null){
+      //throw new Error('Invalid Email');
+    //}
     // Hashes the password and inserts the info into the `user` table
     await bcrypt.hash(req.body.password, 10).then(async hash => {
       try {
@@ -211,7 +211,7 @@ app.post('/add-task', async function (req, res) {
 app.delete('/delete-tasks', async function (req, res) {
   const [scheme, token] = req.headers.authorization.split(' ');
   const user = jwt.verify(token, process.env.JWT_KEY)
-})
+});
 
 // Start the Express server
 app.listen(port, () => {
