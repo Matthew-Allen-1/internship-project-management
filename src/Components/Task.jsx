@@ -1,6 +1,7 @@
 import React from 'react'
 import '../styling/Task.css'
 import {nanoid} from 'nanoid'
+import OptionsDropDown from './OptionsDropDown';
 
 export default function Task(props){
 
@@ -104,7 +105,8 @@ export default function Task(props){
       />
       <span className="line-divider"></span>
       <span>Time: {elapsedTime}</span>
-      <img className="options" src="https://app.clockify.me/assets/ui-icons/menu-dots-vertical.svg" alt="" />
+      {/* <img className="options" src="https://app.clockify.me/assets/ui-icons/menu-dots-vertical.svg" alt="" /> */}
+      <OptionsDropDown />
     </div>
   )
 }
