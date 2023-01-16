@@ -3,14 +3,37 @@
   height: 200px;
 }
 
+.create-task-container{
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  margin: 20px 20px 100px 20px;
+}
+
 .create-task{
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: white;
+  flex-wrap: wrap;
+}
+
+.create-task .left-box{
+  display: flex;
+  align-items: center;
   height: 60px;
   border: 1px solid  rgb(215, 215, 215);
-  margin: 20px 20px 50px 20px;
+  flex-grow: 1;
+  border-right: none;
+}
+
+.create-task .right-box{
+  display: flex;
+  justify-content: space-between;
+  height: 60px;
+  align-items: center;
+  border: 1px solid  rgb(215, 215, 215);
+  border-left: none;
+  flex-grow: 1;
 }
 
 .create-task .input{
@@ -19,6 +42,7 @@
   height: 35px;
   margin: 5px;
   border: 1px solid transparent;
+  flex-grow: 1;
 }
 .create-task .input:hover{
   border-color: rgb(215, 215, 215);
@@ -129,3 +153,19 @@
 }
 
 .show {display: block;}
+
+
+/* Screen smaller than 1200px */
+@media screen and (max-width: 1200px){
+  .create-task .left-box{
+    flex-basis: 100%;
+    padding-right: 20px;
+    border-right: 1px solid  rgb(215, 215, 215);
+  }
+  .create-task .right-box{
+    border-left: 1px solid  rgb(215, 215, 215);
+  }
+  .dropdown-content{
+    right: -20px;
+  }
+}

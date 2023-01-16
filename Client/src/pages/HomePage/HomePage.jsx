@@ -182,7 +182,7 @@ export default function Home(){
       // gets the current group id from the event.target.id
       const currGroup = groupData.filter(group => group.title == value)[0]
       const currGroupId = currGroup.id
-      console.log('currGroup', currGroup)
+      // console.log('currGroup', currGroup)
 
       // handles a selection in the create task dropdown
       if (createTaskDropdown) {
@@ -202,7 +202,7 @@ export default function Home(){
        // slices off "drop-down-enter#" from the event.target.id to get the current task id
         const currTaskId = event.target.id.slice(15)
         const currTask = taskData.filter(task => task.id == currTaskId)[0]
-        console.log('currTask', currTask)
+        // console.log('currTask', currTask)
 
         setGroupData(prevGroupData => prevGroupData.map(prevGroup => {
           // if the current task belongs to this group and this group was not selected, delete the current task from this group
@@ -279,7 +279,7 @@ export default function Home(){
       // slices off "group-list#" from the event.target.id to get the current task id
       const currTaskId = event.target.className.slice(11)
       const currTask = taskData.filter(task => task.id == currTaskId)[0]
-      console.log('currTask', currTask)
+      // console.log('currTask', currTask)
 
       setGroupData(prevGroupData => prevGroupData.map(prevGroup => {
         // if the current task belongs to this group and this group was not selected, delete the current task from this group
@@ -316,9 +316,9 @@ export default function Home(){
       alert('You may not enter a start or end time without entering a date.')
     }
     else {
-      console.log('inputStartTime', input.startTime)
-      console.log('inputEndTime', input.endTime)
-      console.log('inputDate', input.date)
+      // console.log('inputStartTime', input.startTime)
+      // console.log('inputEndTime', input.endTime)
+      // console.log('inputDate', input.date)
       const newTaskId = nanoid()
       setTaskData(prevTaskData => {
         return([...prevTaskData, {...input, id: newTaskId, dropdownActive: false}])
@@ -334,14 +334,14 @@ export default function Home(){
         
       }))
       setNewTaskMessage(true)
-      console.log('NewTaskMessage set to true')
+      // console.log('NewTaskMessage set to true')
     }
-    console.log('Task Data After Add Task: ', taskData)
-    console.log('Group Data After Add Task: ', groupData)
+    // console.log('Task Data After Add Task: ', taskData)
+    // console.log('Group Data After Add Task: ', groupData)
     
     setTimeout(() => {
       setNewTaskMessage(false)
-      console.log('NewTaskMessage set to false')
+      // console.log('NewTaskMessage set to false')
       }, 5000)
   }
 
