@@ -22,6 +22,16 @@ import './HomePage.css'
 
 export default function Home(){
 
+// This is a request that returns the backend data
+  const { data: backendData, isLoading, isError } = useQuery(
+    'tasks', 
+    fetchTasks,
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+  console.log(backendData);
+
   const btnRef = useRef();
   const firstRender = useRef(true);
   const [dropdownActive, setDropdownActive] = useState(false); //controls dropdown state
@@ -345,21 +355,12 @@ export default function Home(){
       }, 5000)
   }
 
-  const { data, isLoading } = useQuery(
-    '/tasks', 
-    ()=> fetchTasks(),
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
-
-  if(isLoading){
-    return <h1>Loading...</h1>
-  }
+  if(isLoading) return <p>Loading...</p>
+  if(isError) return <p>An Error occurred</p>
 
   return (
     <div className = "App">
-      <Navbar user={data?.name} />
+      <Navbar user={backendData?.name} />
       <Sidebar 
         groupData = {groupData}
         handleGroupSelection = {handleGroupSelection}

@@ -179,7 +179,12 @@ app.get('/tasks', async (req, res) => {
       WHERE tasks.user_id = ${user.userId}`
     );
 
-      res.json({ tasks, name: user.name });
+    const [groups] = await req.db.query(`
+      SELECT group_data FROM tasks
+      WHERE tasks.user_id = ${user.userId}`
+    );
+
+    res.json({ tasks, groups, name: user.name });
   } catch (err) {
     console.log(err);
     res.json({ err });

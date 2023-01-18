@@ -1,10 +1,6 @@
 // Libraries
 import React, { useState } from 'react'
 import {nanoid} from 'nanoid'
-import { useQuery, useMutation } from 'react-query'
-
-// Api Services
-import { fetchTasks } from '../../ApiServices/TasksService'
 
 // Components
 import Task from '../Task/Task'
@@ -20,9 +16,6 @@ export default function GroupedTask(props){
     taskDropdownActive, setTaskDropdownActive, taskDropdownSearch, setTaskDropdownSearch} = props;
   const [selectAll, setSelectAll] = useState(false);
 
-  const { data, isLoading, isError } = useQuery('tasks', fetchTasks);
-  if(isLoading) return <p>Loading...</p>
-  if(isError) return <p>An Error occurred</p>
 
   const defaultTaskData = {
     title: 'Task that was added',
