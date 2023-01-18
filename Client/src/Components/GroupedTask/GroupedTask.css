@@ -8,6 +8,8 @@
 
 .task-header .left{
   margin-left: 5px;
+  text-align: left;
+  flex-grow: 1;
 }
 
 .task-header .right{

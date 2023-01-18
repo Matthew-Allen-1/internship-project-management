@@ -52,63 +52,73 @@ export default function Task(props){
 
   //displays information about each task
   return(
-    <div className="created-task">
-      <input 
-        className = "input"
-        id = {'title#' + task.id}
-        defaultValue = {task.title}
-        type = "text" 
-        name = "title"
-        onChange = {() => handleInputChange(event)} 
-      />
-      <div className="task-dropdown">
-        <div className="group task-drop-btn" onClick={() => dropdown(event)}>
-          <p key = {task.groupId} id = {'group#' + task.id} ref = {taskBtnRef}>{task.groupTitle}</p>
+    <div className="created-task-container">
+      <div className="created-task">
+        <div className="left-box">
+          <div className="check-input-time">
+            {props.selectAll && <input type="checkbox"/>}
+            <input 
+              className = "input"
+              id = {'title#' + task.id}
+              defaultValue = {task.title}
+              type = "text" 
+              name = "title"
+              onChange = {() => handleInputChange(event)} 
+            />
+            <span className="elapsed-time">Time: {props.elapsedTime}</span>
+          </div>
+          <div className="task-dropdown">
+            <div className="group task-drop-btn" onClick={() => dropdown(event)}>
+              <p key = {task.groupId} id = {'group#' + task.id} ref = {taskBtnRef}>{task.groupTitle}</p>
+            </div>
+            <div id="task-group-dropdown" className={newClassList} >
+              <input 
+                type = "text" 
+                value = {taskDropdownSearch} 
+                placeholder = "Search/Create..." 
+                className = "task-dropdown-input"
+                id = {'dropdown-input#' + task.id}
+                name = "group" 
+                onChange = {() => dropdownFilter(event)} 
+                onKeyDown = {() => dropdownEnter(event)}
+              />
+              {newGroupListElements}
+            </div>
+          </div>
         </div>
-        <div id="task-group-dropdown" className={newClassList} >
-          <input 
-            type = "text" 
-            value = {taskDropdownSearch} 
-            placeholder = "Search/Create..." 
-            className = "task-dropdown-input"
-            id = {'dropdown-input#' + task.id}
-            name = "group" 
-            onChange = {() => dropdownFilter(event)} 
-            onKeyDown = {() => dropdownEnter(event)}
-          />
-          {newGroupListElements}
-        </div>
-      </div>
 
-      <span className="line-divider"></span>
-      <div className="time">
-        <input 
-          id = {'startTime#' + task.id}
-          name = "startTime"
-          defaultValue = {task.startTime}  
-          type = "time" 
-          onChange = {() => handleInputChange(event)} 
-        />
-        <div className="time-divider">-</div>
-        <input 
-          id = {'endTime#' + task.id}
-          name = "endTime"
-          defaultValue = {task.endTime} 
-          type = "time"
-          onChange = {() => handleInputChange(event)} 
-        />
+        <div className="right-box">
+          <span className="line-divider"></span>
+          <div className="time">
+            <input 
+              id = {'startTime#' + task.id}
+              name = "startTime"
+              defaultValue = {task.startTime}  
+              type = "time" 
+              onChange = {() => handleInputChange(event)} 
+            />
+            <div className="time-divider">-</div>
+            <input 
+              id = {'endTime#' + task.id}
+              name = "endTime"
+              defaultValue = {task.endTime} 
+              type = "time"
+              onChange = {() => handleInputChange(event)} 
+            />
+          </div>
+          <input 
+            className = "date" 
+            id = {'date#' + task.id}
+            type = "date" 
+            defaultValue = {task.date} 
+            name = "date"
+            onChange = {() => handleInputChange(event)} 
+          />
+          <span className="line-divider"></span>
+          <span className="elapsed-time">Time: {props.elapsedTime}</span>
+          <img className="options" src="https://app.clockify.me/assets/ui-icons/menu-dots-vertical.svg" alt="" />
+        </div>
       </div>
-      <input 
-        className = "date" 
-        id = {'date#' + task.id}
-        type = "date" 
-        defaultValue = {task.date} 
-        name = "date"
-        onChange = {() => handleInputChange(event)} 
-      />
-      <span className="line-divider"></span>
-      <span>Time: {props.elapsedTime}</span>
-      <img className="options" src="https://app.clockify.me/assets/ui-icons/menu-dots-vertical.svg" alt="" />
     </div>
   )
 }

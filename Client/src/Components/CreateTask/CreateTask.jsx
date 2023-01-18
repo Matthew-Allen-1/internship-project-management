@@ -29,68 +29,74 @@ export default function CreateTask(props){
     if(group.selected == true) {return <p key = {group.id} className = "create-task-dropdown" ref = {btnRef}>{group.title}</p>}
   })
 
-  console.log('props.newTaskMessage', props.newTaskMessage)
+  // console.log('props.newTaskMessage', props.newTaskMessage)
 
   return(
-    <div>
+    <div className="create-task-container">
+
       <div className = "create-task">
-        <input 
-          className="input create-task-input" 
-          id="create-task-title-input"
-          placeholder="Input task here..."
-          type="text"
-          name="title"
-          value={input.title}
-          onChange={() => handleInputChange(event)} 
-        />
-        <div className = "dropdown create-task-dropdown" >
-          <div className = "group dropbtn create-task-dropdown" onClick = {() => dropdown(event)}>
-            <img className = "create-task-dropdown" src = "https://app.clockify.me/assets/ui-icons/plus-blue-req.svg" alt = "" />
-            {groupElement}
-          </div>
-          <div id = "group-dropdown" className = {classList} >
-            <input 
-              type = "text" 
-              className = ""
-              value = {dropdownSearch} 
-              placeholder = "Search/Create..." 
-              id = "create-dropdown-input"
-              name = "group" 
-              onChange = {() => dropdownFilter(event)} 
-              onKeyDown = {() => dropdownEnter(event)}
-            />
-            {groupListElements}
+        <div className="left-box">
+          <input 
+            className="input create-task-input" 
+            id="create-task-title-input"
+            placeholder="Input task here..."
+            type="text"
+            name="title"
+            value={input.title}
+            onChange={() => handleInputChange(event)} 
+          />
+          <div className = "dropdown create-task-dropdown" >
+            <div className = "group dropbtn create-task-dropdown" onClick = {() => dropdown(event)}>
+              <img className = "create-task-dropdown" src = "https://app.clockify.me/assets/ui-icons/plus-blue-req.svg" alt = "" />
+              {groupElement}
+            </div>
+            <div id = "group-dropdown" className = {classList} >
+              <input 
+                type = "text" 
+                className = ""
+                value = {dropdownSearch} 
+                placeholder = "Search/Create..." 
+                id = "create-dropdown-input"
+                name = "group" 
+                onChange = {() => dropdownFilter(event)} 
+                onKeyDown = {() => dropdownEnter(event)}
+              />
+              {groupListElements}
+            </div>
           </div>
         </div>
-
-        <span className = "line-divider"></span>
-        <div className = "time">
+        
+        <div className="right-box">
+          <span className = "line-divider"></span>
+          <div className = "time">
+            <input 
+              className = "time create-task-input"
+              type = "time" 
+              name = "startTime"
+              value = {input.startTime}
+              onChange = {() => handleInputChange(event)}
+            />
+            <div className = "time-divider">-</div>
+            <input 
+              className = "time create-task-input"
+              type = "time"
+              name = "endTime"
+              value = {input.endTime}
+              onChange = {() => handleInputChange(event)} 
+            />
+          </div>
           <input 
-            className = "time create-task-input"
-            type = "time" 
-            name = "startTime"
-            value = {input.startTime}
-            onChange = {() => handleInputChange(event)}
-          />
-          <div className = "time-divider">-</div>
-          <input 
-            className = "time create-task-input"
-            type = "time"
-            name = "endTime"
-            value = {input.endTime}
+            className = "date create-task-input" 
+            type = "date" 
+            name = "date"
+            value = {input.date}
             onChange = {() => handleInputChange(event)} 
           />
+          <span className = "line-divider"></span>
+          <button onClick = {() => addTask()}>ADD</button>
+          <img className = "options" src = "https://app.clockify.me/assets/ui-icons/menu-dots-vertical.svg" alt = "" />
         </div>
-        <input 
-          className = "date create-task-input" 
-          type = "date" 
-          name = "date"
-          value = {input.date}
-          onChange = {() => handleInputChange(event)} 
-        />
-        <span className = "line-divider"></span>
-        <button onClick = {() => addTask()}>ADD</button>
-        <img className = "options" src = "https://app.clockify.me/assets/ui-icons/menu-dots-vertical.svg" alt = "" />
+        
       </div>
       <h4 style = {{display: props.newTaskMessage ? 'block' : 'none'}}>A new task has been created!</h4>
     </div>
