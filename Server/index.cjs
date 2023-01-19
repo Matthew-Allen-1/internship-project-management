@@ -133,6 +133,7 @@ app.get('/user', async (req, res) => {
 
 // Jwt verification checks to see if there is an authorization header with a valid jwt in it.
 app.use(async function verifyJwt(req, res, next) {
+  console.log(req.headers.authorization)
   if (!req.headers.authorization) {
     res.json('Invalid authorization, no authorization headers');
   }

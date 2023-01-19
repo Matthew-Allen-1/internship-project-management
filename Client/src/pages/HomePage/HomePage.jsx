@@ -351,11 +351,14 @@ export default function Home(){
     {
       refetchOnWindowFocus: false,
     }
+
   );
 
   if(isLoading){
     return <h1>Loading...</h1>
   }
+
+  console.log(data)
 
   return (
     <div className = "App">
