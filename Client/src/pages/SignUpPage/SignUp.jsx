@@ -1,7 +1,8 @@
 // Libraries
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import { useQuery } from 'react-query';
 import {Link, useNavigate} from 'react-router-dom'
+import { UserContext } from '../../context/UserContext'
 
 // API Services
 import { setJwt } from '../../ApiServices/JwtService';
@@ -16,6 +17,8 @@ import './SignUp.css'
 
 
 export default function Login(){
+  const { loginUser } = useContext(UserContext);
+
   // initialize, states, destructuring
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -62,7 +65,10 @@ export default function Login(){
     // refetch call
     const registerResponse = await refetch();
     if (!registerResponse.isError && registerResponse.data.jwt) {
-      setJwt(registerResponse.data.jwt);
+      const token = registerResponse.data.jwt
+      setJwt(token);
+      const payload = JSON.parse(window.atob(token.split(".")[1]))
+      loginUser(payload);
       navigate('/task-manager');
     } else{
       setResponseMessage({state: true, error: 'error', msg: 'This email is already in use.'})

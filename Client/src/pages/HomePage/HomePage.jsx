@@ -1,7 +1,8 @@
 // Libraries
 import {nanoid} from 'nanoid'
 import { useQuery, useMutation } from 'react-query'
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
+import { UserContext } from '../../context/UserContext'
 
 // Components
 import Navbar from '../../Components/Navbar/Navbar'
@@ -21,16 +22,14 @@ import { fetchTasks,  addTaskRequest  } from '../../ApiServices/TasksService'
 import './HomePage.css'
 
 export default function Home(){
-
-// This is a request that returns the backend data
-  const { data: backendData, isLoading, isError } = useQuery(
+  const { currentUser }= useContext(UserContext);
+  const { data: backendData , isLoading: backendLoading, isError: backendError , refetch} = useQuery(
     'tasks', 
     fetchTasks,
     {
       refetchOnWindowFocus: false,
     }
   );
-  console.log(backendData);
 
   const btnRef = useRef();
   const firstRender = useRef(true);
@@ -48,6 +47,7 @@ export default function Home(){
   const [taskDropdownSearch, setTaskDropdownSearch] = useState('')
   const [taskDropdownActive, setTaskDropdownActive] = useState(false)
   const [newTaskMessage, setNewTaskMessage] = useState(false)
+
   
   const { mutate } = useMutation((newTask) => addTaskRequest(newTask));
 // sends task and group data to backend when either is changed.
@@ -61,7 +61,22 @@ export default function Home(){
     }
   }, [taskData, groupData])
 
+  // handles click outside dropdown menu
+  useEffect(() =>{
+    // console.log("useEffect function called");
+    const closeDropdown = e => {
+      if(e.composedPath()[0] !== btnRef.current && e.target.name !== 'group'){
+        setDropdownActive(prevDrop => false);
+      }
+    }
+    document.body.addEventListener('click', closeDropdown);
+    return () => document.body.removeEventListener('click', closeDropdown);
+  }, [])
 
+  if( backendLoading ) return <p>Loading...</p>
+  if(backendError) return <p>An Error occurred</p>
+
+  
   // Changes the group selection in the sidebar on click.
   function handleGroupSelection(event, index) {
 
@@ -249,17 +264,6 @@ export default function Home(){
     else {setTaskDropdownSearch(event.target.value)}
   }
 
-  // handles click outside dropdown menu
-  useEffect(() =>{
-    // console.log("useEffect function called");
-    const closeDropdown = e => {
-      if(e.composedPath()[0] !== btnRef.current && e.target.name !== 'group'){
-        setDropdownActive(prevDrop => false);
-      }
-    }
-    document.body.addEventListener('click', closeDropdown);
-    return () => document.body.removeEventListener('click', closeDropdown);
-  }, [])
 
   // makes options clickable in dropdown and selects them to show
   function dropdownSelected(event){
@@ -355,8 +359,6 @@ export default function Home(){
       }, 5000)
   }
 
-  if(isLoading) return <p>Loading...</p>
-  if(isError) return <p>An Error occurred</p>
 
   return (
     <div className = "App">

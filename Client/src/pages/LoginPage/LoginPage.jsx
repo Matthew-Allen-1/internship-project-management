@@ -1,7 +1,8 @@
 // Libraries
 import { useQuery } from 'react-query'
-import React,{ useState } from 'react';
+import React,{ useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
+import { UserContext } from '../../context/UserContext'
 
 // Authentication
 import { setJwt } from '../../ApiServices/JwtService'
@@ -16,6 +17,8 @@ import './LoginPage.css'
 
 
 export default function Login(){
+  const { loginUser } = useContext(UserContext);
+
 // initialize and states
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -53,13 +56,18 @@ export default function Login(){
     }
     // refetch call
     const loginResponse  = await refetch();
+
     if (!loginResponse.isError && loginResponse.data.jwt) {
-      setJwt(loginResponse.data.jwt);
+      const token = loginResponse.data.jwt
+      setJwt(token);
+      const payload = JSON.parse(window.atob(token.split(".")[1]))
+      loginUser(payload);
       navigate('/task-manager');
     } else{
       setResponseMessage({state: true, error: 'error', msg: 'Sorry, We could not find a user with this login information'})
     }
   }
+
 
 // show password button styling
   function password(event){setShowPassword(prevPass => !prevPass);}
