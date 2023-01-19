@@ -37,6 +37,11 @@ export default function Task(props){
     else {return}
   })
 
+
+  const handleClick = () => {
+    deleteTaskById(task.id);
+  };
+
   // handles click outside dropdown menu
 
   // React.useEffect(() =>{

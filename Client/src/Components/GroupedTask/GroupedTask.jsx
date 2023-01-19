@@ -17,7 +17,7 @@ export default function GroupedTask(props){
 
   const { groupData, setGroupData, taskData, setTaskData, groupSelection, handleInputChange, 
     dropdown, dropdownEnter, dropdownFilter, dropdownSelected, 
-    taskDropdownActive, setTaskDropdownActive, taskDropdownSearch, setTaskDropdownSearch} = props;
+    taskDropdownActive, setTaskDropdownActive, taskDropdownSearch, setTaskDropdownSearch, deleteTaskById} = props;
 
   const defaultTaskData = {
     title: 'Task that was added',
@@ -107,6 +107,7 @@ export default function GroupedTask(props){
         dropdownEnter = {dropdownEnter}
         dropdownSelected={dropdownSelected}
         taskDropdownSearch={taskDropdownSearch}
+        deleteTaskById={deleteTaskById}
         selectAll={selectAll}
       />
     )
