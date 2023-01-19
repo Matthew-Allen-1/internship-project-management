@@ -8,6 +8,7 @@ import { fetchTasks } from '../../ApiServices/TasksService'
 
 // Components
 import Task from '../Task/Task'
+import OptionsMenu from '../OptionsMenu'
 
 //Styling
 import './GroupedTask.css'
@@ -18,6 +19,12 @@ export default function GroupedTask(props){
   const { groupData, setGroupData, taskData, setTaskData, groupSelection, handleInputChange, 
     dropdown, dropdownEnter, dropdownFilter, dropdownSelected, 
     taskDropdownActive, setTaskDropdownActive, taskDropdownSearch, setTaskDropdownSearch, deleteTaskById} = props;
+
+  const [selectAll, setSelectAll] = useState(false);
+
+  const { data, isLoading, isError } = useQuery('tasks', fetchTasks);
+  if(isLoading) return <p>Loading...</p>
+  if(isError) return <p>An Error occurred</p>
 
   const defaultTaskData = {
     title: 'Task that was added',

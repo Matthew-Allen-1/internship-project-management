@@ -354,31 +354,22 @@ export default function Home(){
       }, 5000)
   }
 
-  const { data, isLoading } = useQuery(
-    '/tasks', 
-    ()=> fetchTasks(),
-    {
-      refetchOnWindowFocus: false,
-    }
-    console.log('Task Data After Add Task: ', taskData)
-    console.log('Group Data After Add Task: ', groupData)
-  }
+  // const { data, isLoading } = useQuery(
+  //   '/tasks'
+  //   ()=> fetchTasks(),
+  //   {
+  //     refetchOnWindowFocus: false,
+  //   }
+  // };
 
+  // if(isLoading){
+  //   return <h1>Loading...</h1>
+  // }
   
+  // removed "user={data?.name}" in Navbar for code to work
   return (
     <div className = "App">
-      <Navbar user={data?.name} />
-      <Sidebar 
-        groupData = {groupData}
-        handleGroupSelection = {handleGroupSelection}
-        groupSelection = {groupSelection}
-        groupSidebarStyles = {groupSidebarStyles}
-      />
-      <main>
-        <div className = "task-section">
-          <CreateTask 
-    <div className = "App">
-      <Navbar user={data?.name} />
+      <Navbar />
       <Sidebar 
         groupData = {groupData}
         handleGroupSelection = {handleGroupSelection}
@@ -420,12 +411,7 @@ export default function Home(){
             setTaskDropdownSearch = {setTaskDropdownSearch}
 
             newTaskMessage = {newTaskMessage}
-
-            newTaskMessage = {newTaskMessage}
           />
-        </div>
-      </main>
-    </div>
         </div>
       </main>
     </div>
