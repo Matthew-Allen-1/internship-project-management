@@ -1,7 +1,7 @@
 // Libraries
 import React from 'react'
 import {nanoid} from 'nanoid'
-import OptionsDropDown from './OptionsDropDown';
+import OptionsDropDown from '../OptionsDropDown';
 
 // Styling
 import './Task.css'
@@ -9,7 +9,7 @@ import './Task.css'
 
 export default function Task(props){
 
-  const {groupData, task, handleInputChange, dropdown, dropdownEnter, dropdownFilter, dropdownSelected, taskDropdownSearch} = props;
+  const {groupData, task, handleInputChange, dropdown, dropdownEnter, dropdownFilter, dropdownSelected, taskDropdownSearch, deleteTaskById} = props;
 
   const taskBtnRef = React.useRef();
   const newClassList = task.dropdownActive ? "task-dropdown-content task-dropdown-show" : "task-dropdown-content";
@@ -52,6 +52,11 @@ export default function Task(props){
   // }, [])
 
   //displays information about each task
+
+  const handleClick = () => {
+    deleteTaskById(task.id);
+  };
+
   return(
     <div className="created-task">
       <input 
@@ -110,7 +115,8 @@ export default function Task(props){
       <span className="line-divider"></span>
       <span>Time: {props.elapsedTime}</span>
       {/* <img className="options" src="https://app.clockify.me/assets/ui-icons/menu-dots-vertical.svg" alt="" /> */}
-      <OptionsDropDown />
+      <OptionsDropDown className="delete" onClick={handleClick} />
+    
     </div>
   )
 }

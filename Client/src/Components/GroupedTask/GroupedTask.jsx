@@ -13,7 +13,7 @@ import Task from '../Task/Task'
 import './GroupedTask.css'
 
 
-export default function GroupedTask(props, deleteTaskById){
+export default function GroupedTask(props){
 
   const { data, isLoading, isError } = useQuery('tasks', fetchTasks);
   if(isLoading) return <p>Loading...</p>
@@ -21,7 +21,11 @@ export default function GroupedTask(props, deleteTaskById){
 
   const { groupData, setGroupData, taskData, setTaskData, groupSelection, handleInputChange, 
     dropdown, dropdownEnter, dropdownFilter, dropdownSelected, 
-    taskDropdownActive, setTaskDropdownActive, taskDropdownSearch, setTaskDropdownSearch} = props;
+    taskDropdownActive, setTaskDropdownActive, taskDropdownSearch, setTaskDropdownSearch, deleteTaskById} = props;
+
+  // const handleClick = () => {
+  //   deleteTaskById(props.id);
+  // };
 
   const defaultTaskData = {
     title: 'Task that was added',
@@ -101,7 +105,6 @@ export default function GroupedTask(props, deleteTaskById){
   function TaskComponent (task) {
     return(
       <Task 
-        deleteTaskById = {deleteTaskById}
         key = {task.id} 
         task = {task} 
         elapsedTime = {convertElapsedToText(calcElapsedTime(task))}
@@ -112,6 +115,7 @@ export default function GroupedTask(props, deleteTaskById){
         dropdownEnter = {dropdownEnter}
         dropdownSelected={dropdownSelected}
         taskDropdownSearch={taskDropdownSearch}
+        deleteTaskById = {deleteTaskById}
       />
     )
   }

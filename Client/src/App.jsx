@@ -27,12 +27,12 @@ export default function App() {
     <Router>
       {/* <UserContext.Provider value={{ userData, userLoading, userError }}> */}
       <Routes>
-        <Route path = "/" element = {<SignUp />} />
-        <Route path = "/Login" element = {<Login />} />
+        {/* <Route path = "/" element = {<SignUp />} />
+        <Route path = "/Login" element = {<Login />} /> */}
 
-        <Route element={ <PrivateRoutes/>}>
+        {/* <Route element={ <PrivateRoutes/>}> */}
           <Route path = "/task-manager" element = {<Home/>}/>
-        </Route>
+        {/* </Route> */}
       </Routes>
       {/* </UserContext.Provider> */}
     </Router>

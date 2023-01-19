@@ -308,9 +308,9 @@ export default function Home(){
     createDropdown ? setDropdownActive(prevDrop => !prevDrop) : setTaskDropdownActive(prevTaskDropDownActive => !prevTaskDropDownActive)
   }
 
-  // delete task by id? Am i filtering through tasks or groups?
+  // delete task by id
   const deleteTaskById = (id) => {
-    const updatedTask = tasks.filter((task) => {
+    const updatedTask = taskData.filter((task) => {
         return task.id !== id;
     });
 

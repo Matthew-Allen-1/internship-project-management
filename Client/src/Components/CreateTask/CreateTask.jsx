@@ -91,7 +91,6 @@ export default function CreateTask(props){
         <span className = "line-divider"></span>
         <button onClick = {() => addTask()}>ADD</button>
         {/* <img className = "options" src = "https://app.clockify.me/assets/ui-icons/menu-dots-vertical.svg" alt = "" /> */}
-        <OptionsDropDown />
       </div>
       <h4 style = {{display: props.newTaskMessage ? 'block' : 'none'}}>A new task has been created!</h4>
     </div>
