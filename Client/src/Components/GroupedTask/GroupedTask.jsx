@@ -8,6 +8,7 @@ import { fetchTasks } from '../../ApiServices/TasksService'
 
 // Components
 import Task from '../Task/Task'
+import OptionsMenu from '../OptionsMenu'
 
 //Styling
 import './GroupedTask.css'
@@ -17,7 +18,8 @@ export default function GroupedTask(props){
 
   const { groupData, setGroupData, taskData, setTaskData, groupSelection, handleInputChange, 
     dropdown, dropdownEnter, dropdownFilter, dropdownSelected, 
-    taskDropdownActive, setTaskDropdownActive, taskDropdownSearch, setTaskDropdownSearch} = props;
+    taskDropdownActive, setTaskDropdownActive, taskDropdownSearch, setTaskDropdownSearch, deleteTaskById} = props;
+
   const [selectAll, setSelectAll] = useState(false);
 
   const { data, isLoading, isError } = useQuery('tasks', fetchTasks);
@@ -116,6 +118,7 @@ export default function GroupedTask(props){
         dropdownEnter = {dropdownEnter}
         dropdownSelected={dropdownSelected}
         taskDropdownSearch={taskDropdownSearch}
+        deleteTaskById={deleteTaskById}
         selectAll={selectAll}
       />
     )
@@ -130,9 +133,9 @@ export default function GroupedTask(props){
       TaskComponent(task)
     )}
   })
+    // console.log('taskElementArrays', taskElementArrays)
 
-  // console.log('taskElementArrays', taskElementArrays)
-  //Create an array of total times corresponding to the dates in dateList.
+      //Create an array of total times corresponding to the dates in dateList.
   const timeTotals = taskElementArrays.map((taskArray, index) => {
     // console.log('taskArray', taskArray)
     return taskArray.reduce((runningTotal, currentTask) => {

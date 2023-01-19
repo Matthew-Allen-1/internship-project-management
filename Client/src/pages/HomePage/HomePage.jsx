@@ -308,6 +308,15 @@ export default function Home(){
     createDropdown ? setDropdownActive(prevDrop => !prevDrop) : setTaskDropdownActive(prevTaskDropDownActive => !prevTaskDropDownActive)
   }
 
+  // delete task by id
+  const deleteTaskById = (id) => {
+    const updatedTask = taskData.filter((task) => {
+        return task.id !== id;
+    });
+
+    setTaskData(updatedTask);
+  };
+
   // adds the 'input' state into the currently selected task in 'taskData' state.
   function addTask(){
     // console.log("addTask function called");
@@ -346,19 +355,16 @@ export default function Home(){
   }
 
   const { data, isLoading } = useQuery(
-    '/tasks', 
+    '/tasks',
     ()=> fetchTasks(),
     {
       refetchOnWindowFocus: false,
     }
-
-  );
+  )
 
   if(isLoading){
     return <h1>Loading...</h1>
   }
-
-  console.log(data)
 
   return (
     <div className = "App">
@@ -390,6 +396,7 @@ export default function Home(){
             setGroupData = {setGroupData}
             taskData = {taskData}
             setTaskData = {setTaskData}
+            deleteTaskById = {deleteTaskById}
 
             groupSelection = {groupSelection}
             handleInputChange = {handleInputChange}

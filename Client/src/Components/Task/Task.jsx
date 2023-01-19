@@ -4,6 +4,8 @@ import {nanoid} from 'nanoid'
 
 // Styling
 import './Task.css'
+import OptionsMenu from '../OptionsMenu';
+// import OptionsDropDown from '../OptionsDropDown';
 
 
 export default function Task(props){
@@ -22,6 +24,11 @@ export default function Task(props){
     else {return}
   })
 
+
+  const handleClick = () => {
+    deleteTaskById(task.id);
+  };
+
   // handles click outside dropdown menu
 
   // React.useEffect(() =>{
@@ -38,11 +45,8 @@ export default function Task(props){
   //displays information about each task
   return(
     <div className="created-task-container">
-
       <div className="created-task">
-
         <div className="left-box">
-
           <div className="task-input">
             {props.selectAll && <input type="checkbox"/>}
             <input 
@@ -54,9 +58,7 @@ export default function Task(props){
               onChange = {() => handleInputChange(event)} 
             />
           </div>
-
           <span className="line-divider"></span>
-
           <div className="task-dropdown">
             <div className="group task-drop-btn" onClick={() => dropdown(event)}>
               <p key = {task.groupId} id = {'group#' + task.id} ref = {taskBtnRef}>{task.groupTitle}</p>
@@ -75,16 +77,12 @@ export default function Task(props){
               {newGroupListElements}
             </div>
           </div>
-
           <div className="task-elapsed-time">
             <span className="elapsed-time">{props.elapsedTime != '0:00' ? 'Time: ' + props.elapsedTime : ''}</span>
             <img className="options" src="https://app.clockify.me/assets/ui-icons/menu-dots-vertical.svg" alt="" />
           </div>
-
         </div>
-
         <div className="right-box">
-
           <span className="line-divider"></span>
           <div className="task-time">
             <input 
@@ -117,14 +115,10 @@ export default function Task(props){
           <span className="line-divider"></span>
           <div className="task-elapsed-time">
             <span className="elapsed-time">{props.elapsedTime != '0:00' ? 'Time: ' + props.elapsedTime : ''}</span>
-            <img className="options" src="https://app.clockify.me/assets/ui-icons/menu-dots-vertical.svg" alt="" />
+            <OptionsMenu />
           </div>
-          
         </div>
-
       </div>
-
     </div>
-
   )
 }
