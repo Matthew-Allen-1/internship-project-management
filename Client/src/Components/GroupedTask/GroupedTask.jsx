@@ -1,5 +1,5 @@
 // Libraries
-import React from 'react'
+import React, { useState } from 'react'
 import {nanoid} from 'nanoid'
 import { useQuery, useMutation } from 'react-query'
 
@@ -15,17 +15,9 @@ import './GroupedTask.css'
 
 export default function GroupedTask(props){
 
-  const { data, isLoading, isError } = useQuery('tasks', fetchTasks);
-  if(isLoading) return <p>Loading...</p>
-  if(isError) return <p>An Error occurred</p>
-
   const { groupData, setGroupData, taskData, setTaskData, groupSelection, handleInputChange, 
     dropdown, dropdownEnter, dropdownFilter, dropdownSelected, 
-    taskDropdownActive, setTaskDropdownActive, taskDropdownSearch, setTaskDropdownSearch, deleteTaskById} = props;
-
-  // const handleClick = () => {
-  //   deleteTaskById(props.id);
-  // };
+    taskDropdownActive, setTaskDropdownActive, taskDropdownSearch, setTaskDropdownSearch} = props;
 
   const defaultTaskData = {
     title: 'Task that was added',
@@ -115,7 +107,7 @@ export default function GroupedTask(props){
         dropdownEnter = {dropdownEnter}
         dropdownSelected={dropdownSelected}
         taskDropdownSearch={taskDropdownSearch}
-        deleteTaskById = {deleteTaskById}
+        selectAll={selectAll}
       />
     )
   }
@@ -130,20 +122,6 @@ export default function GroupedTask(props){
     )}
   })
 
-  console.log('taskElementArrays', taskElementArrays)
-  //Create an array of total times corresponding to the dates in dateList.
-  const timeTotals = taskElementArrays.map((taskArray, index) => {
-    console.log('taskArray', taskArray)
-    return taskArray.reduce((runningTotal, currentTask) => {
-      console.log('runningTotal', runningTotal)
-      console.log('currentTask', currentTask)
-      console.log('elapsed current', calcElapsedTime(currentTask))
-      return (runningTotal + calcElapsedTime(currentTask.props.task))
-    }, 0)
-  })
-
-  console.log('timeTotals', timeTotals)
-
   //Create an array of divs corresponding to the dates in dateList
   const dateTaskElements = taskElementArrays.filter(taskElementArray => taskElementArray.length != 0)
   .map((taskElementArray, index) => {
@@ -155,9 +133,10 @@ export default function GroupedTask(props){
     return(
       <div key = {index}>
         <div className = "task-header">
+          {selectAll && <input type="checkbox"/>}
           <p className = "left" >{dateStr}</p>
           <div className = "right">
-            <p>Total Time: {convertElapsedToText(timeTotals[index])}</p>
+            <p>Total: 00:01:00</p>
             <img src = "https://app.clockify.me/assets/ui-icons/bulk-edit.svg" alt = "" />
           </div>
         </div>
