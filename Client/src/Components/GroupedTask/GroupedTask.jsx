@@ -129,6 +129,25 @@ export default function GroupedTask(props){
       TaskComponent(task)
     )}
   })
+    // console.log('taskElementArrays', taskElementArrays)
+
+      //Create an array of total times corresponding to the dates in dateList.
+  const timeTotals = taskElementArrays.map((taskArray, index) => {
+    // console.log('taskArray', taskArray)
+    return taskArray.reduce((runningTotal, currentTask) => {
+      // console.log('runningTotal', runningTotal)
+      // console.log('currentTask', currentTask)
+      // console.log('elapsed current', calcElapsedTime(currentTask))
+      return (runningTotal + calcElapsedTime(currentTask.props.task))
+    }, 0)
+  })
+
+  // console.log('timeTotals', timeTotals)
+
+  function handleSelect() {
+    console.log(selectAll)
+    setSelectAll(prevSelect => !prevSelect);
+  }
 
   //Create an array of divs corresponding to the dates in dateList
   const dateTaskElements = taskElementArrays.filter(taskElementArray => taskElementArray.length != 0)
@@ -144,8 +163,8 @@ export default function GroupedTask(props){
           {selectAll && <input type="checkbox"/>}
           <p className = "left" >{dateStr}</p>
           <div className = "right">
-            <p>Total: 00:01:00</p>
-            <img src = "https://app.clockify.me/assets/ui-icons/bulk-edit.svg" alt = "" />
+            <p>Total Time: {convertElapsedToText(timeTotals[index])}</p>
+            <img onClick={handleSelect} src = "https://app.clockify.me/assets/ui-icons/bulk-edit.svg" alt = "" />
           </div>
         </div>
         {taskElementArray}

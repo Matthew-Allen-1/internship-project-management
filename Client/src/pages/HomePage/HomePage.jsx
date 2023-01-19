@@ -354,22 +354,21 @@ export default function Home(){
       }, 5000)
   }
 
-  // const { data, isLoading } = useQuery(
-  //   '/tasks'
-  //   ()=> fetchTasks(),
-  //   {
-  //     refetchOnWindowFocus: false,
-  //   }
-  // };
+  const { data, isLoading } = useQuery(
+    '/tasks',
+    ()=> fetchTasks(),
+    {
+      refetchOnWindowFocus: false,
+    }
+  )
 
-  // if(isLoading){
-  //   return <h1>Loading...</h1>
-  // }
+  if(isLoading){
+    return <h1>Loading...</h1>
+  }
   
-  // removed "user={data?.name}" in Navbar for code to work
   return (
     <div className = "App">
-      <Navbar />
+      <Navbar user={data?.name} />
       <Sidebar 
         groupData = {groupData}
         handleGroupSelection = {handleGroupSelection}
