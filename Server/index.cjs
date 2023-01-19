@@ -80,7 +80,8 @@ app.post('/register', async function (req, res) {
         encodedUser = jwt.sign(
           { 
             userId: user.insertId,
-            ...req.body
+            name: user.name,
+            email: user.email
           },
           process.env.JWT_KEY
         );
@@ -101,7 +102,6 @@ app.post('/register', async function (req, res) {
 // authenticates user when they log in
 app.post('/authenticate', async function (req, res) {
   try {
-    console.log('ONE')
     const { email, password } = req.body;
     const [[user]] = await req.db.query(`SELECT * FROM users WHERE email = :email`, {  email });
 
@@ -113,6 +113,7 @@ app.post('/authenticate', async function (req, res) {
       const payload = {
         userId: user.id,
         name: user.name,
+        email: user.email,
       }
       
       const encodedUser = jwt.sign(payload, process.env.JWT_KEY);
