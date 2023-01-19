@@ -4,6 +4,8 @@ import {nanoid} from 'nanoid'
 
 // Styling
 import './Task.css'
+import OptionsMenu from '../OptionsMenu';
+// import OptionsDropDown from '../OptionsDropDown';
 
 
 export default function Task(props){
@@ -36,6 +38,11 @@ export default function Task(props){
     } 
     else {return}
   })
+
+
+  const handleClick = () => {
+    deleteTaskById(task.id);
+  };
 
   // handles click outside dropdown menu
 
@@ -116,7 +123,7 @@ export default function Task(props){
           />
           <span className="line-divider"></span>
           <span className="elapsed-time">Time: {props.elapsedTime}</span>
-          <img className="options" src="https://app.clockify.me/assets/ui-icons/menu-dots-vertical.svg" alt="" />
+        <OptionsMenu />
         </div>
       </div>
     </div>
