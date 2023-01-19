@@ -6,7 +6,7 @@ export default function Sidebar(props) {
     //Create an array of divs corresponding to inputted group names.
     const fixedGroupElements = props.groupData.slice(0, 2).map((group, index) => {
         return(
-            <div key = {group.id} className = 'fixed-group' 
+            <div key = {group.id} className = 'group' 
                 onClick = {() => props.handleGroupSelection(event, index)} 
                 style = {props.groupSidebarStyles[index]}
             >

@@ -1,5 +1,6 @@
 .task-header{
   margin: 20px 20px 0px 20px;
+  /* padding: 15px; */
   display: flex;
   justify-content: space-between;
   background-color: #e4eaee;
@@ -8,12 +9,14 @@
 
 .task-header .left{
   margin-left: 5px;
+  margin-top: 10px;
   text-align: left;
   flex-grow: 1;
 }
 
 .task-header .right{
   display: flex;
+  margin-top: 10px;
 }
 
 .task-header .right img{

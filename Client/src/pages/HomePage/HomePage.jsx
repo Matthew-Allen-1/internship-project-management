@@ -365,7 +365,7 @@ export default function Home(){
   if(isLoading){
     return <h1>Loading...</h1>
   }
-  
+
   return (
     <div className = "App">
       <Navbar user={data?.name} />

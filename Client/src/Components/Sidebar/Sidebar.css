@@ -21,6 +21,7 @@
   border-radius: 5px;
   margin: 10px 0px;
   border: 1px solid grey;
+  cursor: pointer;
 }
 
 #groups .fixed-group {
