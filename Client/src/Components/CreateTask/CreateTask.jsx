@@ -35,17 +35,22 @@ export default function CreateTask(props){
     <div className="create-task-container">
 
       <div className = "create-task">
+
         <div className="left-box">
-          <input 
-            className="input create-task-input" 
-            id="create-task-title-input"
-            placeholder="Input task here..."
-            type="text"
-            name="title"
-            value={input.title}
-            onChange={() => handleInputChange(event)} 
-          />
-          <div className = "dropdown create-task-dropdown" >
+          
+          <div className = "create-task-input-container">
+            <input 
+              className="input create-task-input" 
+              id="create-task-title-input"
+              placeholder="Input task here..."
+              type="text"
+              name="title"
+              value={input.title}
+              onChange={() => handleInputChange(event)} 
+            />
+          </div>
+
+          <div className = "dropdown create-task-dropdown-container" >
             <div className = "group dropbtn create-task-dropdown" onClick = {() => dropdown(event)}>
               <img className = "create-task-dropdown" src = "https://app.clockify.me/assets/ui-icons/plus-blue-req.svg" alt = "" />
               {groupElement}
@@ -64,11 +69,13 @@ export default function CreateTask(props){
               {groupListElements}
             </div>
           </div>
+
         </div>
         
         <div className="right-box">
           <span className = "line-divider"></span>
-          <div className = "time">
+
+          <div className = "create-task-time-container">
             <input 
               className = "time create-task-input"
               type = "time" 
@@ -85,16 +92,22 @@ export default function CreateTask(props){
               onChange = {() => handleInputChange(event)} 
             />
           </div>
-          <input 
-            className = "date create-task-input" 
-            type = "date" 
-            name = "date"
-            value = {input.date}
-            onChange = {() => handleInputChange(event)} 
-          />
+
+          <span className="line-divider"></span>
+          
+          <div className = "create-task-date-container">
+            <input 
+              className = "date create-task-input" 
+              type = "date" 
+              name = "date"
+              value = {input.date}
+              onChange = {() => handleInputChange(event)} 
+            />
+          </div>
+
           <span className = "line-divider"></span>
           <button onClick = {() => addTask()}>ADD</button>
-          {/* <img className = "options" src = "https://app.clockify.me/assets/ui-icons/menu-dots-vertical.svg" alt = "" /> */}
+          <img className = "options" src = "https://app.clockify.me/assets/ui-icons/menu-dots-vertical.svg" alt = "" />
         </div>
         
       </div>

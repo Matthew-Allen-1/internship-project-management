@@ -3,6 +3,12 @@
   height: 200px;
 }
 
+.line-divider{
+  width: 1px;
+  height: 40px;
+  border-right: 1px dotted rgb(215, 215, 215);
+}
+
 .create-task-container{
   display: flex;
   flex-direction: column;
@@ -24,7 +30,18 @@
   border: 1px solid  rgb(215, 215, 215);
   flex-grow: 1;
   border-right: none;
+  width: 40%;
 }
+  
+  .create-task .left-box .create-task-input-container {
+    width: 50%;
+    justify-content: center;
+  }
+
+  .create-task .left-box .create-task-dropdown-container {
+    width: 50%;
+    justify-content: center;
+  }
 
 .create-task .right-box{
   display: flex;
@@ -34,16 +51,37 @@
   border: 1px solid  rgb(215, 215, 215);
   border-left: none;
   flex-grow: 1;
+  width: 60%;
 }
 
-.create-task .input{
+.create-task .right-box .create-task-time-container {
+  width: 48%;
+  justify-content: center;
+}
+
+.create-task .right-box .create-task-date-container {
+  width: 26%;
+  justify-content: center;
+}
+
+.create-task .right-box .create-task-add-button-container {
+  width: 26%;
+  justify-content: flex-end;
+}
+
+.create-task .create-task-time-container{
   display: flex;
   justify-content: flex-start;
   height: 35px;
   margin: 5px;
-  border: 1px solid transparent;
   flex-grow: 1;
 }
+
+.create-task .input{
+  height: 35px;
+  margin: 5px;
+}
+
 .create-task .input:hover{
   border-color: rgb(215, 215, 215);
 }
@@ -72,7 +110,7 @@
   align-items: center;
 }
 
-.create-task .time input{
+.create-task .create-task-time-container input{
   height: 35px;
   margin: 5px;
   width: 90px;
