@@ -18,3 +18,11 @@ export const addTaskRequest = async (newTask) => {
     return { data: [], error: err }
   }
 }
+
+export const addGroupRequest = async (newGroup) => {
+  try{
+    return post(`${API_URL}/add-group`, newGroup);
+  } catch(err){
+    return { data: [], error: err } 
+  }
+}

@@ -6,27 +6,41 @@ import './CreateTask.css'
 
 export default function CreateTask(props){
 
-  const {groupData, input, handleInputChange, addTask, btnRef, 
-    dropdown, dropdownActive, dropdownEnter, dropdownFilter, dropdownSearch, dropdownSelected} = props;
+  const {groupData, input, handleInputChange, addTask, btnRef/*, 
+    dropdown*/, dropdownActive, dropdownEnter, dropdownFilter, dropdownSearch/*, dropdownSelected*/} = props;
 
-  const classList = dropdownActive ? "dropdown-content show" : "dropdown-content";
+  const [selected, setSelected] = useState('');
+  const [active, setActive] = useState(false)
+  function dropdownSelected(event) {
+    setSelected(event.target.id)
+    setActive(false)
+  }
 
+  function dropdown() {
+    setActive(prevActive => !prevActive)
+  }
+
+  const classList = active ? "dropdown-content show" : "dropdown-content";
   
   // displays elements in dropdown
   const groupListElements = groupData.map(group => {
-    if(group.id != 0 && group.id != 1) {
+    if(group.group_id != 0 && group.group_id != 1) {
       if(dropdownSearch == "") {
-        return <p key = {group.id} id = {group.id} className = "create-dropdown-group" onClick={() => dropdownSelected(event)}>{group.title}</p>
+        return <p key = {group.group_id} id = {group.group_id} className = "create-dropdown-group" onClick={(event) => dropdownSelected(event)}>{group.title}</p>
       } 
       else if (group.title.toUpperCase().indexOf(dropdownSearch.toUpperCase()) === 0 && group.title != "Group") {
-        return <p key = {group.id} id = {group.id} className = "create-task-dropdown-group" onClick={() => dropdownSelected(event)}>{group.title}</p>
+        return <p key = {group.group_id} id = {group.group_id} className = "create-task-dropdown-group" onClick={(event) => dropdownSelected(event)}>{group.title}</p>
       }
     }
   })
 
   // switches group name to name of current group selected
-  const groupElement = groupData.map(group => {
-    if(group.selected == true) {return <p key = {group.id} className = "create-task-dropdown" ref = {btnRef}>{group.title}</p>}
+  // const groupElement = groupData.map(group => {
+  //   if(group.selected == true) {return <p key = {group.group_id} className = "create-task-dropdown" ref = {btnRef}>{group.title}</p>}
+  // })
+
+  const groupElement = groupData.filter(group => selected === group.group_id).map(group => {
+    return <p key = {group.group_id} className = "create-task-dropdown" ref = {btnRef}>{group.title}</p>
   })
 
   // console.log('props.newTaskMessage', props.newTaskMessage)
@@ -48,7 +62,7 @@ export default function CreateTask(props){
           <div className = "dropdown create-task-dropdown" >
             <div className = "group dropbtn create-task-dropdown" onClick = {() => dropdown(event)}>
               <img className = "create-task-dropdown" src = "https://app.clockify.me/assets/ui-icons/plus-blue-req.svg" alt = "" />
-              {groupElement}
+              {selected == '' ? 'Group' : groupElement}
             </div>
             <div id = "group-dropdown" className = {classList} >
               <input 

@@ -4,6 +4,8 @@ const UserContext = createContext(null);
 
 function UserProvider({children}) {
   const [currentUser, setCurrentUser] = useState(null);
+  const [testTask, setTestTask] = useState([]);
+  const [testGroup, setTestGroup] = useState([]);
 
   function loginUser(payload) {
     setCurrentUser({ ...payload })

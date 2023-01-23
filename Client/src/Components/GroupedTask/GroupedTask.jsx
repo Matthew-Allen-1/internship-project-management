@@ -19,10 +19,10 @@ export default function GroupedTask(props){
 
   const defaultTaskData = {
     title: 'Task that was added',
-    groupTitle: 'Group that was chosen',
-    groupId: 0,
-    startTime: '12:00',
-    endTime: '12:00',
+    group_title: 'Group that was chosen',
+    group_id: 0,
+    start_time: '12:00',
+    end_time: '12:00',
     date: '1/1/00'
   }
 
@@ -49,11 +49,11 @@ export default function GroupedTask(props){
   }
 
   function calcElapsedTime(task) {
-    if (!task.startTime || !task.endTime ) {return 0}
+    if (!task.start_time || !task.end_time ) {return 0}
     else {
-      const endTimeInMinutes = parseInt(task.endTime.slice(0, 2)) * 60 + parseInt(task.endTime.slice(3, 5))
-      const startTimeInMinutes = parseInt(task.startTime.slice(0, 2)) * 60 + parseInt(task.startTime.slice(3, 5))
-      const duration = endTimeInMinutes - startTimeInMinutes
+      const end_timeInMinutes = parseInt(task.end_time.slice(0, 2)) * 60 + parseInt(task.end_time.slice(3, 5))
+      const start_timeInMinutes = parseInt(task.start_time.slice(0, 2)) * 60 + parseInt(task.start_time.slice(3, 5))
+      const duration = end_timeInMinutes - start_timeInMinutes
       return duration < 0 ? (duration + Math.ceil(Math.abs(duration) / 1440) * 1440) : duration
     }
   }
@@ -67,7 +67,7 @@ export default function GroupedTask(props){
 
 //Filter task list according to the group selected in the sidebar.
   const filteredTasks = taskData.filter((task, index) => {
-    const indexOfGroupSelection = groupData.map(group => group.id).indexOf(groupSelection)
+    const indexOfGroupSelection = groupData.map(group => group.group_id).indexOf(groupSelection)
     if (groupSelection == 0 || index == 0) {return true}
     else {return groupData[indexOfGroupSelection].taskIds.indexOf(task.id) >= 0}
  })
@@ -75,7 +75,7 @@ export default function GroupedTask(props){
   //Sort filtered task list in ascending order by date.
   const sortedTasks = filteredTasks.sort(function(a,b){
     if (new Date(a.date) - new Date(b.date) == 0) {
-      if (a.startTime < b.startTime) {return -1}
+      if (a.start_time < b.start_time) {return -1}
       else return 1
     }
     else {return new Date(a.date) - new Date(b.date)};
@@ -95,7 +95,7 @@ export default function GroupedTask(props){
   function TaskComponent (task) {
     return(
       <Task 
-        key = {task.id} 
+        key = {task.task_id} 
         task = {task} 
         elapsedTime = {convertElapsedToText(calcElapsedTime(task))}
         groupData = {groupData}
