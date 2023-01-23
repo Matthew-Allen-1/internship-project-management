@@ -4,6 +4,7 @@ import {nanoid} from 'nanoid'
 
 // Components
 import Task from '../Task/Task'
+import OptionsMenu from '../OptionsMenu'
 
 //Styling
 import './GroupedTask.css'
@@ -13,7 +14,8 @@ export default function GroupedTask(props){
 
   const { groupData, setGroupData, taskData, setTaskData, groupSelection, handleInputChange, 
     dropdown, dropdownEnter, dropdownFilter, dropdownSelected, 
-    taskDropdownActive, setTaskDropdownActive, taskDropdownSearch, setTaskDropdownSearch} = props;
+    taskDropdownActive, setTaskDropdownActive, taskDropdownSearch, setTaskDropdownSearch, deleteTaskById} = props;
+
   const [selectAll, setSelectAll] = useState(false);
 
 
@@ -32,20 +34,25 @@ export default function GroupedTask(props){
     const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][newDate.getDay()]
     const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][newDate.getMonth()];
     const day = newDate.getDate()
-    var dayStr = ''
 
+    var daySuffix = ''
     switch(parseInt(day) % 10) {
-      case 1: dayStr = day + 'st'; break;
-      case 2: dayStr = day + 'nd'; break;
-      case 3: dayStr = day + 'rd'; break;
-      default: dayStr = day + 'th'; break;
+      case 1: daySuffix = 'st'; break;
+      case 2: daySuffix = 'nd'; break;
+      case 3: daySuffix = 'rd'; break;
+      default: daySuffix = 'th'; break;
     }
     switch(day){
-      case 11: dayStr = day + 'th'
-      case 12: dayStr = day + 'th'
-      case 13: dayStr = day + 'th'
+      case 11: daySuffix = 'th'
+      case 12: daySuffix = 'th'
+      case 13: daySuffix = 'th'
     }    
-    return (weekday + ', ' + month + ' ' + dayStr + ' ' + newDate.getFullYear())
+    
+    return (<span>
+              {weekday + ', ' + month + ' ' + day}
+              <sup>{daySuffix}</sup>
+              {' ' + newDate.getFullYear()}
+            </span>)
   }
 
   function calcElapsedTime(task) {
@@ -63,7 +70,6 @@ export default function GroupedTask(props){
     const minutesElapsed = ''.concat((duration % 60) < 10 ? '0' : '', (duration % 60).toString())
     return (hoursElapsed.toString() + ":" + minutesElapsed.toString())
   }
-
 
 //Filter task list according to the group selected in the sidebar.
   const filteredTasks = taskData.filter((task, index) => {
@@ -105,6 +111,7 @@ export default function GroupedTask(props){
         dropdownEnter = {dropdownEnter}
         dropdownSelected={dropdownSelected}
         taskDropdownSearch={taskDropdownSearch}
+        deleteTaskById={deleteTaskById}
         selectAll={selectAll}
       />
     )
@@ -119,9 +126,9 @@ export default function GroupedTask(props){
       TaskComponent(task)
     )}
   })
+    // console.log('taskElementArrays', taskElementArrays)
 
-  // console.log('taskElementArrays', taskElementArrays)
-  //Create an array of total times corresponding to the dates in dateList.
+      //Create an array of total times corresponding to the dates in dateList.
   const timeTotals = taskElementArrays.map((taskArray, index) => {
     // console.log('taskArray', taskArray)
     return taskArray.reduce((runningTotal, currentTask) => {
@@ -144,7 +151,7 @@ export default function GroupedTask(props){
   .map((taskElementArray, index) => {
 
     //Convert the date to a string to display
-    var dateStr = index <= dateList.length - 1 ? convertDateToString(dateList[index]) : 'Unscheduled Tasks'
+    var dateStr = index <= dateList.length - 1 ? convertDateToString(dateList[index]) : <span>Unscheduled Tasks</span>
     // var timeStr = 
 
     return(
@@ -153,7 +160,7 @@ export default function GroupedTask(props){
           {selectAll && <input type="checkbox"/>}
           <p className = "left" >{dateStr}</p>
           <div className = "right">
-            <p>Total Time: {convertElapsedToText(timeTotals[index])}</p>
+            <p>{timeTotals[index] > 0 ? 'Total Time: ' + convertElapsedToText(timeTotals[index]) : ''}</p>
             <img onClick={handleSelect} src = "https://app.clockify.me/assets/ui-icons/bulk-edit.svg" alt = "" />
           </div>
         </div>

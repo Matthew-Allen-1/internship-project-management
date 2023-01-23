@@ -313,10 +313,16 @@ export default function Home(){
       }))
     }
     createDropdown ? setDropdownActive(prevDrop => !prevDrop) : setTaskDropdownActive(prevTaskDropDownActive => !prevTaskDropDownActive)
+
+
+  // delete task by id
+  const deleteTaskById = (id) => {
+    const updatedTask = taskData.filter((task) => {
+        return task.id !== id;
+    });
+
+    setTaskData(updatedTask);
   };
-
-
-
   // adds the 'input' state into the currently selected task in 'taskData' state.
   function addTask(){
     if (input.title == '') {alert('You must enter a task description.')}
@@ -351,6 +357,7 @@ export default function Home(){
 
 
 
+
   return (
     <div className = "App">
       <Navbar user={backendData?.name} />
@@ -381,6 +388,7 @@ export default function Home(){
             setGroupData = {setGroupData}
             taskData = {backendTasks}
             setTaskData = {setTaskData}
+            deleteTaskById = {deleteTaskById}
 
             groupSelection = {groupSelection}
             handleInputChange = {handleInputChange}
