@@ -175,15 +175,25 @@ app.get('/tasks', async (req, res) => {
 
   try {
 
-    const [tasks] = await req.db.query(`
-      SELECT task_data FROM tasks
-      WHERE tasks.user_id = ${user.userId}`
-    );
+    // const [tasks] = await req.db.query(`
+    //   SELECT task_data FROM tasks
+    //   WHERE tasks.user_id = ${user.userId}`
+    // );
 
-    const [groups] = await req.db.query(`
-      SELECT group_data FROM tasks
-      WHERE tasks.user_id = ${user.userId}`
-    );
+    // const [groups] = await req.db.query(`
+    //   SELECT group_data FROM tasks
+    //   WHERE tasks.user_id = ${user.userId}`
+    // );
+
+    const [tasks] = await req.db.query(`
+    SELECT * FROM task_table
+    WHERE task_table.id = ${user.userId}`
+  );
+
+  const [groups] = await req.db.query(`
+    SELECT * FROM group_table
+    WHERE group_table.id = ${user.userId}`
+  );
 
     res.json({ tasks, groups, name: user.name });
   } catch (err) {
@@ -192,22 +202,51 @@ app.get('/tasks', async (req, res) => {
   }
 });
 
+app.post('/add-group', async function (req, res) {
+  const [scheme, token] = req.headers.authorization.split(' ');
+  const user = jwt.verify(token, process.env.JWT_KEY)
+  console.log(req.body)
+
+  try{
+    const [group] = await req.db.query(`
+      INSERT INTO group_table (group_id, title, active_sidebar, selected, id)
+      VALUES (:group_id, :title, :active_sidebar, :selected, ${user.userId})`,
+      {
+        group_id: req.body.id,
+        title: req.body.title,
+        active_sidebar: req.body.activeSidebar,
+        selected: req.body.selected,
+      }
+    );
+
+
+  } catch (error){
+    console.timeLog('error', error)
+  }
+})
+
 // POST request to http://localhost:8080/add-task ends here
 app.post('/add-task', async function (req, res) {
   const [scheme, token] = req.headers.authorization.split(' ');
   const user = jwt.verify(token, process.env.JWT_KEY)
+  console.log(req.body);
 
   try {
 
-    const [tasks] = await req.db.query(`
-      INSERT INTO tasks (user_id, task_data, group_data)
-      VALUES (${user.userId}, :task_data, :group_data)
-      ON DUPLICATE KEY
-      UPDATE task_data = :task_data, group_data = :group_data;
-    `, {
-      task_data: req.body.task_data,
-      group_data: req.body.group_data,
-    });
+    const [task] = await req.db.query(`
+      INSERT INTO task_table (task_id, title, start_time, end_time, date, dropdown_active, group_title, group_id, id)
+      VALUES (:task_id, :title, :start_time, :end_time, :date, :dropdown_active, :group_title, :group_id, ${user.userId})`, 
+      {
+      task_id: req.body.id,
+      title: req.body.title,
+      start_time: req.body.startTime,
+      end_time: req.body.endTime,
+      date: req.body.date,
+      dropdown_active: req.body.dropdownActive,
+      group_title: req.body.groupTitle,
+      group_id: req.body.groupId,
+      }
+    );
 
   } catch (error) {
     console.log('error', error);
