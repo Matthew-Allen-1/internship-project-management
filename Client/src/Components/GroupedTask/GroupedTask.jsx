@@ -1,10 +1,6 @@
 // Libraries
 import React, { useState } from 'react'
 import {nanoid} from 'nanoid'
-import { useQuery, useMutation } from 'react-query'
-
-// Api Services
-import { fetchTasks } from '../../ApiServices/TasksService'
 
 // Components
 import Task from '../Task/Task'
@@ -22,16 +18,13 @@ export default function GroupedTask(props){
 
   const [selectAll, setSelectAll] = useState(false);
 
-  const { data, isLoading, isError } = useQuery('tasks', fetchTasks);
-  if(isLoading) return <p>Loading...</p>
-  if(isError) return <p>An Error occurred</p>
 
   const defaultTaskData = {
     title: 'Task that was added',
-    groupTitle: 'Group that was chosen',
-    groupId: 0,
-    startTime: '12:00',
-    endTime: '12:00',
+    group_title: 'Group that was chosen',
+    group_id: 0,
+    start_time: '12:00',
+    end_time: '12:00',
     date: '1/1/00'
   }
 
@@ -63,11 +56,11 @@ export default function GroupedTask(props){
   }
 
   function calcElapsedTime(task) {
-    if (!task.startTime || !task.endTime ) {return 0}
+    if (!task.start_time || !task.end_time ) {return 0}
     else {
-      const endTimeInMinutes = parseInt(task.endTime.slice(0, 2)) * 60 + parseInt(task.endTime.slice(3, 5))
-      const startTimeInMinutes = parseInt(task.startTime.slice(0, 2)) * 60 + parseInt(task.startTime.slice(3, 5))
-      const duration = endTimeInMinutes - startTimeInMinutes
+      const end_timeInMinutes = parseInt(task.end_time.slice(0, 2)) * 60 + parseInt(task.end_time.slice(3, 5))
+      const start_timeInMinutes = parseInt(task.start_time.slice(0, 2)) * 60 + parseInt(task.start_time.slice(3, 5))
+      const duration = end_timeInMinutes - start_timeInMinutes
       return duration < 0 ? (duration + Math.ceil(Math.abs(duration) / 1440) * 1440) : duration
     }
   }
@@ -78,21 +71,34 @@ export default function GroupedTask(props){
     return (hoursElapsed.toString() + ":" + minutesElapsed.toString())
   }
 
-//Filter task list according to the group selected in the sidebar.
-  const filteredTasks = taskData.filter((task, index) => {
-    const indexOfGroupSelection = groupData.map(group => group.id).indexOf(groupSelection)
-    if (groupSelection == 0 || index == 0) {return true}
-    else {return groupData[indexOfGroupSelection].taskIds.indexOf(task.id) >= 0}
- })
+// //Filter task list according to the group selected in the sidebar.
+//   const filteredTasks = taskData.filter((task, index) => {
+//     const indexOfGroupSelection = groupData.map(group => group.group_id).indexOf(groupSelection)
+//     if (groupSelection == 0 || index == 0) {return true}
+//     else {return groupData[indexOfGroupSelection].taskIds.indexOf(task.id) >= 0}
+//  })
+
+  const filteredTasks = taskData.filter(task => {
+    if(groupSelection === 'default'){
+      return true
+    } else if (groupSelection === 'unscheduled' && !task.date){
+      return true
+    } else if(groupSelection === task.group_id){
+     return true
+    } else{
+      return false
+    }
+  })
 
   //Sort filtered task list in ascending order by date.
   const sortedTasks = filteredTasks.sort(function(a,b){
     if (new Date(a.date) - new Date(b.date) == 0) {
-      if (a.startTime < b.startTime) {return -1}
+      if (a.start_time < b.start_time) {return -1}
       else return 1
     }
     else {return new Date(a.date) - new Date(b.date)};
   });
+  console.log('sortedTasks', sortedTasks)
 
   //Create an array of dates for which displayed tasks are assigned (if any).
   const dateList = sortedTasks.filter((task, index) => {
@@ -100,15 +106,17 @@ export default function GroupedTask(props){
     else {return false}
   })
   .map(task => task.date)
+  console.log('dateList', dateList);
 
   //Create an array of task element arrays with one array of tasks for each date in dateList and one additional array for unscheduled tasks.
   const taskElementArrays = dateList.map((date, index) => [])
   taskElementArrays.push([])
+  console.log(taskElementArrays);
 
   function TaskComponent (task) {
     return(
       <Task 
-        key = {task.id} 
+        key = {task.task_id} 
         task = {task} 
         elapsedTime = {convertElapsedToText(calcElapsedTime(task))}
         groupData = {groupData}
@@ -133,20 +141,14 @@ export default function GroupedTask(props){
       TaskComponent(task)
     )}
   })
-    // console.log('taskElementArrays', taskElementArrays)
 
       //Create an array of total times corresponding to the dates in dateList.
   const timeTotals = taskElementArrays.map((taskArray, index) => {
-    // console.log('taskArray', taskArray)
     return taskArray.reduce((runningTotal, currentTask) => {
-      // console.log('runningTotal', runningTotal)
-      // console.log('currentTask', currentTask)
-      // console.log('elapsed current', calcElapsedTime(currentTask))
       return (runningTotal + calcElapsedTime(currentTask.props.task))
     }, 0)
   })
 
-  // console.log('timeTotals', timeTotals)
 
   function handleSelect() {
     console.log(selectAll)

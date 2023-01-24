@@ -1,7 +1,8 @@
 // Libraries
 import {nanoid} from 'nanoid'
 import { useQuery, useMutation } from 'react-query'
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
+import { UserContext } from '../../context/UserContext'
 
 // Components
 import Navbar from '../../Components/Navbar/Navbar'
@@ -15,12 +16,20 @@ import {HardCodedGroupData} from '../../Components/HardCodedGroupData'
 import { defaultInputState, allTasksGroupState, unscheduledTasksGroupState, defaultTaskState} from '../../data/DefaultData'
 
 // Requests functions
-import { fetchTasks,  addTaskRequest  } from '../../ApiServices/TasksService'
+import { fetchTasks,  addTaskRequest, addGroupRequest } from '../../ApiServices/TasksService'
 
 // Styling
 import './HomePage.css'
 
 export default function Home(){
+  const { currentUser }= useContext(UserContext);
+  const { data: backendData , isLoading: backendLoading, isError: backendError , refetch} = useQuery(
+    'tasks', 
+    fetchTasks,
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
   const btnRef = useRef();
   const firstRender = useRef(true);
@@ -33,49 +42,42 @@ export default function Home(){
   const [taskData, setTaskData] = useState([defaultTaskState, ...HardCodedTaskData]); //stores all task data.  I don't think this will work in the long run. 
   //probably need form tag around all the data in CreateTask jsx
 
-  const [groupSelection, setGroupSelection] = useState(0)
-  const [groupSidebarStyles, setGroupSideBarStyles] = useState([])
+  const [groupSelection, setGroupSelection] = useState('default')
   const [taskDropdownSearch, setTaskDropdownSearch] = useState('')
   const [taskDropdownActive, setTaskDropdownActive] = useState(false)
   const [newTaskMessage, setNewTaskMessage] = useState(false)
-  
-  const { mutate } = useMutation((newTask) => addTaskRequest(newTask));
-// sends task and group data to backend when either is changed.
+
+  // handles click outside dropdown menu
   useEffect(() =>{
-    if(firstRender.current){
-      firstRender.current = false;
-    } else{
-      console.log('backend updated')
-      const task_ = { task_data: JSON.stringify(taskData), group_data: JSON.stringify(groupData) }
-      mutate(task_)
+    const closeDropdown = e => {
+      if(e.composedPath()[0] !== btnRef.current && e.target.name !== 'group'){
+        setDropdownActive(prevDrop => false);
+      }
     }
-  }, [taskData, groupData])
+    document.body.addEventListener('click', closeDropdown);
+    return () => document.body.removeEventListener('click', closeDropdown);
+  }, [])
+
+  const { mutate: mutateAddTask } = useMutation((newTask) => addTaskRequest(newTask));
+  const { mutate: mutateAddGroup } = useMutation((newGroup) => addGroupRequest(newGroup));
+
+  if( backendLoading ) return <p>Loading...</p>
+  if(backendError) return <p>An Error occurred</p>
+  const backendTasks = backendData.tasks;
+  const backendGroups = backendData.groups;
 
 
+  
   // Changes the group selection in the sidebar on click.
-  function handleGroupSelection(event, index) {
-
+  function handleGroupSelection(event) {
     //Set the newly selected group in the sidebar
-    const selectedGroupId = groupData[index].id
-    setGroupSelection(selectedGroupId)
-
-    //Construct an array of group id's representing groups in the sidebar.
-    const sidebarGroups = groupData.map(group => group.id)
-
-    //Assign background color styles to the sidebar groups.
-    setGroupSideBarStyles(sidebarGroups.map((groupId) => {
-      if (groupId == selectedGroupId) {return {backgroundColor: '#c4eaee'}}
-      else {return {backgroundColor: 'white'}}
-    }))
+    setGroupSelection(event.target.id)
   }
+
 
   // handles input changes except group
   function handleInputChange(event){
-    // console.log("handleInputChange function called");
     const{name, value} = event.target;
-    // console.log('eventTargetId', event.target.id)
-    // console.log('eventTargetClassName', event.target.className)
-    // console.log(event.target.className.indexOf("create-task-input"))
 
     //handles input changes on the create task
     if(event.target.className.indexOf("create-task-input") >= 0) {
@@ -94,6 +96,8 @@ export default function Home(){
       }))
     }
   } 
+
+
 
   // switches dropdown to active on click
   function dropdown(event) {
@@ -119,6 +123,8 @@ export default function Home(){
     }
   };
 
+
+
   // adds group to list if enter key is pressed and checks repeats
   function dropdownEnter(event){
     const createTaskDropdown = (event.target.id == 'create-dropdown-input')
@@ -129,8 +135,8 @@ export default function Home(){
     
     //check to see if the entered group name is new
     let noMatches = true;
-    for(let i = 0; i < groupData.length; i++){
-      if(groupData[i].title.toUpperCase() === (createTaskDropdown ? dropdownSearch.toUpperCase() : taskDropdownSearch.toUpperCase()) ){
+    for(let i = 0; i < backendGroups.length; i++){
+      if(backendGroups[i].title.toUpperCase() === (createTaskDropdown ? dropdownSearch.toUpperCase() : taskDropdownSearch.toUpperCase()) ){
         noMatches = false;
       }
     }
@@ -148,6 +154,7 @@ export default function Home(){
         }))
         setGroupData(prevGroupData => prevGroupData.map(group => ({...group, selected: false})))
         setGroupData(prevGroupData => [...prevGroupData, {id: newGroupId, title: dropdownSearch, taskIds: [], selected: true}])
+        mutateAddGroup({id: newGroupId, title: dropdownSearch, activeSidebar: false, selected: true});
         setInput(prevInput => ({...prevInput, groupId: newGroupId, groupTitle: dropdownSearch}))
         createTaskDropdown ? setDropdownActive(prevDropdownActive => !prevDropdownActive) : setTaskDropdownActive(prevTaskDropdownActive => !prevTaskDropdownActive)
       }
@@ -177,12 +184,11 @@ export default function Home(){
       }
     }
 
-  //else if the entered group name matches an existing group, select the entered group name
+    //else if the entered group name matches an existing group, select the entered group name
     else {
       // gets the current group id from the event.target.id
       const currGroup = groupData.filter(group => group.title == value)[0]
       const currGroupId = currGroup.id
-      // console.log('currGroup', currGroup)
 
       // handles a selection in the create task dropdown
       if (createTaskDropdown) {
@@ -202,7 +208,6 @@ export default function Home(){
        // slices off "drop-down-enter#" from the event.target.id to get the current task id
         const currTaskId = event.target.id.slice(15)
         const currTask = taskData.filter(task => task.id == currTaskId)[0]
-        // console.log('currTask', currTask)
 
         setGroupData(prevGroupData => prevGroupData.map(prevGroup => {
           // if the current task belongs to this group and this group was not selected, delete the current task from this group
@@ -231,6 +236,8 @@ export default function Home(){
     }
   };
 
+
+
   //updates search bar state
   function dropdownFilter(event) {
     //updates search bar on the create task dropdown
@@ -239,28 +246,15 @@ export default function Home(){
     else {setTaskDropdownSearch(event.target.value)}
   }
 
-  // handles click outside dropdown menu
-  useEffect(() =>{
-    // console.log("useEffect function called");
-    const closeDropdown = e => {
-      if(e.composedPath()[0] !== btnRef.current && e.target.name !== 'group'){
-        setDropdownActive(prevDrop => false);
-      }
-    }
-    document.body.addEventListener('click', closeDropdown);
-    return () => document.body.removeEventListener('click', closeDropdown);
-  }, [])
+
 
   // makes options clickable in dropdown and selects them to show
   function dropdownSelected(event){
-    // console.log('eventTargetId', event.target.id)
-    // console.log('eventTargetClassName', event.target.className)
     const createDropdown = (event.target.className == 'create-dropdown-group')
 
     // gets the current group id from the event.target.id
     const currGroupId = event.target.id
     const currGroup = groupData.filter(group => group.id == currGroupId)[0]
-    // console.log('currGroup', currGroup)
 
     // handles a selection in the create task dropdown
     if (createDropdown) {
@@ -279,7 +273,6 @@ export default function Home(){
       // slices off "group-list#" from the event.target.id to get the current task id
       const currTaskId = event.target.className.slice(11)
       const currTask = taskData.filter(task => task.id == currTaskId)[0]
-      // console.log('currTask', currTask)
 
       setGroupData(prevGroupData => prevGroupData.map(prevGroup => {
         // if the current task belongs to this group and this group was not selected, delete the current task from this group
@@ -306,7 +299,7 @@ export default function Home(){
       }))
     }
     createDropdown ? setDropdownActive(prevDrop => !prevDrop) : setTaskDropdownActive(prevTaskDropDownActive => !prevTaskDropDownActive)
-  }
+  };
 
   // delete task by id
   const deleteTaskById = (id) => {
@@ -316,18 +309,14 @@ export default function Home(){
 
     setTaskData(updatedTask);
   };
-
   // adds the 'input' state into the currently selected task in 'taskData' state.
   function addTask(){
-    // console.log("addTask function called");
     if (input.title == '') {alert('You must enter a task description.')}
     else if ((input.startTime != '' || input.endTime != '') && input.date == '') {
       alert('You may not enter a start or end time without entering a date.')
     }
     else {
-      // console.log('inputStartTime', input.startTime)
-      // console.log('inputEndTime', input.endTime)
-      // console.log('inputDate', input.date)
+      mutateAddTask({...input, id: nanoid(), dropdownActive: false})
       const newTaskId = nanoid()
       setTaskData(prevTaskData => {
         return([...prevTaskData, {...input, id: newTaskId, dropdownActive: false}])
@@ -343,42 +332,30 @@ export default function Home(){
         
       }))
       setNewTaskMessage(true)
-      // console.log('NewTaskMessage set to true')
     }
-    // console.log('Task Data After Add Task: ', taskData)
-    // console.log('Group Data After Add Task: ', groupData)
     
     setTimeout(() => {
       setNewTaskMessage(false)
-      // console.log('NewTaskMessage set to false')
-      }, 5000)
-  }
+    }, 5000)
 
-  const { data, isLoading } = useQuery(
-    '/tasks',
-    ()=> fetchTasks(),
-    {
-      refetchOnWindowFocus: false,
-    }
-  )
+    console.log(input);
+  };
 
-  if(isLoading){
-    return <h1>Loading...</h1>
-  }
+
+
 
   return (
     <div className = "App">
-      <Navbar user={data?.name} />
+      <Navbar user={backendData?.name} />
       <Sidebar 
-        groupData = {groupData}
+        groupData = {backendGroups}
         handleGroupSelection = {handleGroupSelection}
         groupSelection = {groupSelection}
-        groupSidebarStyles = {groupSidebarStyles}
       />
       <main>
         <div className = "task-section">
           <CreateTask 
-            groupData = {groupData} 
+            groupData = {backendGroups} 
             input = {input}
             handleInputChange = {handleInputChange}
             addTask = {addTask}
@@ -392,9 +369,9 @@ export default function Home(){
             dropdownSelected = {dropdownSelected}
           />
           <GroupedTask 
-            groupData = {groupData}
+            groupData = {backendGroups}
             setGroupData = {setGroupData}
-            taskData = {taskData}
+            taskData = {backendTasks}
             setTaskData = {setTaskData}
             deleteTaskById = {deleteTaskById}
 
@@ -415,4 +392,4 @@ export default function Home(){
       </main>
     </div>
   )
-}
+};

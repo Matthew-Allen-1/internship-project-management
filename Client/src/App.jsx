@@ -12,16 +12,14 @@ import PrivateRoutes from './utils/PrivateRoutes'
 import './index.css'
 
 export default function App() {
-
   return (
     <Router>
       <Routes>
         <Route path = "/" element = {<SignUp />} />
         <Route path = "/Login" element = {<Login />} />
-
-        <Route element={ <PrivateRoutes/>}> 
+        <Route element={ <PrivateRoutes/>}>
           <Route path = "/task-manager" element = {<Home/>}/>
-         </Route> 
+        </Route> 
       </Routes>
     </Router>
   )

@@ -16,9 +16,9 @@ export default function Task(props){
   
   // displays elements in dropdown
   const newGroupListElements = groupData.map(group => {
-    if (group.id != 0 && group.id != 1) {
+    if (group.group_id != 0 && group.group_id != 1) {
       if (taskDropdownSearch == "" || group.title.toUpperCase().indexOf(taskDropdownSearch.toUpperCase()) === 0) {
-        return <p key = {group.id} id = {group.id} className = {'group-list#' + task.id} onClick={() => dropdownSelected(event)}>{group.title}</p>
+        return <p key = {group.group_id} id = {group.group_id} className = {'group-list#' + task.task_id} onClick={() => dropdownSelected(event)}>{group.title}</p>
       }
     } 
     else {return}
@@ -51,7 +51,7 @@ export default function Task(props){
             {props.selectAll && <input type="checkbox"/>}
             <input 
               className = "input"
-              id = {'title#' + task.id}
+              id = {'title#' + task.task_id}
               defaultValue = {task.title}
               type = "text" 
               name = "title"
@@ -61,7 +61,7 @@ export default function Task(props){
           <span className="line-divider"></span>
           <div className="task-dropdown">
             <div className="group task-drop-btn" onClick={() => dropdown(event)}>
-              <p key = {task.groupId} id = {'group#' + task.id} ref = {taskBtnRef}>{task.groupTitle}</p>
+              <p key = {task.groupId} id = {'group#' + task.task_id} ref = {taskBtnRef}>{task.group_title}</p>
             </div>
             <div id="task-group-dropdown" className={newClassList} >
               <input 
@@ -69,7 +69,7 @@ export default function Task(props){
                 value = {taskDropdownSearch} 
                 placeholder = "Search/Create..." 
                 className = "task-dropdown-input"
-                id = {'dropdown-input#' + task.id}
+                id = {'dropdown-input#' + task.task_id}
                 name = "group" 
                 onChange = {() => dropdownFilter(event)} 
                 onKeyDown = {() => dropdownEnter(event)}
@@ -79,28 +79,36 @@ export default function Task(props){
           </div>
           <div className="task-elapsed-time">
             <span className="elapsed-time">{props.elapsedTime != '0:00' ? 'Time: ' + props.elapsedTime : ''}</span>
-            <img className="options" src="https://app.clockify.me/assets/ui-icons/menu-dots-vertical.svg" alt="" />
+            <OptionsMenu />
           </div>
         </div>
         <div className="right-box">
           <span className="line-divider"></span>
           <div className="task-time">
             <input 
-              id = {'startTime#' + task.id}
+              id = {'startTime#' + task.task_id}
               name = "startTime"
-              defaultValue = {task.startTime}  
+              defaultValue = {task.start_time}  
               type = "time" 
               onChange = {() => handleInputChange(event)} 
             />
             <div className="time-divider">-</div>
             <input 
-              id = {'endTime#' + task.id}
+              id = {'endTime#' + task.task_id}
               name = "endTime"
-              defaultValue = {task.endTime} 
+              defaultValue = {task.end_time} 
               type = "time"
               onChange = {() => handleInputChange(event)} 
             />
           </div>
+          <input 
+            className = "date" 
+            id = {'date#' + task.task_id}
+            type = "date" 
+            defaultValue = {task.date} 
+            name = "date"
+            onChange = {() => handleInputChange(event)} 
+          />
           <span className="line-divider"></span>
           <div className = "task-date">
             <input 
