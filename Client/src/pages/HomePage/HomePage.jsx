@@ -42,8 +42,7 @@ export default function Home(){
   const [taskData, setTaskData] = useState([defaultTaskState, ...HardCodedTaskData]); //stores all task data.  I don't think this will work in the long run. 
   //probably need form tag around all the data in CreateTask jsx
 
-  const [groupSelection, setGroupSelection] = useState(0)
-  const [groupSidebarStyles, setGroupSideBarStyles] = useState([])
+  const [groupSelection, setGroupSelection] = useState('default')
   const [taskDropdownSearch, setTaskDropdownSearch] = useState('')
   const [taskDropdownActive, setTaskDropdownActive] = useState(false)
   const [newTaskMessage, setNewTaskMessage] = useState(false)
@@ -64,29 +63,16 @@ export default function Home(){
 
   if( backendLoading ) return <p>Loading...</p>
   if(backendError) return <p>An Error occurred</p>
-  console.log(backendData)
   const backendTasks = backendData.tasks;
   const backendGroups = backendData.groups;
 
 
   
   // Changes the group selection in the sidebar on click.
-  function handleGroupSelection(event, index) {
-
+  function handleGroupSelection(event) {
     //Set the newly selected group in the sidebar
-    const selectedGroupId = backendGroups[index].id
-    setGroupSelection(selectedGroupId)
-
-    //Construct an array of group id's representing groups in the sidebar.
-    const sidebarGroups = backendGroups.map(group => group.id)
-
-    //Assign background color styles to the sidebar groups.
-    setGroupSideBarStyles(sidebarGroups.map((groupId) => {
-      if (groupId == selectedGroupId) {return {backgroundColor: '#c4eaee'}}
-      else {return {backgroundColor: 'white'}}
-    }))
+    setGroupSelection(event.target.id)
   }
-
 
 
   // handles input changes except group
@@ -198,7 +184,7 @@ export default function Home(){
       }
     }
 
-  //else if the entered group name matches an existing group, select the entered group name
+    //else if the entered group name matches an existing group, select the entered group name
     else {
       // gets the current group id from the event.target.id
       const currGroup = groupData.filter(group => group.title == value)[0]
@@ -313,7 +299,7 @@ export default function Home(){
       }))
     }
     createDropdown ? setDropdownActive(prevDrop => !prevDrop) : setTaskDropdownActive(prevTaskDropDownActive => !prevTaskDropDownActive)
-
+  };
 
   // delete task by id
   const deleteTaskById = (id) => {
@@ -353,7 +339,7 @@ export default function Home(){
     }, 5000)
 
     console.log(input);
-  }
+  };
 
 
 
@@ -365,7 +351,6 @@ export default function Home(){
         groupData = {backendGroups}
         handleGroupSelection = {handleGroupSelection}
         groupSelection = {groupSelection}
-        groupSidebarStyles = {groupSidebarStyles}
       />
       <main>
         <div className = "task-section">
@@ -407,4 +392,4 @@ export default function Home(){
       </main>
     </div>
   )
-}
+};

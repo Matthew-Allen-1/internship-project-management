@@ -79,7 +79,7 @@ export default function Task(props){
           </div>
           <div className="task-elapsed-time">
             <span className="elapsed-time">{props.elapsedTime != '0:00' ? 'Time: ' + props.elapsedTime : ''}</span>
-            <img className="options" src="https://app.clockify.me/assets/ui-icons/menu-dots-vertical.svg" alt="" />
+            <OptionsMenu />
           </div>
         </div>
         <div className="right-box">
