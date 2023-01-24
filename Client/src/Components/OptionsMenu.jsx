@@ -1,4 +1,4 @@
-import * as React from "react"
+import React, { useState } from "react"
 import {SlOptionsVertical} from 'react-icons/sl'
 import Menu from "@mui/material/Menu"
 import MenuItem from "@mui/material/MenuItem"
@@ -11,14 +11,15 @@ const options = [
 
 const ITEM_HEIGHT = 48
 
-export default function OptionsMenu() {
-  const [anchorEl, setAnchorEl] = React.useState(null)
+export default function OptionsMenu(props) {
+  const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
   const handleClick = event => {
     setAnchorEl(event.currentTarget)
   }
-  const handleClose = () => {
+  const handleClose = (event) => {
     setAnchorEl(null)
+    props.deleteTask(event)
   }
 
   return (
@@ -40,7 +41,7 @@ export default function OptionsMenu() {
         }}
         anchorEl={anchorEl}
         open={open}
-        onClose={handleClose}
+        onClose={(event) => handleClose(event)}
         PaperProps={{
           style: {
             maxHeight: ITEM_HEIGHT * 4.5,
@@ -52,7 +53,7 @@ export default function OptionsMenu() {
           <MenuItem
             key={option}
             selected={option === "Pyxis"}
-            onClick={handleClose}
+            onClick={(event) => handleClose(event)}
           >
             {option}
           </MenuItem>

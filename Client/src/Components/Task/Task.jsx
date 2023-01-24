@@ -1,6 +1,9 @@
 // Libraries
 import React from 'react'
 import {nanoid} from 'nanoid'
+import { useMutation, useQueryClient } from 'react-query'
+
+import { deleteTaskRequest } from '../../ApiServices/TasksService'
 
 // Styling
 import './Task.css'
@@ -12,6 +15,7 @@ export default function Task(props){
 
   const {groupData, task, handleInputChange, dropdown, dropdownEnter, dropdownFilter, dropdownSelected, taskDropdownSearch} = props;
   const taskBtnRef = React.useRef();
+  const queryClient = useQueryClient();
   const newClassList = task.dropdownActive ? "task-dropdown-content task-dropdown-show" : "task-dropdown-content";
   
   // displays elements in dropdown
@@ -24,23 +28,18 @@ export default function Task(props){
     else {return}
   })
 
+  const { mutate: mutateDeleteTask } = useMutation(
+    (id) => deleteTaskRequest(id),
+    {
+      onSuccess: () => queryClient.invalidateQueries(['tasks'])
+    }
+  );
 
-  const handleClick = () => {
-    deleteTaskById(task.id);
-  };
-
-  // handles click outside dropdown menu
-
-  // React.useEffect(() =>{
-  //   const closeTaskDropdown = e => {
-  //     if(e.composedPath()[0] !== taskBtnRef){
-  //       setTaskData(prevTaskData => prevTaskData.map(prevTask => ({...prevTask, dropdownActive: false})))
-  //     }
-  //   }
-  //   setTaskDropdownActive(prevTaskDropdownActive => !prevTaskDropdownActive);
-  //   document.body.addEventListener('click', closeTaskDropdown);
-  //   return () => document.body.removeEventListener('click', closeTaskDropdown);
-  // }, [])
+  function deleteTask(event) {
+    if(event.target.tabIndex === -1){
+      mutateDeleteTask(task.task_id)
+    }
+  }
 
   //displays information about each task
   return(
@@ -79,7 +78,7 @@ export default function Task(props){
           </div>
           <div className="task-elapsed-time">
             <span className="elapsed-time">{props.elapsedTime != '0:00' ? 'Time: ' + props.elapsedTime : ''}</span>
-            <OptionsMenu />
+            <OptionsMenu deleteTask={deleteTask}/>
           </div>
         </div>
         <div className="right-box">
@@ -123,7 +122,7 @@ export default function Task(props){
           <span className="line-divider"></span>
           <div className="task-elapsed-time">
             <span className="elapsed-time">{props.elapsedTime != '0:00' ? 'Time: ' + props.elapsedTime : ''}</span>
-            <OptionsMenu />
+            <OptionsMenu deleteTask={deleteTask}/>
           </div>
         </div>
       </div>
