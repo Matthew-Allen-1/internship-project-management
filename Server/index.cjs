@@ -134,7 +134,7 @@ app.get('/user', async (req, res) => {
 
 // Jwt verification checks to see if there is an authorization header with a valid jwt in it.
 app.use(async function verifyJwt(req, res, next) {
-  console.log(req.headers.authorization)
+  // console.log(req.headers.authorization)
   if (!req.headers.authorization) {
     res.json('Invalid authorization, no authorization headers');
   }
@@ -172,7 +172,7 @@ app.use(async function verifyJwt(req, res, next) {
 app.get('/tasks', async (req, res) => {
   const [scheme, token] = req.headers.authorization.split(' ');
   const user = jwt.verify(token, process.env.JWT_KEY)
-  console.log(user)
+  console.log('user: ', user)
 
   try {
 
@@ -206,7 +206,7 @@ app.get('/tasks', async (req, res) => {
 app.post('/add-group', async function (req, res) {
   const [scheme, token] = req.headers.authorization.split(' ');
   const user = jwt.verify(token, process.env.JWT_KEY)
-  console.log(req.body)
+  console.log('group added: ', req.body)
 
   try{
     const [group] = await req.db.query(`
@@ -222,16 +222,15 @@ app.post('/add-group', async function (req, res) {
     res.json({Success: true, title: req.body.title})
 
   } catch (error){
+    console.log('error', error)
     res.json({Success: false})
-    console.timeLog('error', error)
   }
 })
 
-// POST request to http://localhost:8080/add-task ends here
 app.post('/add-task', async function (req, res) {
   const [scheme, token] = req.headers.authorization.split(' ');
   const user = jwt.verify(token, process.env.JWT_KEY)
-  console.log(req.body);
+  console.log('task added: ',req.body);
 
   try {
 
@@ -252,26 +251,30 @@ app.post('/add-task', async function (req, res) {
     res.json({Success: true})
 
   } catch (error) {
-    res.json({Success: false})
     console.log('error', error);
+    res.json({Success: false})
   };
 });
 
-app.delete('/delete-tasks', async function (req, res) {
+app.delete('/delete-task/:id', async function (req, res) {
   const [scheme, token] = req.headers.authorization.split(' ');
   const user = jwt.verify(token, process.env.JWT_KEY)
+  const task_id = req.params.id;
+  console.log('deleted task: ', task_id, user.userId);
+  try{
+    const [task] = await req.db.query(`
+      DELETE FROM task_table 
+      WHERE task_table.task_id = '${task_id}' AND task_table.id = ${user.userId}`,{hello: 'hello'}
+    );
+    res.json({Success: true })
+
+  } catch (error){
+    console.log('error', error)
+    res.json({Success: false})
+  }
 });
 
 // Start the Express server
 app.listen(port, () => {
   console.log(`server started at http://localhost:${port}`);
 });
-
-
-  // const [tasks] = await req.db.query(`
-  // SELECT messages.* FROM messages,  
-  // (
-  //   SELECT from_user_id, max(date_time) AS date_time FROM messages GROUP BY from_user_id
-  // ) last_message 
-  // WHERE messages.from_user_id = last_message.from_user_id 
-  // AND messages.date_time = last_message.date_time`);

@@ -82,7 +82,7 @@ export default function Home(){
   if(backendError) return <p>An Error occurred</p>
   const backendTasks = backendData.tasks;
   const backendGroups = backendData.groups;
-  console.log(input);
+
 
   
   // Changes the group selection in the sidebar on click.
@@ -90,6 +90,7 @@ export default function Home(){
     //Set the newly selected group in the sidebar
     setGroupSelection(event.target.id)
   }
+
 
 
   // handles input changes except group
@@ -318,14 +319,8 @@ export default function Home(){
     createDropdown ? setDropdownActive(prevDrop => !prevDrop) : setTaskDropdownActive(prevTaskDropDownActive => !prevTaskDropDownActive)
   };
 
-  // delete task by id
-  const deleteTaskById = (id) => {
-    const updatedTask = taskData.filter((task) => {
-        return task.id !== id;
-    });
 
-    setTaskData(updatedTask);
-  };
+
   // adds the 'input' state into the currently selected task in 'taskData' state.
   function addTask(){
     if (input.title == '') {alert('You must enter a task description.')}
@@ -390,7 +385,6 @@ export default function Home(){
             setGroupData = {setGroupData}
             taskData = {backendTasks}
             setTaskData = {setTaskData}
-            deleteTaskById = {deleteTaskById}
 
             groupSelection = {groupSelection}
             handleInputChange = {handleInputChange}

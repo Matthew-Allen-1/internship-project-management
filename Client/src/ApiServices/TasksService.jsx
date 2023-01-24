@@ -1,5 +1,5 @@
 import { API_URL } from '../environment/environment.dev';
-import { get, post } from './HttpService'
+import { get, post, remove } from './HttpService'
 
 
 export const fetchTasks = async () => {
@@ -22,6 +22,14 @@ export const addTaskRequest = async (newTask) => {
 export const addGroupRequest = async (newGroup) => {
   try{
     return post(`${API_URL}/add-group`, newGroup);
+  } catch(err){
+    return { data: [], error: err } 
+  }
+}
+
+export const deleteTaskRequest = async (id) => {
+  try{
+    return remove(`${API_URL}/delete-task/${id}`);
   } catch(err){
     return { data: [], error: err } 
   }
