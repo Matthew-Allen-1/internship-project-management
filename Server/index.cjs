@@ -219,9 +219,10 @@ app.post('/add-group', async function (req, res) {
         selected: req.body.selected,
       }
     );
-
+    res.json({Success: true, title: req.body.title})
 
   } catch (error){
+    res.json({Success: false})
     console.timeLog('error', error)
   }
 })
@@ -248,8 +249,10 @@ app.post('/add-task', async function (req, res) {
       group_id: req.body.groupId,
       }
     );
+    res.json({Success: true})
 
   } catch (error) {
+    res.json({Success: false})
     console.log('error', error);
   };
 });

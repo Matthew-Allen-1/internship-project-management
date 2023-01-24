@@ -98,7 +98,7 @@ export default function GroupedTask(props){
     }
     else {return new Date(a.date) - new Date(b.date)};
   });
-  console.log('sortedTasks', sortedTasks)
+  // console.log('sortedTasks', sortedTasks)
 
   //Create an array of dates for which displayed tasks are assigned (if any).
   const dateList = sortedTasks.filter((task, index) => {
@@ -106,12 +106,12 @@ export default function GroupedTask(props){
     else {return false}
   })
   .map(task => task.date)
-  console.log('dateList', dateList);
+  // console.log('dateList', dateList);
 
   //Create an array of task element arrays with one array of tasks for each date in dateList and one additional array for unscheduled tasks.
   const taskElementArrays = dateList.map((date, index) => [])
   taskElementArrays.push([])
-  console.log(taskElementArrays);
+  // console.log(taskElementArrays);
 
   function TaskComponent (task) {
     return(

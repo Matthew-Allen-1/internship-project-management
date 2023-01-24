@@ -1,6 +1,6 @@
 // Libraries
 import {nanoid} from 'nanoid'
-import { useQuery, useMutation } from 'react-query'
+import { useQuery, useMutation, useQueryClient } from 'react-query'
 import React, { useState, useEffect, useRef, useContext } from 'react'
 import { UserContext } from '../../context/UserContext'
 
@@ -21,8 +21,10 @@ import { fetchTasks,  addTaskRequest, addGroupRequest } from '../../ApiServices/
 // Styling
 import './HomePage.css'
 
+
 export default function Home(){
   const { currentUser }= useContext(UserContext);
+  const queryClient = useQueryClient();
   const { data: backendData , isLoading: backendLoading, isError: backendError , refetch} = useQuery(
     'tasks', 
     fetchTasks,
@@ -58,14 +60,29 @@ export default function Home(){
     return () => document.body.removeEventListener('click', closeDropdown);
   }, [])
 
-  const { mutate: mutateAddTask } = useMutation((newTask) => addTaskRequest(newTask));
-  const { mutate: mutateAddGroup } = useMutation((newGroup) => addGroupRequest(newGroup));
+  const { mutate: mutateAddTask } = useMutation(
+    (newTask) => addTaskRequest(newTask),
+    {
+      onSuccess: () => queryClient.invalidateQueries(['tasks'])
+    }
+  );
+  const { mutate: mutateAddGroup } = useMutation(
+    (newGroup) => addGroupRequest(newGroup),
+    {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries(['tasks']);
+        setInput(prevInput => ({...prevInput, groupTitle: dropdownSearch}))
+        setDropdownActive(false);
+        setDropdownSearch('');
+      }
+    }
+  );
 
   if( backendLoading ) return <p>Loading...</p>
   if(backendError) return <p>An Error occurred</p>
   const backendTasks = backendData.tasks;
   const backendGroups = backendData.groups;
-
+  console.log(input);
 
   
   // Changes the group selection in the sidebar on click.
@@ -187,7 +204,7 @@ export default function Home(){
     //else if the entered group name matches an existing group, select the entered group name
     else {
       // gets the current group id from the event.target.id
-      const currGroup = groupData.filter(group => group.title == value)[0]
+      const currGroup = backendGroups.filter(group => group.title == value)[0]
       const currGroupId = currGroup.id
 
       // handles a selection in the create task dropdown
@@ -254,7 +271,7 @@ export default function Home(){
 
     // gets the current group id from the event.target.id
     const currGroupId = event.target.id
-    const currGroup = groupData.filter(group => group.id == currGroupId)[0]
+    const currGroup = backendGroups.filter(group => group.group_id == currGroupId)[0]
 
     // handles a selection in the create task dropdown
     if (createDropdown) {
