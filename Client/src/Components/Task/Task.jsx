@@ -22,7 +22,7 @@ export default function Task(props){
   const newGroupListElements = groupData.map(group => {
     if (group.group_id != 0 && group.group_id != 1) {
       if (taskDropdownSearch == "" || group.title.toUpperCase().indexOf(taskDropdownSearch.toUpperCase()) === 0) {
-        return <p key = {group.group_id} id = {group.group_id} className = {'group-list#' + task.task_id} onClick={() => dropdownSelected(event)}>{group.title}</p>
+        return <p key = {group.group_id} id = {group.group_id} className = {'group-list#' + task.task_id} onClick={() => dropdownSelected(event, false)}>{group.title}</p>
       }
     } 
     else {return}
@@ -54,12 +54,12 @@ export default function Task(props){
               defaultValue = {task.title}
               type = "text" 
               name = "title"
-              onChange = {() => handleInputChange(event)} 
+              onChange = {() => handleInputChange(event, false)} 
             />
           </div>
           <span className="line-divider"></span>
           <div className="task-dropdown">
-            <div className="group task-drop-btn" onClick={() => dropdown(event)}>
+            <div className="group task-drop-btn" onClick={() => dropdown(event, false)}>
               <p key = {task.groupId} id = {'group#' + task.task_id} ref = {taskBtnRef}>{task.group_title}</p>
             </div>
             <div id="task-group-dropdown" className={newClassList} >
@@ -70,8 +70,8 @@ export default function Task(props){
                 className = "task-dropdown-input"
                 id = {'dropdown-input#' + task.task_id}
                 name = "group" 
-                onChange = {() => dropdownFilter(event)} 
-                onKeyDown = {() => dropdownEnter(event)}
+                onChange = {() => dropdownFilter(event, false)} 
+                onKeyDown = {() => dropdownEnter(event, false)}
               />
               {newGroupListElements}
             </div>
@@ -89,7 +89,7 @@ export default function Task(props){
               name = "startTime"
               defaultValue = {task.start_time}  
               type = "time" 
-              onChange = {() => handleInputChange(event)} 
+              onChange = {() => handleInputChange(event, false)} 
             />
             <div className="time-divider">-</div>
             <input 
@@ -97,7 +97,7 @@ export default function Task(props){
               name = "endTime"
               defaultValue = {task.end_time} 
               type = "time"
-              onChange = {() => handleInputChange(event)} 
+              onChange = {() => handleInputChange(event, false)} 
             />
           </div>
           <input 
@@ -106,7 +106,7 @@ export default function Task(props){
             type = "date" 
             defaultValue = {task.date} 
             name = "date"
-            onChange = {() => handleInputChange(event)} 
+            onChange = {() => handleInputChange(event, false)} 
           />
           <span className="line-divider"></span>
           <div className = "task-date">
@@ -116,7 +116,7 @@ export default function Task(props){
               type = "date" 
               defaultValue = {task.date} 
               name = "date"
-              onChange = {() => handleInputChange(event)} 
+              onChange = {() => handleInputChange(event, false)} 
             />
           </div>
           <span className="line-divider"></span>

@@ -78,6 +78,7 @@ export default function GroupedTask(props){
 //     else {return groupData[indexOfGroupSelection].taskIds.indexOf(task.id) >= 0}
 //  })
 
+
   const filteredTasks = taskData.filter(task => {
     if(groupSelection === 'default'){
       return true
@@ -98,20 +99,18 @@ export default function GroupedTask(props){
     }
     else {return new Date(a.date) - new Date(b.date)};
   });
-  // console.log('sortedTasks', sortedTasks)
 
   //Create an array of dates for which displayed tasks are assigned (if any).
   const dateList = sortedTasks.filter((task, index) => {
-    if (index > 0 && task.date) {return(task.date != sortedTasks[index - 1].date)}
+    if (index == 0 && task.date) {return true}
+    else if (task.date) {return(task.date != sortedTasks[index - 1].date)}
     else {return false}
   })
   .map(task => task.date)
-  // console.log('dateList', dateList);
 
   //Create an array of task element arrays with one array of tasks for each date in dateList and one additional array for unscheduled tasks.
   const taskElementArrays = dateList.map((date, index) => [])
   taskElementArrays.push([])
-  // console.log(taskElementArrays);
 
   function TaskComponent (task) {
     return(
@@ -133,11 +132,11 @@ export default function GroupedTask(props){
   }
 
   //Push the tasks corresponding to each date in dateList to the corresponding array element of taskElements
-  sortedTasks.forEach((task, index) => {
-    if(index > 0 && dateList.indexOf(task.date) >= 0 ) {taskElementArrays[dateList.indexOf(task.date)].push(
+  sortedTasks.forEach(task => {
+    if(dateList.indexOf(task.date) >= 0 ) {taskElementArrays[dateList.indexOf(task.date)].push(
       TaskComponent(task)
     )}
-    else if (index > 0) {taskElementArrays[taskElementArrays.length - 1].push(
+    else {taskElementArrays[taskElementArrays.length - 1].push(
       TaskComponent(task)
     )}
   })
@@ -148,7 +147,6 @@ export default function GroupedTask(props){
       return (runningTotal + calcElapsedTime(currentTask.props.task))
     }, 0)
   })
-
 
   function handleSelect() {
     console.log(selectAll)

@@ -48,11 +48,12 @@ export default function Home(){
   const [taskDropdownSearch, setTaskDropdownSearch] = useState('')
   const [taskDropdownActive, setTaskDropdownActive] = useState(false)
   const [newTaskMessage, setNewTaskMessage] = useState(false)
+  const [selected, setSelected] = useState('')
 
   // handles click outside dropdown menu
   useEffect(() =>{
     const closeDropdown = e => {
-      if(e.composedPath()[0] !== btnRef.current && e.target.name !== 'group'){
+      if(e.composedPath()[0] !== btnRef.current && e.target.id !== 'create-task-dropdown'){
         setDropdownActive(prevDrop => false);
       }
     }
@@ -83,22 +84,18 @@ export default function Home(){
   const backendTasks = backendData.tasks;
   const backendGroups = backendData.groups;
 
-
-  
   // Changes the group selection in the sidebar on click.
   function handleGroupSelection(event) {
     //Set the newly selected group in the sidebar
     setGroupSelection(event.target.id)
   }
 
-
-
   // handles input changes except group
-  function handleInputChange(event){
+  function handleInputChange(event, createTaskBoolean){
     const{name, value} = event.target;
 
     //handles input changes on the create task
-    if(event.target.className.indexOf("create-task-input") >= 0) {
+    if(createTaskBoolean) {
       setInput(prevInput => ({...prevInput, [name]: value}))
     }
 
@@ -115,15 +112,16 @@ export default function Home(){
     }
   } 
 
-
-
   // switches dropdown to active on click
-  function dropdown(event) {
+  function dropdown(event, createTaskBoolean) {
+
     // handles a click on the create task dropdown
-    if (event.target.className.indexOf('create-task-dropdown') >= 0) {
+    if (createTaskBoolean) {
       setDropdownSearch("");
       setDropdownActive(prevDrop => !prevDrop);
+      console.log('dropdownActive', dropdownActive)
     }
+
     // handles a click on a task list dropdown
     else {
       // slices off "group#" from the event.target.id to get the current task id
@@ -141,11 +139,9 @@ export default function Home(){
     }
   };
 
-
-
   // adds group to list if enter key is pressed and checks repeats
-  function dropdownEnter(event){
-    const createTaskDropdown = (event.target.id == 'create-dropdown-input')
+  function dropdownEnter(event, createTaskBoolean){
+    
     const {name, value} = event.target
 
     //check to see if user pressed "Enter"
@@ -164,7 +160,7 @@ export default function Home(){
       let newGroupId = nanoid(); 
       
       //handles the addition of a new group on the create task dropdown
-      if (createTaskDropdown) {
+      if (createTaskBoolean) {
         setInput(prevValues => ({
           ...prevValues,
           [name]: value,
@@ -174,7 +170,7 @@ export default function Home(){
         setGroupData(prevGroupData => [...prevGroupData, {id: newGroupId, title: dropdownSearch, taskIds: [], selected: true}])
         mutateAddGroup({id: newGroupId, title: dropdownSearch, activeSidebar: false, selected: true});
         setInput(prevInput => ({...prevInput, groupId: newGroupId, groupTitle: dropdownSearch}))
-        createTaskDropdown ? setDropdownActive(prevDropdownActive => !prevDropdownActive) : setTaskDropdownActive(prevTaskDropdownActive => !prevTaskDropdownActive)
+        createTaskBoolean ? setDropdownActive(prevDropdownActive => !prevDropdownActive) : setTaskDropdownActive(prevTaskDropdownActive => !prevTaskDropdownActive)
       }
 
       //handles the addition of a new group on a task list dropdown
@@ -209,7 +205,7 @@ export default function Home(){
       const currGroupId = currGroup.id
 
       // handles a selection in the create task dropdown
-      if (createTaskDropdown) {
+      if (createTaskBoolean) {
         setGroupData(prevGroupData => prevGroupData.map(group => {
           if(group.title.toUpperCase() === currGroup.title.toUpperCase()){
             setInput({...input, groupTitle: group.title, groupId: group.id})
@@ -218,7 +214,7 @@ export default function Home(){
             return {...group, selected: false}
           }
         }))
-        createTaskDropdown ? setDropdownActive(prevDropdownActive => !prevDropdownActive) : setTaskDropdownActive(prevTaskDropdownActive => !prevTaskDropdownActive)
+        createTaskBoolean ? setDropdownActive(prevDropdownActive => !prevDropdownActive) : setTaskDropdownActive(prevTaskDropdownActive => !prevTaskDropdownActive)
       }
 
       // handles a selection in a task list dropdown 
@@ -254,36 +250,31 @@ export default function Home(){
     }
   };
 
-
-
   //updates search bar state
-  function dropdownFilter(event) {
+  function dropdownFilter(event, createTaskBoolean) {
     //updates search bar on the create task dropdown
-    if (event.target.id == 'create-dropdown-input') {setDropdownSearch(event.target.value)}
+    if (createTaskBoolean) {setDropdownSearch(event.target.value)}
     //updates search bar on a task list dropdown
     else {setTaskDropdownSearch(event.target.value)}
   }
 
-
-
   // makes options clickable in dropdown and selects them to show
-  function dropdownSelected(event){
-    const createDropdown = (event.target.className == 'create-dropdown-group')
-
+  function dropdownSelected(event, createTaskBoolean){
+    
     // gets the current group id from the event.target.id
     const currGroupId = event.target.id
     const currGroup = backendGroups.filter(group => group.group_id == currGroupId)[0]
+    console.log('currGroup', currGroup)
 
     // handles a selection in the create task dropdown
-    if (createDropdown) {
-      setGroupData(prevGroupData => prevGroupData.map(group => {
+    if (createTaskBoolean) {
+      backendGroups.forEach(group => {
         if(group.title.toUpperCase() === currGroup.title.toUpperCase()){
-          setInput({...input, groupTitle: group.title, groupId: group.id})
-          return {...group, selected: true}
-        } else {
-          return {...group, selected: false}
+          setInput({...input, groupTitle: group.title, groupId: group.group_id})
+          setSelected(group.group_id)
+          console.log('Selected Group: ', group.title)
         }
-      }))
+      })
     }
 
     // handles a selection in a task list dropdown 
@@ -316,10 +307,8 @@ export default function Home(){
         else {return prevGroup}
       }))
     }
-    createDropdown ? setDropdownActive(prevDrop => !prevDrop) : setTaskDropdownActive(prevTaskDropDownActive => !prevTaskDropDownActive)
+    createTaskBoolean ? setDropdownActive(prevDrop => !prevDrop) : setTaskDropdownActive(prevTaskDropDownActive => !prevTaskDropDownActive)
   };
-
-
 
   // adds the 'input' state into the currently selected task in 'taskData' state.
   function addTask(){
@@ -349,12 +338,8 @@ export default function Home(){
     setTimeout(() => {
       setNewTaskMessage(false)
     }, 5000)
-
     console.log(input);
   };
-
-
-
 
   return (
     <div className = "App">
@@ -379,6 +364,7 @@ export default function Home(){
             dropdownFilter = {dropdownFilter} 
             dropdownSearch = {dropdownSearch} 
             dropdownSelected = {dropdownSelected}
+            selected = {selected}
           />
           <GroupedTask 
             groupData = {backendGroups}
