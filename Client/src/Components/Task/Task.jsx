@@ -20,11 +20,9 @@ export default function Task(props){
   
   // displays elements in dropdown
   const newGroupListElements = groupData.map(group => {
-    if (group.group_id != 0 && group.group_id != 1) {
-      if (taskDropdownSearch == "" || group.title.toUpperCase().indexOf(taskDropdownSearch.toUpperCase()) === 0) {
-        return <p key = {group.group_id} id = {group.group_id} className = {'group-list#' + task.task_id} onClick={() => dropdownSelected(event, false)}>{group.title}</p>
-      }
-    } 
+    if (taskDropdownSearch == "" || group.title.toUpperCase().indexOf(taskDropdownSearch.toUpperCase()) === 0) {
+      return <p key = {group.group_id} id = {group.group_id} className = {'group-list#' + task.task_id} onClick={() => dropdownSelected(event, false)}>{group.title}</p>
+    }
     else {return}
   })
 
@@ -77,7 +75,10 @@ export default function Task(props){
             </div>
           </div>
           <div className="task-elapsed-time">
-            <span className="elapsed-time">{props.elapsedTime != '0:00' ? 'Time: ' + props.elapsedTime : ''}</span>
+            <div className = "elapsed-time-container">
+              <span className="elapsed-time">{props.elapsedTime != '0:00' ? 'Duration: ' + props.elapsedTime : ''}</span>
+              <span className="elapsed-time-format">{props.elapsedTime != '0:00' ? '(hh:mm)' : ''}</span>
+            </div>
             <OptionsMenu deleteTask={deleteTask}/>
           </div>
         </div>
@@ -100,19 +101,11 @@ export default function Task(props){
               onChange = {() => handleInputChange(event, false)} 
             />
           </div>
-          <input 
-            className = "date" 
-            id = {'date#' + task.task_id}
-            type = "date" 
-            defaultValue = {task.date} 
-            name = "date"
-            onChange = {() => handleInputChange(event, false)} 
-          />
           <span className="line-divider"></span>
           <div className = "task-date">
             <input 
               className = "date" 
-              id = {'date#' + task.id}
+              id = {'date#' + task.task_id}
               type = "date" 
               defaultValue = {task.date} 
               name = "date"
@@ -121,7 +114,10 @@ export default function Task(props){
           </div>
           <span className="line-divider"></span>
           <div className="task-elapsed-time">
-            <span className="elapsed-time">{props.elapsedTime != '0:00' ? 'Time: ' + props.elapsedTime : ''}</span>
+            <div className = "elapsed-time-container">
+              <span className="elapsed-time">{props.elapsedTime != '0:00' ? 'Duration: ' + props.elapsedTime : ''}</span>
+              <span className="elapsed-time-format">{props.elapsedTime != '0:00' ? '(hh:mm)' : ''}</span>
+            </div>
             <OptionsMenu deleteTask={deleteTask}/>
           </div>
         </div>

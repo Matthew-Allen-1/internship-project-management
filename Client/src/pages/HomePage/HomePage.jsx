@@ -108,7 +108,15 @@ export default function Home(){
           return ({...prevTask, [name]: value})
         }
         else {return prevTask}
+
+      
+
+
       }))
+
+
+
+
     }
   } 
 
@@ -263,18 +271,24 @@ export default function Home(){
     
     // gets the current group id from the event.target.id
     const currGroupId = event.target.id
-    const currGroup = backendGroups.filter(group => group.group_id == currGroupId)[0]
-    console.log('currGroup', currGroup)
+    console.log('currGroupId', currGroupId)
 
     // handles a selection in the create task dropdown
     if (createTaskBoolean) {
-      backendGroups.forEach(group => {
-        if(group.title.toUpperCase() === currGroup.title.toUpperCase()){
-          setInput({...input, groupTitle: group.title, groupId: group.group_id})
-          setSelected(group.group_id)
-          console.log('Selected Group: ', group.title)
-        }
-      })
+      if (currGroupId === "create-dropdown-input") {
+        // setInput({...input, groupTitle: 'Group', groupId: "default"})
+        // setSelected("default")
+        // console.log('Selected Group: ', "default")
+      }
+      else {
+        backendGroups.forEach(group => {
+          if(group.group_id === currGroupId) {
+            setInput({...input, groupTitle: group.title, groupId: group.group_id})
+            setSelected(group.group_id)
+            console.log('Selected Group: ', group.title)
+          }
+        })
+      }
     }
 
     // handles a selection in a task list dropdown 
