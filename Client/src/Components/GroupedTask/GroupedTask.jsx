@@ -167,7 +167,7 @@ export default function GroupedTask(props){
           {selectAll && <input type="checkbox"/>}
           <p className = "left" >{dateStr}</p>
           <div className = "right">
-            <p>{timeTotals[index] > 0 ? 'Total Time: ' + convertElapsedToText(timeTotals[index]) : ''}</p>
+            <p>{timeTotals[index] > 0 ? 'Total Duration: ' + convertElapsedToText(timeTotals[index]) : ''}</p>
             <img onClick={handleSelect} src = "https://app.clockify.me/assets/ui-icons/bulk-edit.svg" alt = "" />
           </div>
         </div>
