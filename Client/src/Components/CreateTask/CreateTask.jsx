@@ -21,8 +21,9 @@ export default function CreateTask(props){
       }
   })
 
+  const defaultGroupElement = <p key = "default" className = "group-element" ref = {btnRef}>Group</p>
   const groupElement = groupData.filter(group => selected === group.group_id).map(group => {
-    return <p key = {group.group_id} className = "create-task-dropdown" ref = {btnRef}>{group.title}</p>
+    return <p key = {group.group_id} className = "group-element" ref = {btnRef}>{group.title}</p>
   })
 
   return(
@@ -40,11 +41,11 @@ export default function CreateTask(props){
               onChange={() => handleInputChange(event, true)} 
             />
           </div>
-
+          <span className = "line-divider"></span>
           <div className = "dropdown create-task-dropdown-container" >
-            <div className = "group dropbtn create-task-dropdown" id = 'create-task-dropdown' onClick = {() => dropdown(event, true)}>
-              <img className = "create-task-dropdown" src = "https://app.clockify.me/assets/ui-icons/plus-blue-req.svg" alt = "" />
-              {selected == '' ? 'Group' : groupElement}
+            <div className = "group" onClick = {() => dropdown(event, true)}>
+              <img  src = "https://app.clockify.me/assets/ui-icons/plus-blue-req.svg" alt = "" />
+              {selected == '' ? defaultGroupElement : groupElement}
             </div>
             <div id = "group-dropdown" className = {classList} >
               <input 
@@ -56,6 +57,7 @@ export default function CreateTask(props){
                 name = "group" 
                 onChange = {() => dropdownFilter(event, true)} 
                 onKeyDown = {() => dropdownEnter(event, true)}
+                onClick = {() => dropdownSelected(event, true)}
               />
               {groupListElements}
             </div>
