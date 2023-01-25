@@ -58,9 +58,9 @@ app.post('/register', async function (req, res) {
     let encodedUser;
     if(Object.values(req.body).indexOf('') > -1){
       throw new Error('missing fields');
-    } //else if(registerForm.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) == null){
-      //throw new Error('Invalid Email');
-    //}
+    } else if(req.body.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) == null){
+      throw new Error('Invalid Email');
+    }
     // Hashes the password and inserts the info into the `user` table
     await bcrypt.hash(req.body.password, 10).then(async hash => {
       try {
