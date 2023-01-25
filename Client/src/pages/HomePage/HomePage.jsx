@@ -9,6 +9,7 @@ import Navbar from '../../Components/Navbar/Navbar'
 import Sidebar from '../../Components/Sidebar/Sidebar'
 import CreateTask from '../../Components/CreateTask/CreateTask'
 import GroupedTask from '../../Components/GroupedTask/GroupedTask'
+import { Alert } from '@mui/material'
 
 // other Data
 import {HardCodedTaskData} from '../../Components/HardCodedTaskData'
@@ -53,7 +54,8 @@ export default function Home(){
   // handles click outside dropdown menu
   useEffect(() =>{
     const closeDropdown = e => {
-      if(e.composedPath()[0] !== btnRef.current && e.target.id !== 'create-task-dropdown'){
+      console.log(e.composedPath()[0], btnRef.current, e.target.id)
+      if(e.composedPath()[0] !== btnRef.current && e.target.className !== 'create-task-dropdown' && e.target.id !== 'create-task-dropdown' && e.target.name !== 'group'){
         setDropdownActive(prevDrop => false);
       }
     }
@@ -64,7 +66,13 @@ export default function Home(){
   const { mutate: mutateAddTask } = useMutation(
     (newTask) => addTaskRequest(newTask),
     {
-      onSuccess: () => queryClient.invalidateQueries(['tasks'])
+      onSuccess: () => {
+        queryClient.invalidateQueries(['tasks']);
+        setNewTaskMessage(true)
+        setTimeout(() => {
+          setNewTaskMessage(false)
+        }, 5000)
+      }
     }
   );
   const { mutate: mutateAddGroup } = useMutation(
@@ -83,6 +91,7 @@ export default function Home(){
   if(backendError) return <p>An Error occurred</p>
   const backendTasks = backendData.tasks;
   const backendGroups = backendData.groups;
+  // console.log(input);
 
   // Changes the group selection in the sidebar on click.
   function handleGroupSelection(event) {
@@ -119,7 +128,6 @@ export default function Home(){
     if (createTaskBoolean) {
       setDropdownSearch("");
       setDropdownActive(prevDrop => !prevDrop);
-      console.log('dropdownActive', dropdownActive)
     }
 
     // handles a click on a task list dropdown
@@ -141,7 +149,7 @@ export default function Home(){
 
   // adds group to list if enter key is pressed and checks repeats
   function dropdownEnter(event, createTaskBoolean){
-    
+
     const {name, value} = event.target
 
     //check to see if user pressed "Enter"
@@ -332,13 +340,7 @@ export default function Home(){
         }
         
       }))
-      setNewTaskMessage(true)
     }
-    
-    setTimeout(() => {
-      setNewTaskMessage(false)
-    }, 5000)
-    console.log(input);
   };
 
   return (
@@ -366,6 +368,7 @@ export default function Home(){
             dropdownSelected = {dropdownSelected}
             selected = {selected}
           />
+          {newTaskMessage && <Alert className="alert" variant="filled" severity="success">Task Saved</Alert>}
           <GroupedTask 
             groupData = {backendGroups}
             setGroupData = {setGroupData}
