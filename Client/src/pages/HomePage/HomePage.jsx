@@ -35,7 +35,6 @@ export default function Home(){
   );
 
   const btnRef = useRef();
-  const firstRender = useRef(true);
   const [dropdownActive, setDropdownActive] = useState(false); //controls dropdown state
   const [dropdownSearch, setDropdownSearch] = useState(""); //stores search bar on dropdown value
   const [input, setInput] = useState(defaultInputState);
@@ -115,15 +114,7 @@ export default function Home(){
           return ({...prevTask, [name]: value})
         }
         else {return prevTask}
-
-      
-
-
       }))
-
-
-
-
     }
   } 
 
@@ -134,7 +125,6 @@ export default function Home(){
     if (createTaskBoolean) {
       setDropdownSearch("");
       setDropdownActive(prevDrop => !prevDrop);
-      console.log('dropdownActive', dropdownActive)
     }
 
     // handles a click on a task list dropdown
@@ -176,16 +166,9 @@ export default function Home(){
       
       //handles the addition of a new group on the create task dropdown
       if (createTaskBoolean) {
-        setInput(prevValues => ({
-          ...prevValues,
-          [name]: value,
-          groupId: newGroupId
-        }))
-        setGroupData(prevGroupData => prevGroupData.map(group => ({...group, selected: false})))
-        setGroupData(prevGroupData => [...prevGroupData, {id: newGroupId, title: dropdownSearch, taskIds: [], selected: true}])
         mutateAddGroup({id: newGroupId, title: dropdownSearch, activeSidebar: false, selected: true});
         setSelected(newGroupId)
-        setInput(prevInput => ({...prevInput, groupId: newGroupId, groupTitle: dropdownSearch}))
+        setInput(prevInput => ({...prevInput, groupId: newGroupId, groupTitle: value}))
         createTaskBoolean ? setDropdownActive(prevDropdownActive => !prevDropdownActive) : setTaskDropdownActive(prevTaskDropdownActive => !prevTaskDropdownActive)
       }
 
