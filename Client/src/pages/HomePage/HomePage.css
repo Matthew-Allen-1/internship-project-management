@@ -16,3 +16,9 @@ main {
 .task-section{
   width: 100%;
 }
+
+.alert {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
