@@ -9,6 +9,7 @@ import Navbar from '../../Components/Navbar/Navbar'
 import Sidebar from '../../Components/Sidebar/Sidebar'
 import CreateTask from '../../Components/CreateTask/CreateTask'
 import GroupedTask from '../../Components/GroupedTask/GroupedTask'
+import Alert from '@mui/material/Alert'
 
 // other Data
 import {HardCodedTaskData} from '../../Components/HardCodedTaskData'
@@ -53,7 +54,7 @@ export default function Home(){
   // handles click outside dropdown menu
   useEffect(() =>{
     const closeDropdown = e => {
-      if(e.composedPath()[0] !== btnRef.current && e.target.id !== 'create-task-dropdown'){
+      if(e.composedPath()[0] !== btnRef.current && e.target.id !== 'create-task-dropdown' && e.target.name !== 'group'){
         setDropdownActive(prevDrop => false);
       }
     }
@@ -64,7 +65,13 @@ export default function Home(){
   const { mutate: mutateAddTask } = useMutation(
     (newTask) => addTaskRequest(newTask),
     {
-      onSuccess: () => queryClient.invalidateQueries(['tasks'])
+      onSuccess: () => {
+        queryClient.invalidateQueries(['tasks'])
+        setNewTaskMessage(true)
+        setTimeout(() => {
+          setNewTaskMessage(false)
+        }, 5000)
+      }
     }
   );
   const { mutate: mutateAddGroup } = useMutation(
@@ -158,7 +165,7 @@ export default function Home(){
     //check to see if the entered group name is new
     let noMatches = true;
     for(let i = 0; i < backendGroups.length; i++){
-      if(backendGroups[i].title.toUpperCase() === (createTaskDropdown ? dropdownSearch.toUpperCase() : taskDropdownSearch.toUpperCase()) ){
+      if(backendGroups[i].title.toUpperCase() === (createTaskBoolean ? dropdownSearch.toUpperCase() : taskDropdownSearch.toUpperCase()) ){
         noMatches = false;
       }
     }
@@ -177,6 +184,7 @@ export default function Home(){
         setGroupData(prevGroupData => prevGroupData.map(group => ({...group, selected: false})))
         setGroupData(prevGroupData => [...prevGroupData, {id: newGroupId, title: dropdownSearch, taskIds: [], selected: true}])
         mutateAddGroup({id: newGroupId, title: dropdownSearch, activeSidebar: false, selected: true});
+        setSelected(newGroupId)
         setInput(prevInput => ({...prevInput, groupId: newGroupId, groupTitle: dropdownSearch}))
         createTaskBoolean ? setDropdownActive(prevDropdownActive => !prevDropdownActive) : setTaskDropdownActive(prevTaskDropdownActive => !prevTaskDropdownActive)
       }
@@ -321,7 +329,7 @@ export default function Home(){
         else {return prevGroup}
       }))
     }
-    createTaskBoolean ? setDropdownActive(prevDrop => !prevDrop) : setTaskDropdownActive(prevTaskDropDownActive => !prevTaskDropDownActive)
+    // createTaskBoolean ? setDropdownActive(prevDrop => !prevDrop) : setTaskDropdownActive(prevTaskDropDownActive => !prevTaskDropDownActive)
   };
 
   // adds the 'input' state into the currently selected task in 'taskData' state.
@@ -346,12 +354,7 @@ export default function Home(){
         }
         
       }))
-      setNewTaskMessage(true)
     }
-    
-    setTimeout(() => {
-      setNewTaskMessage(false)
-    }, 5000)
     console.log(input);
   };
 
@@ -380,6 +383,7 @@ export default function Home(){
             dropdownSelected = {dropdownSelected}
             selected = {selected}
           />
+          { newTaskMessage && <Alert className="alert" variant="filled" severity="success">Task Saved</Alert>}
           <GroupedTask 
             groupData = {backendGroups}
             setGroupData = {setGroupData}
