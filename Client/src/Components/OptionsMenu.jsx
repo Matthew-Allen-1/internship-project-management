@@ -18,8 +18,13 @@ export default function OptionsMenu(props) {
     setAnchorEl(event.currentTarget)
   }
   const handleClose = (event) => {
+    const target = event.target.getAttribute('name');
     setAnchorEl(null)
-    props.deleteTask(event)
+    if(target === 'Delete'){
+      props.deleteTask(event)
+    } else if(target === 'Duplicate'){
+      console.log(target)
+    }
   }
 
   return (
@@ -52,6 +57,7 @@ export default function OptionsMenu(props) {
         {options.map(option => (
           <MenuItem
             key={option}
+            name={option}
             selected={option === "Pyxis"}
             onClick={(event) => handleClose(event)}
           >

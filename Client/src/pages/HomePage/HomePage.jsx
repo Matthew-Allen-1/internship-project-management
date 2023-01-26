@@ -262,7 +262,6 @@ export default function Home(){
     
     // gets the current group id from the event.target.id
     const currGroupId = event.target.id
-    console.log('currGroupId', currGroupId)
 
     // handles a selection in the create task dropdown
     if (createTaskBoolean) {
@@ -276,7 +275,6 @@ export default function Home(){
           if(group.group_id === currGroupId) {
             setInput({...input, groupTitle: group.title, groupId: group.group_id})
             setSelected(group.group_id)
-            console.log('Selected Group: ', group.title)
           }
         })
       }
@@ -338,7 +336,6 @@ export default function Home(){
         
       }))
     }
-    console.log(input);
   };
 
   return (
