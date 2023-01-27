@@ -18,16 +18,6 @@ nav img {
   cursor: pointer;
 }
 
-.nav-menu-button {
-  width: 96px;
-  height: 44px;
-  margin: 0px 8px;
-  display: flex;
-  align-items: center;
-}
-
-.nav-menu-button::before{content: "Menu"; margin: 4px 4px 4px 0px;}
-
 .nav-title {
   color: black;
   font-weight: bold;
@@ -38,6 +28,7 @@ nav img {
 .nav-title-url {
   font-size: 24px; 
   line-height: 24px;
+  margin: 0px; /* need to find where the 8px is coming from */
 }
 
 .user-info {

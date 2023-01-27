@@ -1,0 +1,29 @@
+.css-zddlty-MuiButtonBase-root-MuiButton-root{
+  background-color: transparent !important;
+  color: black !important;
+  padding: 0 !important;
+  font-family: "SF Pro Text","Myriad Set Pro","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif !important;
+}
+
+#demo-customized-button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  max-width: 190px;
+}
+
+#demo-customized-button .user {
+  white-space: nowrap;
+  overflow-x: hidden;
+  max-width: 130px;
+  text-overflow: ellipsis;
+  margin: 0px;
+  margin-left: 5px;
+}
+
+@media screen and (max-width: 550px){
+  #demo-customized-button .user {
+    display: none;
+  }
+}

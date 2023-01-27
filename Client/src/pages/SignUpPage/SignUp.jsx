@@ -87,7 +87,7 @@ export default function Login(){
         <Link to="/"><img className="logo" src = "https://upload.wikimedia.org/wikipedia/commons/8/84/Alternate_Task_Manager_icon.png" ></img></Link>
         <div className="log-in">
           <p>Already have an account?</p>
-          <Link to="/Login"><button>Log in</button></Link>
+          <Link to="/login"><button>Log in</button></Link>
         </div>
       </header>
       <div className="input-field-container">
@@ -132,7 +132,7 @@ export default function Login(){
           <button onClick={() => handleRegisterClick()}>{isRefetching ? 'Loading...' : 'Register'}</button>
           {/* <p className='password-error-text'>{passwordMatchMsg}</p> */}
         </div>
-        <p className="link">Already have an account? <Link to="/Login">Log in</Link></p>
+        <p className="link">Already have an account? <Link to="/login">Log in</Link></p>
       </div>
     </div>
   )
