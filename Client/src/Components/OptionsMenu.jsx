@@ -23,7 +23,7 @@ export default function OptionsMenu(props) {
     if(target === 'Delete'){
       props.deleteTask(event)
     } else if(target === 'Duplicate'){
-      console.log(target)
+      props.duplicateTask(props.id)
     }
   }
 

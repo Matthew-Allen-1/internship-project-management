@@ -33,10 +33,13 @@ export default function Task(props){
     }
   );
 
-  function deleteTask(event) {
-    if(event.target.tabIndex === -1){
-      mutateDeleteTask(task.task_id)
-    }
+  function deleteTask() {
+    mutateDeleteTask(task.task_id)
+  }
+
+  function duplicateTask(taskId) {
+    console.log(taskId)
+    console.log(task);
   }
 
   //displays information about each task
@@ -79,7 +82,7 @@ export default function Task(props){
               <span className="elapsed-time">{props.elapsedTime != '0:00' ? 'Duration: ' + props.elapsedTime : ''}</span>
               <span className="elapsed-time-format">{props.elapsedTime != '0:00' ? '(hh:mm)' : ''}</span>
             </div>
-            <OptionsMenu deleteTask={deleteTask}/>
+            <OptionsMenu id={task.task_id} deleteTask={deleteTask} duplicateTask={duplicateTask} />
           </div>
         </div>
         <div className="right-box">
@@ -118,7 +121,7 @@ export default function Task(props){
               <span className="elapsed-time">{props.elapsedTime != '0:00' ? 'Duration: ' + props.elapsedTime : ''}</span>
               <span className="elapsed-time-format">{props.elapsedTime != '0:00' ? '(hh:mm)' : ''}</span>
             </div>
-            <OptionsMenu deleteTask={deleteTask}/>
+            <OptionsMenu id={task.task_id} deleteTask={deleteTask} duplicateTask={duplicateTask} />
           </div>
         </div>
       </div>
