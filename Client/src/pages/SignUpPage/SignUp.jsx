@@ -99,13 +99,13 @@ export default function Login(){
                 <p>{responseMessage.msg}</p>
               </div>
           }
-          <label htmlFor="name">Name</label>
+          <label htmlFor="name">Username</label>
           <input 
             onChange={(event) => handleFormChange(event)} 
             id={(responseMessage.error === 'missing' && name === '') ? 'error' : 'name'} 
             name="name" 
             type="text" 
-            placeholder="Enter your name" 
+            placeholder="Enter your username" 
           />
 
           <label htmlFor="email">Email</label>
@@ -117,7 +117,7 @@ export default function Login(){
             placeholder="Enter your email" 
           />
 
-          <label htmlFor="password">password</label>
+          <label htmlFor="password">Password</label>
           <div className="password-input">
             <input 
               onChange={(event) => handleFormChange(event)} 
