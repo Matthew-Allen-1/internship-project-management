@@ -7,9 +7,9 @@ import './CreateTask.css'
 export default function CreateTask(props){
 
   const {groupData, input, handleInputChange, addTask, btnRef, 
-    dropdown, dropdown_active, dropdownEnter, dropdownFilter, dropdownSearch, dropdownSelected, selected} = props;
+    dropdown, dropdownActive, dropdownEnter, dropdownFilter, dropdownSearch, dropdownSelected, selected} = props;
 
-  const classList = dropdown_active ? "dropdown-content show" : "dropdown-content";
+  const classList = dropdownActive ? "dropdown-content show" : "dropdown-content";
   
   // displays elements in dropdown
   const groupListElements = groupData.map(group => {

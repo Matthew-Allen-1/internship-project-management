@@ -14,7 +14,7 @@ export default function GroupedTask(props){
 
   const { groupData, setGroupData, taskData, setTaskData, groupSelection, handleInputChange, 
     dropdown, dropdownEnter, dropdownFilter, dropdownSelected, 
-    taskdropdown_active, setTaskdropdown_active, taskDropdownSearch, setTaskDropdownSearch, deleteTaskById} = props;
+    taskDropdownActive, setTaskDropdownActive, taskDropdownSearch, setTaskDropdownSearch, deleteTaskById} = props;
 
   const [selectAll, setSelectAll] = useState(false);
 
