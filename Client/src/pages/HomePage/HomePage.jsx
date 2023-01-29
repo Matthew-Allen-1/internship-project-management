@@ -17,14 +17,15 @@ import {HardCodedGroupData} from '../../Components/HardCodedGroupData'
 import { defaultInputState, allTasksGroupState, unscheduledTasksGroupState, defaultTaskState} from '../../data/DefaultData'
 
 // Requests functions
-import { fetchTasks,  addTaskRequest, addGroupRequest } from '../../ApiServices/TasksService'
+import { fetchTasks, addGroupRequest } from '../../ApiServices/TasksService'
+import useMutationAddTask from '../../hooks/useMutationAddTask'
 
 // Styling
 import './HomePage.css'
 
 
 export default function Home(){
-  const { currentUser }= useContext(UserContext);
+  const { currentUser, newTaskMessage }= useContext(UserContext);
   const queryClient = useQueryClient();
   const { data: backendData , isLoading: backendLoading, isError: backendError , refetch} = useQuery(
     'tasks', 
@@ -47,7 +48,6 @@ export default function Home(){
   const [groupSelection, setGroupSelection] = useState('default')
   const [taskDropdownSearch, setTaskDropdownSearch] = useState('')
   const [taskDropdownActive, setTaskDropdownActive] = useState(false)
-  const [newTaskMessage, setNewTaskMessage] = useState(false)
   const [selected, setSelected] = useState('')
 
   // handles click outside dropdown menu
@@ -61,29 +61,20 @@ export default function Home(){
     return () => document.body.removeEventListener('click', closeDropdown);
   }, [])
 
-  const { mutate: mutateAddTask } = useMutation(
-    (newTask) => addTaskRequest(newTask),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(['tasks'])
-        setNewTaskMessage(true)
-        setTimeout(() => {
-          setNewTaskMessage(false)
-        }, 5000)
-      }
-    }
-  );
+  const { mutate: mutateAddTask } = useMutationAddTask();
+
   const { mutate: mutateAddGroup } = useMutation(
     (newGroup) => addGroupRequest(newGroup),
     {
       onSuccess: (data) => {
         queryClient.invalidateQueries(['tasks']);
-        setInput(prevInput => ({...prevInput, groupTitle: dropdownSearch}))
+        setInput(prevInput => ({...prevInput, group_title: dropdownSearch}))
         setDropdownActive(false);
         setDropdownSearch('');
       }
     }
   );
+  
 
   if( backendLoading ) return <p>Loading...</p>
   if(backendError) return <p>An Error occurred</p>
@@ -134,9 +125,9 @@ export default function Home(){
 
       setTaskData(prevTaskData => prevTaskData.map(prevTask => {
         if(currTaskId == prevTask.id) {
-          const newDropdownActive = !prevTask.dropdownActive
-          setTaskDropdownActive(prevTaskDropDownActive => !prevTaskDropDownActive)
-          return {...prevTask, dropdownActive: newDropdownActive}
+          const newDropdownActive = !prevTask.dropdown_active
+          setTaskDropdownActive(prevTaskDropdownActive => !prevTaskDropdownActive)
+          return {...prevTask, dropdown_active: newDropdownActive}
         }
         else {return prevTask}
       }))
@@ -166,9 +157,9 @@ export default function Home(){
       
       //handles the addition of a new group on the create task dropdown
       if (createTaskBoolean) {
-        mutateAddGroup({id: newGroupId, title: dropdownSearch, activeSidebar: false, selected: true});
+        mutateAddGroup({group_id: newGroupId, title: dropdownSearch, activeSidebar: false, selected: true});
         setSelected(newGroupId)
-        setInput(prevInput => ({...prevInput, groupId: newGroupId, groupTitle: value}))
+        setInput(prevInput => ({...prevInput, group_id: newGroupId, group_title: value}))
         createTaskBoolean ? setDropdownActive(prevDropdownActive => !prevDropdownActive) : setTaskDropdownActive(prevTaskDropdownActive => !prevTaskDropdownActive)
       }
 
@@ -179,7 +170,7 @@ export default function Home(){
         const currTask = taskData.filter(task => task.id == currTaskId)[0]
 
         setGroupData(prevGroupData => [...prevGroupData.map(prevGroup => {
-          if (currTask.groupId == prevGroup.id && event.target.id != prevGroup.id) {
+          if (currTask.group_id == prevGroup.id && event.target.id != prevGroup.id) {
             const prevTaskIds = prevGroup.taskIds
             prevTaskIds.splice(prevTaskIds.indexOf(currTaskId), 1)
             return ({...prevGroup, taskIds: [...prevTaskIds]})
@@ -189,8 +180,8 @@ export default function Home(){
     
         setTaskData(prevTaskData => prevTaskData.map(prevTask => {
           if (currTaskId == prevTask.id) {
-            const newDropdownActive = !prevTask.dropdownActive
-            return {...prevTask, dropdownActive: newDropdownActive, groupId: newGroupId, groupTitle: taskDropdownSearch}
+            const newDropdownActive = !prevTask.dropdown_active
+            return {...prevTask, dropdown_active: newDropdownActive, group_id: newGroupId, group_title: taskDropdownSearch}
           }
           else {return prevTask} 
         }))
@@ -207,7 +198,7 @@ export default function Home(){
       if (createTaskBoolean) {
         setGroupData(prevGroupData => prevGroupData.map(group => {
           if(group.title.toUpperCase() === currGroup.title.toUpperCase()){
-            setInput({...input, groupTitle: group.title, groupId: group.id})
+            setInput({...input, group_title: group.title, group_id: group.id})
             return {...group, selected: true}
           } else {
             return {...group, selected: false}
@@ -224,18 +215,18 @@ export default function Home(){
 
         setGroupData(prevGroupData => prevGroupData.map(prevGroup => {
           // if the current task belongs to this group and this group was not selected, delete the current task from this group
-          if (currTask.groupId == prevGroup.id && currGroupId != prevGroup.id) {
+          if (currTask.group_id == prevGroup.id && currGroupId != prevGroup.id) {
             const prevTaskIds = prevGroup.taskIds
             prevTaskIds.splice(prevTaskIds.indexOf(currTaskId), 1)
             return ({...prevGroup, taskIds: [...prevTaskIds]})
           }
           // else if the current task does not belong to this group, and this is the selected group
-          else if (currTask.groupId != prevGroup.id && currGroupId == prevGroup.id) {
+          else if (currTask.group_id != prevGroup.id && currGroupId == prevGroup.id) {
             setTaskData(prevTaskData => prevTaskData.map(prevTask => {
-              //if this is the current task, switch its dropdownActiveState and update its group info to the selected group
+              //if this is the current task, switch its dropdown_activeState and update its group info to the selected group
               if (currTaskId == prevTask.id) {
-                const newDropdownActive = !prevTask.dropdownActive
-                return {...prevTask, dropdownActive: newDropdownActive, groupId: prevGroup.id, groupTitle: prevGroup.title}
+                const newDropdownActive = !prevTask.dropdown_active
+                return {...prevTask, dropdown_active: newDropdownActive, group_id: prevGroup.id, group_title: prevGroup.title}
               }
               else {return prevTask} 
             }))
@@ -266,14 +257,14 @@ export default function Home(){
     // handles a selection in the create task dropdown
     if (createTaskBoolean) {
       if (currGroupId === "create-dropdown-input") {
-        // setInput({...input, groupTitle: 'Group', groupId: "default"})
+        // setInput({...input, group_title: 'Group', group_id: "default"})
         // setSelected("default")
         // console.log('Selected Group: ', "default")
       }
       else {
         backendGroups.forEach(group => {
           if(group.group_id === currGroupId) {
-            setInput({...input, groupTitle: group.title, groupId: group.group_id})
+            setInput({...input, group_title: group.title, group_id: group.group_id})
             setSelected(group.group_id)
           }
         })
@@ -288,18 +279,18 @@ export default function Home(){
 
       setGroupData(prevGroupData => prevGroupData.map(prevGroup => {
         // if the current task belongs to this group and this group was not selected, delete the current task from this group
-        if (currTask.groupId == prevGroup.id && currGroupId != prevGroup.id) {
+        if (currTask.group_id == prevGroup.id && currGroupId != prevGroup.id) {
           const prevTaskIds = prevGroup.taskIds
           prevTaskIds.splice(prevTaskIds.indexOf(currTaskId), 1)
           return ({...prevGroup, taskIds: [...prevTaskIds]})
         }
         // else if the current task does not belong to this group, and this is the selected group
-        else if (currTask.groupId != prevGroup.id && currGroupId == prevGroup.id) {
+        else if (currTask.group_id != prevGroup.id && currGroupId == prevGroup.id) {
           setTaskData(prevTaskData => prevTaskData.map(prevTask => {
-            //if this is the current task, switch its dropdownActiveState and update its group info to the selected group
+            //if this is the current task, switch its dropdown_activeState and update its group info to the selected group
             if (currTaskId == prevTask.id) {
-              const newDropdownActive = !prevTask.dropdownActive
-              return {...prevTask, dropdownActive: newDropdownActive, groupId: prevGroup.id, groupTitle: prevGroup.title}
+              const newDropdownActive = !prevTask.dropdown_active
+              return {...prevTask, dropdown_active: newDropdownActive, group_id: prevGroup.id, group_title: prevGroup.title}
             }
             else {return prevTask} 
           }))
@@ -310,20 +301,20 @@ export default function Home(){
         else {return prevGroup}
       }))
     }
-    // createTaskBoolean ? setDropdownActive(prevDrop => !prevDrop) : setTaskDropdownActive(prevTaskDropDownActive => !prevTaskDropDownActive)
+    // createTaskBoolean ? setDropdownActive(prevDrop => !prevDrop) : setTaskDropdownActive(prevTaskDropdownActive => !prevTaskDropdownActive)
   };
 
   // adds the 'input' state into the currently selected task in 'taskData' state.
   function addTask(){
     if (input.title == '') {alert('You must enter a task description.')}
-    else if ((input.startTime != '' || input.endTime != '') && input.date == '') {
+    else if ((input.start_time != '' || input.end_time != '') && input.date == '') {
       alert('You may not enter a start or end time without entering a date.')
     }
     else {
-      mutateAddTask({...input, id: nanoid(), dropdownActive: false})
+      mutateAddTask({...input, task_id: nanoid(), dropdown_active: false})
       const newTaskId = nanoid()
       setTaskData(prevTaskData => {
-        return([...prevTaskData, {...input, id: newTaskId, dropdownActive: false}])
+        return([...prevTaskData, {...input, id: newTaskId, dropdown_active: false}])
       })
       setGroupData(prevGroupData => prevGroupData.map(group => {
         if (group.id == 1 && input.date == '') {
@@ -356,7 +347,7 @@ export default function Home(){
 
             btnRef = {btnRef}
             dropdown = {dropdown} 
-            dropdownActive = {dropdownActive} 
+            dropdown_active = {dropdownActive} 
             dropdownEnter = {dropdownEnter}
             dropdownFilter = {dropdownFilter} 
             dropdownSearch = {dropdownSearch} 

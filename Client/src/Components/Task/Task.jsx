@@ -5,6 +5,10 @@ import { useMutation, useQueryClient } from 'react-query'
 
 import { deleteTaskRequest } from '../../ApiServices/TasksService'
 
+import useMutationAddTask from '../../hooks/useMutationAddTask';
+
+import { defaultInputState } from '../../data/DefaultData';
+
 // Styling
 import './Task.css'
 import OptionsMenu from '../OptionsMenu';
@@ -16,7 +20,7 @@ export default function Task(props){
   const {groupData, task, handleInputChange, dropdown, dropdownEnter, dropdownFilter, dropdownSelected, taskDropdownSearch} = props;
   const taskBtnRef = React.useRef();
   const queryClient = useQueryClient();
-  const newClassList = task.dropdownActive ? "task-dropdown-content task-dropdown-show" : "task-dropdown-content";
+  const newClassList = task.dropdown_active ? "task-dropdown-content task-dropdown-show" : "task-dropdown-content";
   
   // displays elements in dropdown
   const newGroupListElements = groupData.map(group => {
@@ -33,13 +37,14 @@ export default function Task(props){
     }
   );
 
+  const { mutate: mutateAddTask } = useMutationAddTask();
+
   function deleteTask() {
     mutateDeleteTask(task.task_id)
   }
 
-  function duplicateTask(taskId) {
-    console.log(taskId)
-    console.log(task);
+  function duplicateTask() {
+    mutateAddTask({defaultInputState ,...task, task_id: nanoid()})
   }
 
   //displays information about each task
@@ -61,7 +66,7 @@ export default function Task(props){
           <span className="line-divider"></span>
           <div className="task-dropdown">
             <div className="group task-drop-btn" onClick={() => dropdown(event, false)}>
-              <p key = {task.groupId} id = {'group#' + task.task_id} ref = {taskBtnRef}>{task.group_title}</p>
+              <p key = {task.group_id} id = {'group#' + task.task_id} ref = {taskBtnRef}>{task.group_title}</p>
             </div>
             <div id="task-group-dropdown" className={newClassList} >
               <input 
@@ -89,16 +94,16 @@ export default function Task(props){
           <span className="line-divider"></span>
           <div className="task-time">
             <input 
-              id = {'startTime#' + task.task_id}
-              name = "startTime"
+              id = {'start_time#' + task.task_id}
+              name = "start_time"
               defaultValue = {task.start_time}  
               type = "time" 
               onChange = {() => handleInputChange(event, false)} 
             />
             <div className="time-divider">-</div>
             <input 
-              id = {'endTime#' + task.task_id}
-              name = "endTime"
+              id = {'end_time#' + task.task_id}
+              name = "end_time"
               defaultValue = {task.end_time} 
               type = "time"
               onChange = {() => handleInputChange(event, false)} 

@@ -7,9 +7,9 @@ import './CreateTask.css'
 export default function CreateTask(props){
 
   const {groupData, input, handleInputChange, addTask, btnRef, 
-    dropdown, dropdownActive, dropdownEnter, dropdownFilter, dropdownSearch, dropdownSelected, selected} = props;
+    dropdown, dropdown_active, dropdownEnter, dropdownFilter, dropdownSearch, dropdownSelected, selected} = props;
 
-  const classList = dropdownActive ? "dropdown-content show" : "dropdown-content";
+  const classList = dropdown_active ? "dropdown-content show" : "dropdown-content";
   
   // displays elements in dropdown
   const groupListElements = groupData.map(group => {
@@ -74,16 +74,16 @@ export default function CreateTask(props){
             <input 
               className = "time create-task-input"
               type = "time" 
-              name = "startTime"
-              value = {input.startTime}
+              name = "start_time"
+              value = {input.start_time}
               onChange = {() => handleInputChange(event, true)}
             />
             <div className = "time-divider">-</div>
             <input 
               className = "time create-task-input"
               type = "time"
-              name = "endTime"
-              value = {input.endTime}
+              name = "end_time"
+              value = {input.end_time}
               onChange = {() => handleInputChange(event, true)} 
             />
           </div>

@@ -213,7 +213,7 @@ app.post('/add-group', async function (req, res) {
       INSERT INTO group_table (group_id, title, active_sidebar, selected, id)
       VALUES (:group_id, :title, :active_sidebar, :selected, ${user.userId})`,
       {
-        group_id: req.body.id,
+        group_id: req.body.group_id,
         title: req.body.title,
         active_sidebar: req.body.activeSidebar,
         selected: req.body.selected,
@@ -238,14 +238,14 @@ app.post('/add-task', async function (req, res) {
       INSERT INTO task_table (task_id, title, start_time, end_time, date, dropdown_active, group_title, group_id, id)
       VALUES (:task_id, :title, :start_time, :end_time, :date, :dropdown_active, :group_title, :group_id, ${user.userId})`, 
       {
-      task_id: req.body.id,
+      task_id: req.body.task_id,
       title: req.body.title,
-      start_time: req.body.startTime,
-      end_time: req.body.endTime,
+      start_time: req.body.start_time,
+      end_time: req.body.end_time,
       date: req.body.date,
-      dropdown_active: req.body.dropdownActive,
-      group_title: req.body.groupTitle,
-      group_id: req.body.groupId,
+      dropdown_active: req.body.dropdown_active,
+      group_title: req.body.group_title,
+      group_id: req.body.group_id,
       }
     );
     res.json({Success: true})
