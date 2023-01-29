@@ -44,7 +44,7 @@ export default function Task(props){
   }
 
   function duplicateTask() {
-    mutateAddTask({defaultInputState ,...task, task_id: nanoid()})
+    mutateAddTask({...defaultInputState ,...task, task_id: nanoid()})
   }
 
   //displays information about each task
