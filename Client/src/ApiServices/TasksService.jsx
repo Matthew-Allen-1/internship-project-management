@@ -27,6 +27,14 @@ export const addGroupRequest = async (newGroup) => {
   }
 }
 
+export const updateTaskRequest = async (newGroup) => {
+  try{
+    return post(`${API_URL}/update-task`, newGroup);
+  } catch(err){
+    return { data: [], error: err }
+  }
+}
+
 export const deleteTaskRequest = async (id) => {
   try{
     return remove(`${API_URL}/delete-task/${id}`);

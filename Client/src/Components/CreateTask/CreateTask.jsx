@@ -14,10 +14,10 @@ export default function CreateTask(props){
   // displays elements in dropdown
   const groupListElements = groupData.map(group => {
       if(dropdownSearch == "") {
-        return <p key = {group.group_id} id = {group.group_id} className = "create-dropdown-group" onClick={(event) => dropdownSelected(event, true)}>{group.title}</p>
+        return <p key = {group.group_id} id = {group.group_id} className = "create-dropdown-group" onClick={(event) => dropdownSelected(event)}>{group.title}</p>
       } 
       else if (group.title.toUpperCase().indexOf(dropdownSearch.toUpperCase()) === 0 && group.title != "Group") {
-        return <p key = {group.group_id} id = {group.group_id} className = "create-task-dropdown-group" onClick={(event) => dropdownSelected(event, true)}>{group.title}</p>
+        return <p key = {group.group_id} id = {group.group_id} className = "create-task-dropdown-group" onClick={(event) => dropdownSelected(event)}>{group.title}</p>
       }
   })
 
@@ -40,12 +40,12 @@ export default function CreateTask(props){
               type="text"
               name="title"
               value={input.title}
-              onChange={() => handleInputChange(event, true)} 
+              onChange={(event) => handleInputChange(event)} 
             />
           </div>
           <span className = "line-divider"></span>
           <div className = "dropdown create-task-dropdown-container" >
-            <div className = "group" onClick = {() => dropdown(event, true)}>
+            <div className = "group" onClick = {(event) => dropdown(event)}>
               <img  src = "https://app.clockify.me/assets/ui-icons/plus-blue-req.svg" alt = "" />
               {selected == '' ? defaultGroupElement : groupElement}
             </div>
@@ -57,9 +57,9 @@ export default function CreateTask(props){
                 placeholder = "Search/Create..." 
                 id = "create-dropdown-input"
                 name = "group" 
-                onChange = {() => dropdownFilter(event, true)} 
-                onKeyDown = {() => dropdownEnter(event, true)}
-                onClick = {() => dropdownSelected(event, true)}
+                onChange = {(event) => dropdownFilter(event)} 
+                onKeyDown = {(event) => dropdownEnter(event)}
+                onClick = {(event) => dropdownSelected(event)}
               />
               {groupListElements}
             </div>
@@ -76,7 +76,7 @@ export default function CreateTask(props){
               type = "time" 
               name = "start_time"
               value = {input.start_time}
-              onChange = {() => handleInputChange(event, true)}
+              onChange = {(event) => handleInputChange(event)}
             />
             <div className = "time-divider">-</div>
             <input 
@@ -84,7 +84,7 @@ export default function CreateTask(props){
               type = "time"
               name = "end_time"
               value = {input.end_time}
-              onChange = {() => handleInputChange(event, true)} 
+              onChange = {(event) => handleInputChange(event)} 
             />
           </div>
 
@@ -96,7 +96,7 @@ export default function CreateTask(props){
               type = "date" 
               name = "date"
               value = {input.date}
-              onChange = {() => handleInputChange(event, true)} 
+              onChange = {(event) => handleInputChange(event)} 
             />
           </div>
 

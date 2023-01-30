@@ -4,29 +4,14 @@ import {nanoid} from 'nanoid'
 
 // Components
 import Task from '../Task/Task'
-import OptionsMenu from '../OptionsMenu'
 
 //Styling
 import './GroupedTask.css'
 
 
 export default function GroupedTask(props){
-
-  const { groupData, setGroupData, taskData, setTaskData, groupSelection, handleInputChange, 
-    dropdown, dropdownEnter, dropdownFilter, dropdownSelected, 
-    taskDropdownActive, setTaskDropdownActive, taskDropdownSearch, setTaskDropdownSearch, deleteTaskById} = props;
-
+  const { groupData, taskData, groupSelection } = props;
   const [selectAll, setSelectAll] = useState(false);
-
-
-  const defaultTaskData = {
-    title: 'Task that was added',
-    group_title: 'Group that was chosen',
-    group_id: 0,
-    start_time: '12:00',
-    end_time: '12:00',
-    date: '1/1/00'
-  }
 
   //converts date object to a displayable date string
   function convertDateToString(date) {
@@ -71,13 +56,6 @@ export default function GroupedTask(props){
     return (hoursElapsed.toString() + ":" + minutesElapsed.toString())
   }
 
-// //Filter task list according to the group selected in the sidebar.
-//   const filteredTasks = taskData.filter((task, index) => {
-//     const indexOfGroupSelection = groupData.map(group => group.group_id).indexOf(groupSelection)
-//     if (groupSelection == 0 || index == 0) {return true}
-//     else {return groupData[indexOfGroupSelection].taskIds.indexOf(task.id) >= 0}
-//  })
-
 
   const filteredTasks = taskData.filter(task => {
     if(groupSelection === 'default'){
@@ -119,13 +97,6 @@ export default function GroupedTask(props){
         task = {task} 
         elapsedTime = {convertElapsedToText(calcElapsedTime(task))}
         groupData = {groupData}
-        handleInputChange = {handleInputChange}
-        dropdown = {dropdown}
-        dropdownFilter = {dropdownFilter}
-        dropdownEnter = {dropdownEnter}
-        dropdownSelected={dropdownSelected}
-        taskDropdownSearch={taskDropdownSearch}
-        deleteTaskById={deleteTaskById}
         selectAll={selectAll}
       />
     )

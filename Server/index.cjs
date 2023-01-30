@@ -219,7 +219,33 @@ app.post('/add-group', async function (req, res) {
         selected: req.body.selected,
       }
     );
-    res.json({Success: true, title: req.body.title})
+    res.json({Success: true, group_title: req.body.title, group_id: req.body.group_id})
+
+  } catch (error){
+    console.log('error', error)
+    res.json({Success: false})
+  }
+})
+
+app.post('/update-task', async function (req, res) {
+  const [scheme, token] = req.headers.authorization.split(' ');
+  const user = jwt.verify(token, process.env.JWT_KEY)
+  console.log('group updated: ', req.body)
+
+  try{
+    if(req.body.type === 'groupSelect'){
+      const [task] = await req.db.query(`
+        UPDATE task_table
+        SET group_id = :group_id, group_title = :group_title
+        WHERE task_id = :task_id`,
+        {
+          group_id: req.body.group_id,
+          group_title: req.body.group_title,
+          task_id: req.body.task_id,
+        }
+      );
+    }
+    res.json({Success: true})
 
   } catch (error){
     console.log('error', error)
