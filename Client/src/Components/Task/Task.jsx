@@ -179,7 +179,7 @@ export default function Task(props){
           <span className="line-divider"></span>
           <div className="task-time">
             <input 
-              id = {'start_time#' + task.task_id}
+              id = {'start-time#' + task.task_id}
               name = "start_time"
               defaultValue = {task.start_time}  
               type = "time" 
@@ -187,7 +187,7 @@ export default function Task(props){
             />
             <div className="time-divider">-</div>
             <input 
-              id = {'end_time#' + task.task_id}
+              id = {'end-time#' + task.task_id}
               name = "end_time"
               defaultValue = {task.end_time} 
               type = "time"
