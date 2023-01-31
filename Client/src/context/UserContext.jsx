@@ -4,23 +4,19 @@ const UserContext = createContext(null);
 
 function UserProvider({children}) {
   const [currentUser, setCurrentUser] = useState(null);
-  const [testTask, setTestTask] = useState([]);
-  const [testGroup, setTestGroup] = useState([]);
+  const [newTaskMessage, setNewTaskMessage] = useState(false)
 
   function loginUser(payload) {
     setCurrentUser({ ...payload })
   }
 
-  function updateFrontend(tasks, groups) {
-    setTaskDataB()
+  function updateNewTaskMessage(boolean){
+    setNewTaskMessage(boolean)
   }
 
-  function signOut(){
-
-  }
 
   return (
-    <UserContext.Provider value={{currentUser, loginUser, signOut}}>
+    <UserContext.Provider value={{currentUser, newTaskMessage, loginUser, updateNewTaskMessage}}>
       {children}
     </UserContext.Provider>
   )

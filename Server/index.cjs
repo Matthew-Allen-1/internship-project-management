@@ -213,13 +213,39 @@ app.post('/add-group', async function (req, res) {
       INSERT INTO group_table (group_id, title, active_sidebar, selected, id)
       VALUES (:group_id, :title, :active_sidebar, :selected, ${user.userId})`,
       {
-        group_id: req.body.id,
+        group_id: req.body.group_id,
         title: req.body.title,
         active_sidebar: req.body.activeSidebar,
         selected: req.body.selected,
       }
     );
-    res.json({Success: true, title: req.body.title})
+    res.json({Success: true, group_title: req.body.title, group_id: req.body.group_id})
+
+  } catch (error){
+    console.log('error', error)
+    res.json({Success: false})
+  }
+})
+
+app.post('/update-task', async function (req, res) {
+  const [scheme, token] = req.headers.authorization.split(' ');
+  const user = jwt.verify(token, process.env.JWT_KEY)
+  console.log('group updated: ', req.body)
+
+  try{
+    if(req.body.type === 'groupSelect'){
+      const [task] = await req.db.query(`
+        UPDATE task_table
+        SET group_id = :group_id, group_title = :group_title
+        WHERE task_id = :task_id`,
+        {
+          group_id: req.body.group_id,
+          group_title: req.body.group_title,
+          task_id: req.body.task_id,
+        }
+      );
+    }
+    res.json({Success: true})
 
   } catch (error){
     console.log('error', error)
@@ -238,14 +264,14 @@ app.post('/add-task', async function (req, res) {
       INSERT INTO task_table (task_id, title, start_time, end_time, date, dropdown_active, group_title, group_id, id)
       VALUES (:task_id, :title, :start_time, :end_time, :date, :dropdown_active, :group_title, :group_id, ${user.userId})`, 
       {
-      task_id: req.body.id,
+      task_id: req.body.task_id,
       title: req.body.title,
-      start_time: req.body.startTime,
-      end_time: req.body.endTime,
+      start_time: req.body.start_time,
+      end_time: req.body.end_time,
       date: req.body.date,
-      dropdown_active: req.body.dropdownActive,
-      group_title: req.body.groupTitle,
-      group_id: req.body.groupId,
+      dropdown_active: req.body.dropdown_active,
+      group_title: req.body.group_title,
+      group_id: req.body.group_id,
       }
     );
     res.json({Success: true})

@@ -1,9 +1,13 @@
 // Libraries
-import React from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import {nanoid} from 'nanoid'
 import { useMutation, useQueryClient } from 'react-query'
 
-import { deleteTaskRequest } from '../../ApiServices/TasksService'
+import { addGroupRequest, deleteTaskRequest, updateTaskRequest } from '../../ApiServices/TasksService'
+
+import useMutationAddTask from '../../hooks/useMutationAddTask';
+
+import { defaultInputState } from '../../data/DefaultData';
 
 // Styling
 import './Task.css'
@@ -13,19 +17,24 @@ import OptionsMenu from '../OptionsMenu';
 
 export default function Task(props){
 
-  const {groupData, task, handleInputChange, dropdown, dropdownEnter, dropdownFilter, dropdownSelected, taskDropdownSearch} = props;
-  const taskBtnRef = React.useRef();
+  const {groupData, task} = props;
+  const btnRef = useRef();
   const queryClient = useQueryClient();
-  const newClassList = task.dropdownActive ? "task-dropdown-content task-dropdown-show" : "task-dropdown-content";
-  
-  // displays elements in dropdown
-  const newGroupListElements = groupData.map(group => {
-    if (taskDropdownSearch == "" || group.title.toUpperCase().indexOf(taskDropdownSearch.toUpperCase()) === 0) {
-      return <p key = {group.group_id} id = {group.group_id} className = {'group-list#' + task.task_id} onClick={() => dropdownSelected(event, false)}>{group.title}</p>
-    }
-    else {return}
-  })
+  const [input, setInput] = useState({title: '', start_time: '', end_time:'', date:''})
+  const [dropdownActive, setDropdownActive] = useState(false)
+  const [dropdownSearch, setDropdownSearch] = useState(""); 
+  const newClassList = dropdownActive ? "task-dropdown-content task-dropdown-show" : "task-dropdown-content";
 
+  useEffect(() =>{
+    const closeDropdown = e => {
+      if(e.composedPath()[0] !== btnRef.current  && e.target.name !== 'group'){
+        setDropdownActive(prevDrop => false);
+      }
+    }
+    document.body.addEventListener('click', closeDropdown);
+    return () => document.body.removeEventListener('click', closeDropdown);
+  }, []);
+  
   const { mutate: mutateDeleteTask } = useMutation(
     (id) => deleteTaskRequest(id),
     {
@@ -33,14 +42,95 @@ export default function Task(props){
     }
   );
 
-  function deleteTask() {
-    mutateDeleteTask(task.task_id)
-  }
+  const { mutate: mutateAddGroup } = useMutation(
+    (newGroup) => addGroupRequest(newGroup),
+    {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries(['tasks']);
+        setDropdownActive(false);
+        setDropdownSearch('');
+        mutateUpdateTask({type: 'groupSelect', group_id: data.group_id, group_title: data.group_title, task_id: task.task_id})
+      }
+    }
+  );
 
-  function duplicateTask(taskId) {
-    console.log(taskId)
-    console.log(task);
-  }
+  const { mutate: mutateUpdateTask } = useMutation(
+    (groupId) => updateTaskRequest(groupId),
+    {
+      onSuccess: () => queryClient.invalidateQueries(['tasks'])
+    }
+  );
+
+  const { mutate: mutateAddTask } = useMutationAddTask();
+
+  function deleteTask() {mutateDeleteTask(task.task_id)};
+  function duplicateTask() {mutateAddTask({...defaultInputState ,...task, task_id: nanoid()})};
+
+
+
+  // handles input changes
+  function handleInputChange(event){
+    const{name, value} = event.target;
+    setInput(prevInput => ({...prevInput, [name]: value}))
+  };
+
+  // handles a click on the create task dropdown
+  function dropdown() {
+    setDropdownSearch("");
+    setDropdownActive(prevDrop => !prevDrop);
+  };
+
+  // adds group to list if enter key is pressed and checks repeats
+  function dropdownEnter(event){
+    const {name, value} = event.target
+
+    //check to see if user pressed "Enter"
+    if(event.key !== "Enter") {return}
+    
+    //check to see if the entered group name is new
+    let noMatches = true;
+    for(let i = 0; i < groupData.length; i++){
+      if(groupData[i].title.toUpperCase() === (dropdownSearch.toUpperCase())){
+        noMatches = false;
+      }
+    }
+    //if the entered group name is new, add the new group to groupData
+    if(noMatches){
+      let newGroupId = nanoid(); 
+      mutateAddGroup({group_id: newGroupId, title: dropdownSearch, activeSidebar: false, selected: true});
+    } else{
+      // gets the current group id from the event.target.id
+      const currGroup = groupData.filter(group => group.title == value)[0]
+      mutateUpdateTask({type: 'groupSelect', group_id: currGroup.group_id, group_title: currGroup.title, task_id: task.task_id})
+      setDropdownActive(false);
+    }
+  };
+
+  //updates search bar state
+  function dropdownFilter(event) {
+   setDropdownSearch(event.target.value)
+  };
+
+  // makes options clickable in dropdown and selects them to show
+  function dropdownSelected(event){
+    const currGroupId = event.target.id
+    groupData.forEach(group => {
+      if(group.group_id === currGroupId) {
+        mutateUpdateTask({type: 'groupSelect', group_id: group.group_id, group_title: group.title, task_id: task.task_id})
+      }
+    })
+  };
+
+
+
+
+
+  // displays elements in dropdown
+  const newGroupListElements = groupData.map(group => {
+    if (dropdownSearch == "" || group.title.toUpperCase().indexOf(dropdownSearch.toUpperCase()) === 0) {
+      return <p key = {group.group_id} id = {group.group_id} className = {'group-list#' + task.task_id} onClick={(event) => dropdownSelected(event)}>{group.title}</p>
+    } else {return}
+  });
 
   //displays information about each task
   return(
@@ -49,30 +139,30 @@ export default function Task(props){
         <div className="left-box">
           <div className="task-input">
             {props.selectAll && <input type="checkbox"/>}
-            <input 
+            <input
               className = "input"
               id = {'title#' + task.task_id}
               defaultValue = {task.title}
               type = "text" 
               name = "title"
-              onChange = {() => handleInputChange(event, false)} 
+              onChange = {(event) => handleInputChange(event)} 
             />
           </div>
           <span className="line-divider"></span>
           <div className="task-dropdown">
-            <div className="group task-drop-btn" onClick={() => dropdown(event, false)}>
-              <p key = {task.groupId} id = {'group#' + task.task_id} ref = {taskBtnRef}>{task.group_title}</p>
+            <div className="group task-drop-btn" onClick={(event) => dropdown(event)}>
+              <p key = {task.group_id} id = {'group#' + task.task_id} ref = {btnRef}>{task.group_title}</p>
             </div>
             <div id="task-group-dropdown" className={newClassList} >
               <input 
                 type = "text" 
-                value = {taskDropdownSearch} 
+                value = {dropdownSearch} 
                 placeholder = "Search/Create..." 
                 className = "task-dropdown-input"
                 id = {'dropdown-input#' + task.task_id}
                 name = "group" 
-                onChange = {() => dropdownFilter(event, false)} 
-                onKeyDown = {() => dropdownEnter(event, false)}
+                onChange = {(event) => dropdownFilter(event)} 
+                onKeyDown = {(event) => dropdownEnter(event)}
               />
               {newGroupListElements}
             </div>
@@ -89,16 +179,16 @@ export default function Task(props){
           <span className="line-divider"></span>
           <div className="task-time">
             <input 
-              id = {'startTime#' + task.task_id}
-              name = "startTime"
+              id = {'start-time#' + task.task_id}
+              name = "start_time"
               defaultValue = {task.start_time}  
               type = "time" 
               onChange = {() => handleInputChange(event, false)} 
             />
             <div className="time-divider">-</div>
             <input 
-              id = {'endTime#' + task.task_id}
-              name = "endTime"
+              id = {'end-time#' + task.task_id}
+              name = "end_time"
               defaultValue = {task.end_time} 
               type = "time"
               onChange = {() => handleInputChange(event, false)} 
