@@ -244,6 +244,46 @@ app.post('/update-task', async function (req, res) {
           task_id: req.body.task_id,
         }
       );
+    } else if (req.body.type === 'title'){
+      const [task] = await req.db.query(`
+        UPDATE task_table
+        SET title = :title
+        WHERE task_id = :task_id`,
+        {
+          title: req.body.title,
+          task_id: req.body.task_id,
+        }
+      );
+    } else if (req.body.type === 'start_time'){
+      const [task] = await req.db.query(`
+        UPDATE task_table
+        SET start_time = :start_time
+        WHERE task_id = :task_id`,
+        {
+          start_time: req.body.start_time,
+          task_id: req.body.task_id,
+        }
+      );
+    }else if (req.body.type === 'end_time'){
+      const [task] = await req.db.query(`
+        UPDATE task_table
+        SET end_time = :end_time
+        WHERE task_id = :task_id`,
+        {
+          end_time: req.body.end_time,
+          task_id: req.body.task_id,
+        }
+      );
+    } else if (req.body.type === 'date'){
+      const [task] = await req.db.query(`
+        UPDATE task_table
+        SET date = :date
+        WHERE task_id = :task_id`,
+        {
+          date: req.body.date,
+          task_id: req.body.task_id,
+        }
+      );
     }
     res.json({Success: true})
 

@@ -166,7 +166,7 @@ export default function Home(){
             dropdownSelected = {dropdownSelected}
             selected = {selected}
           />
-          { newTaskMessage && <Alert className="alert" variant="filled" severity="success">Task Saved</Alert>}
+          { newTaskMessage.state && <Alert className="alert" variant="filled" severity="success">{newTaskMessage.msg}</Alert>}
           <GroupedTask 
             groupData = {backendGroups}
             taskData = {backendTasks}

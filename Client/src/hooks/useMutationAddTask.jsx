@@ -12,10 +12,10 @@ export default function useMutationAddTask(){
     {
       onSuccess: () => {
         queryClient.invalidateQueries(['tasks'])
-        updateNewTaskMessage(true)
+        updateNewTaskMessage(true, "Task Saved")
         setTimeout(() => {
-          updateNewTaskMessage(false)
-        }, 5000)
+          updateNewTaskMessage(false, '')
+        }, 4000)
       }
     }
   );
