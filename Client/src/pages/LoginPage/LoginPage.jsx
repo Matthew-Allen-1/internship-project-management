@@ -1,14 +1,17 @@
+import React,{ useState, useContext } from 'react';
+
 // Libraries
 import { useQuery } from 'react-query'
-import React,{ useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
+
+// Hooks & Context
 import { UserContext } from '../../context/UserContext'
 
-// Authentication
+// API Services
 import { setJwt } from '../../ApiServices/JwtService'
 import { authenticateUser } from '../../ApiServices/AuthService'
 
-// Image Assets
+// Assets
 import eye from '../../assets/eye.svg'
 import eyeSlash from '../../assets/eye-slash.svg'
 

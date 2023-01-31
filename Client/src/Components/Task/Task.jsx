@@ -1,19 +1,24 @@
-// Libraries
 import React, { useRef, useEffect, useState, useContext } from 'react'
+
+// Libraries
 import {nanoid} from 'nanoid'
 import { useMutation, useQueryClient } from 'react-query'
-import { UserContext } from '../../context/UserContext'
 
+// API Requests
 import { addGroupRequest, deleteTaskRequest, updateTaskRequest } from '../../ApiServices/TasksService'
 
+// Hooks && Context
 import useMutationAddTask from '../../hooks/useMutationAddTask';
+import { UserContext } from '../../context/UserContext'
 
+//Components
+import OptionsMenu from '../OptionsMenu';
+
+// default data
 import { defaultInputState } from '../../data/DefaultData';
 
 // Styling
 import './Task.css'
-import OptionsMenu from '../OptionsMenu';
-// import OptionsDropDown from '../OptionsDropDown';
 
 
 export default function Task(props){

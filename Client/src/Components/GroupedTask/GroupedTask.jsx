@@ -1,6 +1,4 @@
-// Libraries
 import React, { useState } from 'react'
-import {nanoid} from 'nanoid'
 
 // Components
 import Task from '../Task/Task'
