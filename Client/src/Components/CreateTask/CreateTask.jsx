@@ -1,5 +1,4 @@
-// Libraries
-import React, {startTransition, useState} from 'react'
+import React from 'react'
 
 // styling
 import './CreateTask.css'
@@ -26,7 +25,6 @@ export default function CreateTask(props){
     return <p key = {group.group_id} className = "group-element" ref = {btnRef}>{group.title}</p>
   })
 
-  // console.log('props.newTaskMessage', props.newTaskMessage)
 
   return(
     <div className="create-task-container">
@@ -109,9 +107,6 @@ export default function CreateTask(props){
         </div>
         
       </div>
-      <h4 style = {{display: props.newTaskMessage ? 'block' : 'none'}}>A new task has been created!</h4>
     </div>
   )
 }
-
-// 

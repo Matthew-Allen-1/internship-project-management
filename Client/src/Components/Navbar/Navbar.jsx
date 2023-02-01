@@ -1,9 +1,4 @@
-// Libraries
-import {Link} from 'react-router-dom'
-
-// Api Services
-import { clearJwt } from '../../ApiServices/JwtService'
-
+// Components
 import Dropdown from '../Menu/Dropdown';
 
 // Styling

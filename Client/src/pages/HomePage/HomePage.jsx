@@ -1,8 +1,12 @@
+import React, { useState, useEffect, useRef, useContext } from 'react'
+
 // Libraries
 import {nanoid} from 'nanoid'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
-import React, { useState, useEffect, useRef, useContext } from 'react'
+
+// Hooks & Context
 import { UserContext } from '../../context/UserContext'
+import useMutationAddTask from '../../hooks/useMutationAddTask'
 
 // Components
 import Navbar from '../../Components/Navbar/Navbar'
@@ -14,9 +18,8 @@ import Alert from '@mui/material/Alert'
 // other Data
 import { defaultInputState } from '../../data/DefaultData'
 
-// Requests functions
+// API Requests
 import { fetchTasks, addGroupRequest } from '../../ApiServices/TasksService'
-import useMutationAddTask from '../../hooks/useMutationAddTask'
 
 // Styling
 import './HomePage.css'
@@ -166,7 +169,7 @@ export default function Home(){
             dropdownSelected = {dropdownSelected}
             selected = {selected}
           />
-          { newTaskMessage && <Alert className="alert" variant="filled" severity="success">Task Saved</Alert>}
+          { newTaskMessage.state && <Alert className="alert" variant="filled" severity="success">{newTaskMessage.msg}</Alert>}
           <GroupedTask 
             groupData = {backendGroups}
             taskData = {backendTasks}

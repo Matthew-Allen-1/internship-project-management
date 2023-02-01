@@ -1,12 +1,14 @@
-// Libraries
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+
+// Libraries
 import { QueryClientProvider, QueryClient } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 
+// Hooks & Context
 import { UserProvider } from './context/UserContext'
 
-// App component
+// Components
 import App from './App'
 
 // Styling

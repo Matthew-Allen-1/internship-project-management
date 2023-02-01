@@ -1,21 +1,29 @@
+import React, { useRef, useEffect, useState, useContext } from 'react'
+
 // Libraries
-import React, { useRef, useEffect, useState } from 'react'
 import {nanoid} from 'nanoid'
 import { useMutation, useQueryClient } from 'react-query'
 
+// API Requests
 import { addGroupRequest, deleteTaskRequest, updateTaskRequest } from '../../ApiServices/TasksService'
 
+// Hooks && Context
 import useMutationAddTask from '../../hooks/useMutationAddTask';
+import { UserContext } from '../../context/UserContext'
 
+//Components
+import OptionsMenu from '../OptionsMenu';
+
+// default data
 import { defaultInputState } from '../../data/DefaultData';
 
 // Styling
 import './Task.css'
-import OptionsMenu from '../OptionsMenu';
-// import OptionsDropDown from '../OptionsDropDown';
 
 
 export default function Task(props){
+  const { newTaskMessage, updateNewTaskMessage }= useContext(UserContext);
+
 
   const {groupData, task} = props;
   const btnRef = useRef();
@@ -57,7 +65,13 @@ export default function Task(props){
   const { mutate: mutateUpdateTask } = useMutation(
     (groupId) => updateTaskRequest(groupId),
     {
-      onSuccess: () => queryClient.invalidateQueries(['tasks'])
+      onSuccess: () => {
+        queryClient.invalidateQueries(['tasks'])
+        updateNewTaskMessage(true, 'Successfully Updated...')
+        setTimeout(() => {
+          updateNewTaskMessage(false, '')
+        }, 2000)
+      }
     }
   );
 
@@ -121,6 +135,18 @@ export default function Task(props){
     })
   };
 
+  function onFocusOut(event){
+    const name = event.target.name
+    if(name === 'title' && task.title != input.title && input.title !== ''){
+      mutateUpdateTask({type: 'title', title: input.title, task_id: task.task_id})
+    } else if (name === 'start_time' && task.start_time !== input.start_time && input.start_time !== ''){
+      mutateUpdateTask({type: 'start_time', start_time: input.start_time, task_id: task.task_id})
+    } else if (name === 'end_time' && task.end_time !== input.end_time && input.end_time !== ''){
+      mutateUpdateTask({type: 'end_time', end_time: input.end_time, task_id: task.task_id})
+    } else if (name === 'date' && task.date !== input.date && input.date !== ''){
+      mutateUpdateTask({type: 'date', date: input.date, task_id: task.task_id})
+    }
+  }
 
 
 
@@ -141,6 +167,7 @@ export default function Task(props){
             {props.selectAll && <input type="checkbox"/>}
             <input
               className = "input"
+              onBlur={(event) => onFocusOut(event)}
               id = {'title#' + task.task_id}
               defaultValue = {task.title}
               type = "text" 
@@ -183,6 +210,7 @@ export default function Task(props){
               name = "start_time"
               defaultValue = {task.start_time}  
               type = "time" 
+              onBlur={(event) => onFocusOut(event)}
               onChange = {() => handleInputChange(event, false)} 
             />
             <div className="time-divider">-</div>
@@ -191,6 +219,7 @@ export default function Task(props){
               name = "end_time"
               defaultValue = {task.end_time} 
               type = "time"
+              onBlur={(event) => onFocusOut(event)}
               onChange = {() => handleInputChange(event, false)} 
             />
           </div>
@@ -202,6 +231,7 @@ export default function Task(props){
               type = "date" 
               defaultValue = {task.date} 
               name = "date"
+              onBlur={(event) => onFocusOut(event)}
               onChange = {() => handleInputChange(event, false)} 
             />
           </div>

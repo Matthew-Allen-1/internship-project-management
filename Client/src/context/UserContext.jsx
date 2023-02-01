@@ -1,17 +1,17 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState } from 'react';
 
 const UserContext = createContext(null);
 
 function UserProvider({children}) {
   const [currentUser, setCurrentUser] = useState(null);
-  const [newTaskMessage, setNewTaskMessage] = useState(false)
+  const [newTaskMessage, setNewTaskMessage] = useState({state: false, msg: ''})
 
   function loginUser(payload) {
     setCurrentUser({ ...payload })
   }
 
-  function updateNewTaskMessage(boolean){
-    setNewTaskMessage(boolean)
+  function updateNewTaskMessage(boolean, msg){
+    setNewTaskMessage({state: boolean, msg: msg})
   }
 
 

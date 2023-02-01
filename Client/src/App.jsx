@@ -1,5 +1,6 @@
-// Libraries
 import React from 'react'
+
+// Libraries
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom"
 
 // Pages

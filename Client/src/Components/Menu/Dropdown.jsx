@@ -1,6 +1,7 @@
 import React  from 'react';
+
+//Libraries && MUI
 import { useNavigate } from 'react-router-dom'
-import { clearJwt } from '../../ApiServices/JwtService'
 import { styled, alpha } from '@mui/material/styles';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -13,6 +14,10 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
+// API Services
+import { clearJwt } from '../../ApiServices/JwtService'
+
+// Styling
 import './Dropdown.css'
 
 const StyledMenu = styled((props) => (
