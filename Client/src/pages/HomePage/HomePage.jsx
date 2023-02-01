@@ -134,6 +134,11 @@ export default function Home(){
     })
   };
 
+  function updateGroupAfterDelete(){
+    setGroupSelection('default');
+    setSelected('');
+  }
+
   // adds the 'input' state into the currently selected task in 'taskData' state.
   function addTask(){
     if (input.title == '') {
@@ -150,6 +155,8 @@ export default function Home(){
       <Navbar user={backendData?.name} />
       <Sidebar 
         groupData = {backendGroups}
+        taskData = {backendTasks}
+        updateGroupAfterDelete = {updateGroupAfterDelete}
         handleGroupSelection = {handleGroupSelection}
         groupSelection = {groupSelection}
       />

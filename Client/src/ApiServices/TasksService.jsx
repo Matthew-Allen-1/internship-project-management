@@ -42,3 +42,11 @@ export const deleteTaskRequest = async (id) => {
     return { data: [], error: err } 
   }
 }
+
+export const deleteGroupRequest = async (id) => {
+  try{
+    return remove(`${API_URL}/delete-group/${id}`)
+  }catch(err){
+    return { data: [], error: err }
+  }
+}

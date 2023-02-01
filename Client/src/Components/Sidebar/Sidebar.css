@@ -1,3 +1,10 @@
+#groups .group-container{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
 #groups {
   width: 20%;
   height: 100%;
@@ -47,4 +54,14 @@
 
 #groups .fixed-group:hover{
   background-color: #c4c4cc !important;
+}
+
+#groups .group-options-btn{
+  cursor: pointer;
+  color: black;
+}
+
+.remove-circle-icon{
+  color: red;
+  cursor: pointer;
 }
