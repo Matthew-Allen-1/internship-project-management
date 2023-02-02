@@ -34,7 +34,10 @@
     }
       
       .create-task .left-box .create-task-input-container {
-        width: 60%;
+        width: 100%;
+      }
+      .create-task .left-box .create-task-input{
+        width: 95%;
       }
 
       .create-task .left-box .create-task-dropdown-container {
