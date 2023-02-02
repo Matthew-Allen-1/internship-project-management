@@ -61,7 +61,7 @@
   color: black;
 }
 
-.remove-circle-icon{
+#groups .remove-circle-icon{
   color: red;
   cursor: pointer;
 }

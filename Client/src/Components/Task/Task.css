@@ -135,29 +135,29 @@
 
     
 
-.date {
+.created-task .date {
   height: 35px;
   border: none;
   cursor: text;
   font-family: 'Times New Roman', Times, serif;
 }
 
-.options {
+.created-task .options {
   margin-right: 10px;
 }
 
-.line-divider {
+.created-task .line-divider {
   width: 1px;
   height: 40px;
   border-right: 1px dotted rgb(215, 215, 215);
 }
 
-.task-dropdown {
+.created-task .task-dropdown {
   position: relative; 
   display: inline-block;
 }
 
-  .task-dropdown-input {
+  .created-task .task-dropdown-input {
     box-sizing: border-box;
     /* background-image: url('searchicon.png');
     background-position: 14px 12px;
@@ -168,7 +168,7 @@
     border-bottom: 1px solid  rgb(215, 215, 215);
   }
 
-  .task-dropdown-content {
+  .created-task .task-dropdown-content {
     display: none;
     position: absolute;
     background-color: white;
@@ -179,7 +179,7 @@
     height: 170px;
   }
 
-    .task-dropdown-content p {
+    .created-task .task-dropdown-content p {
       color: black;
       padding: 12px 16px;
       text-decoration: none;
@@ -188,17 +188,17 @@
       cursor: pointer;
     }
 
-    .task-dropdown-content p:hover {
+    .created-task .task-dropdown-content p:hover {
       background-color: #e4eaee;
     }
 
-  .task-dropdown-show {display: block;}
+  .created-task .task-dropdown-show {display: block;}
 
-.check-input-time{
+.created-task .check-input-time{
   display: flex;
 }
 
-.elapsed-time-container {
+.created-task .elapsed-time-container {
   display: flex;
   flex-direction: column;
   align-items: flex-end;

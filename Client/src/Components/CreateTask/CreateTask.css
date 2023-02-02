@@ -1,9 +1,4 @@
-.scroll-box{
-  width: 100vw;
-  height: 200px;
-}
-
-.line-divider{
+.create-task .line-divider{
   width: 1px;
   height: 40px;
   border-right: 1px dotted rgb(215, 215, 215);
@@ -139,25 +134,25 @@
         cursor: pointer;
       }
 
-.date {
+.create-task .date {
   height: 35px;
   border: none;
   cursor: text;
   font-family: 'Times New Roman', Times, serif;
 }
 
-.options {
+.create-task .options {
   margin: 0px 10px 0px 10px;
   display: flex;
   justify-content: center;
 }
 
-.dropdown {
+.create-task .dropdown {
   position: relative;
   display: inline-block;
 }
 
-  #create-dropdown-input {
+  .create-task #create-dropdown-input {
     box-sizing: border-box;
     /* background-image: url('searchicon.png');
     background-position: 14px 12px;
@@ -168,7 +163,7 @@
     border-bottom: 1px solid  rgb(215, 215, 215);
   }
 
-  .dropdown-content {
+  .create-task .dropdown-content {
     display: none;
     position: absolute;
     background-color: white;
@@ -179,7 +174,7 @@
     height: 170px;
   }
 
-    .dropdown-content p {
+    .create-task.dropdown-content p {
       color: black;
       padding: 12px 16px;
       text-decoration: none;
@@ -188,11 +183,11 @@
       cursor: pointer;
     }
 
-    .dropdown-content p:hover {
+    .create-task .dropdown-content p:hover {
       background-color: #e4eaee;
     }
 
-.show {display: block;}
+.create-task .show {display: block;}
 
 
 /* Screen smaller than 1200px */
@@ -205,7 +200,7 @@
   .create-task .right-box{
     border-left: 1px solid  rgb(215, 215, 215);
   }
-  .dropdown-content{
+  .create-task .dropdown-content{
     right: -20px;
   }
 }
