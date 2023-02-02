@@ -26,5 +26,5 @@ export let unscheduledTasksGroupState = {
 export let defaultTaskState = {
   ...defaultInputState,
   id: 0,
-  dropdown_active: false
+  archived: false
 }

@@ -7,9 +7,10 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import HomeIcon from '@mui/icons-material/Home';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import Divider from '@mui/material/Divider';
-import StarIcon from '@mui/icons-material/Star';
+import InventoryIcon from '@mui/icons-material/Inventory';
 import LogoutIcon from '@mui/icons-material/Logout';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -76,7 +77,11 @@ export default function Dropdown(props) {
       navigate('/login')
       clearJwt()
     }else if(target === 'profile'){
-      navigate('./profile')
+      navigate('/task-manager/profile')
+    } else if(target === 'archive'){
+      navigate('/task-manager/archived-tasks')
+    } else if(target === 'home'){
+      navigate('/task-manager')
     }
   };
 
@@ -105,13 +110,17 @@ export default function Dropdown(props) {
         open={open}
         onClose={handleClose}
       >
+        <MenuItem className="menuItem" name="home" onClick={(event) => handleClose(event)} disableRipple>
+          <HomeIcon />
+          Home
+        </MenuItem>
         <MenuItem className="menuItem" name="profile" onClick={(event) => handleClose(event)} disableRipple>
           <AccountBoxIcon />
           Profile
         </MenuItem>
-        <MenuItem className="menuItem" name="favorites" onClick={(event) => handleClose(event)} disableRipple>
-          <StarIcon />
-          Another Page
+        <MenuItem className="menuItem" name="archive" onClick={(event) => handleClose(event)} disableRipple>
+          <InventoryIcon />
+          Archived Tasks
         </MenuItem>
         <Divider sx={{ my: 0.5 }} />
         <MenuItem className="menuItem" name="logout" onClick={(event) => handleClose(event)} disableRipple>

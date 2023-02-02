@@ -24,7 +24,6 @@ import './Task.css'
 export default function Task(props){
   const { newTaskMessage, updateNewTaskMessage }= useContext(UserContext);
 
-
   const {groupData, task} = props;
   const btnRef = useRef();
   const queryClient = useQueryClient();
@@ -46,7 +45,10 @@ export default function Task(props){
   const { mutate: mutateDeleteTask } = useMutation(
     (id) => deleteTaskRequest(id),
     {
-      onSuccess: () => queryClient.invalidateQueries(['tasks'])
+      onSuccess: () => {
+        queryClient.invalidateQueries(['tasks'])
+        queryClient.invalidateQueries(['archived-tasks'])
+      }
     }
   );
 
@@ -55,6 +57,7 @@ export default function Task(props){
     {
       onSuccess: (data) => {
         queryClient.invalidateQueries(['tasks']);
+        queryClient.invalidateQueries(['archived-tasks'])
         setDropdownActive(false);
         setDropdownSearch('');
         mutateUpdateTask({type: 'groupSelect', group_id: data.group_id, group_title: data.group_title, task_id: task.task_id})
@@ -67,6 +70,7 @@ export default function Task(props){
     {
       onSuccess: () => {
         queryClient.invalidateQueries(['tasks'])
+        queryClient.invalidateQueries(['archived-tasks'])
         updateNewTaskMessage(true, 'Successfully Updated...')
         setTimeout(() => {
           updateNewTaskMessage(false, '')
@@ -79,6 +83,14 @@ export default function Task(props){
 
   function deleteTask() {mutateDeleteTask(task.task_id)};
   function duplicateTask() {mutateAddTask({...defaultInputState ,...task, task_id: nanoid()})};
+  function archiveTask(name) {
+    console.log(name);
+    if(name == "Archive"){
+      mutateUpdateTask({type:"archive", archived: true, task_id: task.task_id})
+    } else if(name == "unArchive"){
+      mutateUpdateTask({type:"archive", archived: false, task_id: task.task_id})
+    }
+  };
 
 
 
@@ -199,7 +211,7 @@ export default function Task(props){
               <span className="elapsed-time">{props.elapsedTime != '0:00' ? 'Duration: ' + props.elapsedTime : ''}</span>
               <span className="elapsed-time-format">{props.elapsedTime != '0:00' ? '(hh:mm)' : ''}</span>
             </div>
-            <OptionsMenu id={task.task_id} deleteTask={deleteTask} duplicateTask={duplicateTask} />
+            <OptionsMenu id={task.task_id} archived={task.archived} deleteTask={deleteTask} duplicateTask={duplicateTask} archiveTask={archiveTask} />
           </div>
         </div>
         <div className="right-box">
@@ -241,7 +253,7 @@ export default function Task(props){
               <span className="elapsed-time">{props.elapsedTime != '0:00' ? 'Duration: ' + props.elapsedTime : ''}</span>
               <span className="elapsed-time-format">{props.elapsedTime != '0:00' ? '(hh:mm)' : ''}</span>
             </div>
-            <OptionsMenu id={task.task_id} deleteTask={deleteTask} duplicateTask={duplicateTask} />
+            <OptionsMenu id={task.task_id} archived={task.archived} deleteTask={deleteTask} duplicateTask={duplicateTask} archiveTask={archiveTask} />
           </div>
         </div>
       </div>

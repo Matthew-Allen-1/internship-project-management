@@ -10,6 +10,14 @@ export const fetchTasks = async () => {
   }
 }
 
+export const fetchArchivedTasks = async () => {
+  try {
+    return get(`${API_URL}/archived-tasks`);
+  } catch (err) {
+    return { data: [], error: err }
+  }
+}
+
 
 export const addTaskRequest = async (newTask) => {
   try{

@@ -4,11 +4,6 @@ import Menu from "@mui/material/Menu"
 import MenuItem from "@mui/material/MenuItem"
 import MoreVertIcon from "@mui/icons-material/MoreVert"
 
-const options = [
-    "Duplicate",
-    "Delete",
-]
-
 const ITEM_HEIGHT = 48
 
 export default function OptionsMenu(props) {
@@ -24,8 +19,18 @@ export default function OptionsMenu(props) {
       props.deleteTask(event)
     } else if(target === 'Duplicate'){
       props.duplicateTask(props.id)
+    } else if(target === 'Archive'){
+      props.archiveTask(target)
+    } else if (target === 'unArchive'){
+      props.archiveTask(target);
     }
   }
+
+  const options = [
+    "Duplicate",
+    "Delete",
+    props.archived ? "unArchive" : "Archive",
+]
 
   return (
     <div>

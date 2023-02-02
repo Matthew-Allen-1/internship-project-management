@@ -146,7 +146,7 @@ export default function Home(){
     } else if ((input.start_time != '' || input.end_time != '') && input.date == ''){
       alert('You may not enter a start or end time without entering a date.')
     } else{
-      mutateAddTask({...input, task_id: nanoid(), dropdown_active: false})
+      mutateAddTask({...input, task_id: nanoid(), archived: false})
     }
   };
 
