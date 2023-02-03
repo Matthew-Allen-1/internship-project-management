@@ -9,6 +9,7 @@
   flex-direction: column;
   background-color: white;
   margin: 20px 20px 100px 20px;
+  box-shadow: 0px 5px 5px -3px rgb(200, 200, 200);
 }
 
   .create-task {
@@ -209,5 +210,12 @@
   .create-task-container{
     margin-bottom: 50px;
     transition: 2s;
+  }
+}
+
+@media screen and (max-width: 550px){
+  .create-task-container{
+    margin: 20px 0px 50px 0px;
+    transition: 1s;
   }
 }

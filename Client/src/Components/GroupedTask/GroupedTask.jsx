@@ -131,7 +131,7 @@ export default function GroupedTask(props){
     // var timeStr = 
 
     return(
-      <div key = {index}>
+      <div key = {index} className="grouped-tasks-container">
         <div className = "task-header">
           {selectAll && <input type="checkbox"/>}
           <p className = "left" >{dateStr}</p>

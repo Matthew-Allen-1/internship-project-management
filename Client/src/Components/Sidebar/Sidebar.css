@@ -9,6 +9,7 @@
   padding-top: 60px;
   top: 0px;
   position: fixed;
+  box-shadow: 4px 0px 4px -3px rgb(200, 200, 200);
 }
 
 .sidebar .group-container{
@@ -70,7 +71,7 @@
     padding: 0;
     height: 65px;
     overflow-x: scroll;
-    background-color: #e4eaee;
+    background: linear-gradient(#e4eaee,#dde4e8);
     padding-bottom: 5px;
   }
 
