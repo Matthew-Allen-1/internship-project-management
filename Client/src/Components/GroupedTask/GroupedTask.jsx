@@ -146,7 +146,7 @@ export default function GroupedTask(props){
   })
 
   return(
-    <div>
+    <div className="all-groups-tasks-container">
       {dateTaskElements}
     </div>
   )

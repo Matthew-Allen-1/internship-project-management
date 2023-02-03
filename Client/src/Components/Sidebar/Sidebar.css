@@ -10,6 +10,8 @@
   top: 0px;
   position: fixed;
   box-shadow: 4px 0px 4px -3px rgb(200, 200, 200);
+  overflow-y: scroll;
+  padding-bottom: 50px;
 }
 
 .sidebar .group-container{
