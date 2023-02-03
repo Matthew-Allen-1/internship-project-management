@@ -204,3 +204,10 @@
     right: -20px;
   }
 }
+
+@media screen and (max-width: 900px){
+  .create-task-container{
+    margin-bottom: 50px;
+    transition: 2s;
+  }
+}

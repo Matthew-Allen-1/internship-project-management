@@ -1,13 +1,6 @@
-#groups .group-container{
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-}
-
-#groups {
+.sidebar{
   width: 20%;
-  height: 100%;
+  height: 100vh;
   background-color: white;
   border-right: 1px solid  rgb(215, 215, 215);
   display: flex;
@@ -18,50 +11,80 @@
   position: fixed;
 }
 
-#groups .group {
-  height: 40px;
-  width: 80%;
-  box-sizing: border-box;
+.sidebar .group-container{
   display: flex;
-  align-items: center;
+  width: 100%;
   justify-content: center;
+  align-items: center;
+}
+
+.sidebar .group {
+  height: 50px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 5px;
-  margin: 10px 0px;
+  padding: 5px;
+  margin: 10px 10px;
   border: 1px solid grey;
   cursor: pointer;
+  overflow: hidden;
+}
+.sidebar .group p{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin: auto;
 }
 
-#groups .fixed-group {
-  height: 40px;
-  width: 80%;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 5px;
-  margin: 10px 0px;
-  border: 1px solid darkblue;
-}
-
-#groups h4 {
+.sidebar h4 {
   margin: 10px 0 0 0;
   color: #0192d6;
 }
 
-#groups .group:hover{
+.sidebar .group:hover{
   background-color: #e4eaee !important;
 }
 
-#groups .fixed-group:hover{
+.sidebar .fixed-group:hover{
   background-color: #c4c4cc !important;
 }
 
-#groups .group-options-btn{
+.sidebar .group-options-btn{
   cursor: pointer;
   color: black;
 }
 
-#groups .remove-circle-icon{
+.sidebar .remove-circle-icon{
   color: red;
   cursor: pointer;
+}
+
+@media screen and (max-width: 900px){
+  .sidebar{
+    flex-direction: row;
+    position: relative;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    height: 65px;
+    overflow-x: scroll;
+    background-color: #e4eaee;
+    padding-bottom: 5px;
+  }
+
+  .sidebar .group{
+    min-width: 170px;
+    height: 40px;
+  }
+
+  .sidebar h4 {
+    margin: 0;
+    color: #0192d6;
+  }
+
+  .remove-circle-icon{
+    margin-right: 20px;
+  }
 }

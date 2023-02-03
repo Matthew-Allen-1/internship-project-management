@@ -36,13 +36,13 @@ export default function Sidebar(props) {
 
     const groupElements = props.groupData.map(group => {
         return (
-            <div key={group.group_id} className="group-container">
+            <div key={group.group_id} id={group.group_id} className="group-container">
                 <div id={group.group_id}
                     className='group'
                     onClick = {(event) => props.handleGroupSelection(event)}
                     style = {{backgroundColor : props.groupSelection === group.group_id ? '#c4eaee':'white'}}
                 >
-                    {group.title}
+                    <p id={group.group_id} onClick = {(event) => props.handleGroupSelection(event)}>{group.title}</p>
                 </div>
                 {deleteGroupBtn && <RemoveCircleIcon fontSize="small" className='remove-circle-icon' onClick={() => deleteGroupClick(group.group_id)} />}
             </div>
@@ -50,18 +50,22 @@ export default function Sidebar(props) {
     })
 
     return(
-        <div id = 'groups'>
-            <div id='default' className='group'
-                onClick = {(event) => props.handleGroupSelection(event)}
-                style = {{backgroundColor : props.groupSelection === 'default' ? '#c4eaee':'white'}}
-            >
-                All Tasks
+        <div className="sidebar">
+            <div id='default' className="group-container">
+                <div id='default' className='group'
+                    onClick = {(event) => props.handleGroupSelection(event)}
+                    style = {{backgroundColor : props.groupSelection === 'default' ? '#c4eaee':'white'}}
+                >
+                    <p id='default' onClick = {(event) => props.handleGroupSelection(event)}>All Tasks</p>
+                </div>
             </div>
-            <div id='unscheduled' className='group'
-                onClick = {(event) => props.handleGroupSelection(event)}
-                style = {{backgroundColor : props.groupSelection === 'unscheduled' ? '#c4eaee':'white'}}
-            >
-                Unscheduled Tasks
+            <div id='unscheduled' className="group-container">
+                <div id='unscheduled' className='group'
+                    onClick = {(event) => props.handleGroupSelection(event)}
+                    style = {{backgroundColor : props.groupSelection === 'unscheduled' ? '#c4eaee':'white'}}
+                >
+                    <p id='unscheduled' onClick = {(event) => props.handleGroupSelection(event)}>Unscheduled Tasks</p>
+                </div>
             </div>
             <h4>Tasks <MoreHorizIcon className="group-options-btn" onClick={handleOptionsClick}/></h4>
             {groupElements}

@@ -23,3 +23,27 @@ main {
   right: 0;
   z-index: 1000;
 }
+
+.horizontal-sidebar{
+  display: none;
+}
+
+@media screen and (max-width: 900px){
+  main{
+    margin-left: 0;
+    width: 100%;
+    transition: 1s;
+  }
+  .vertical-sidebar{
+    /* display: none; */
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    transition: 2s;
+  }
+  .horizontal-sidebar{
+    display: flex;
+    transition: 1s;
+    margin: 0px 25px 0px 25px
+  }
+}

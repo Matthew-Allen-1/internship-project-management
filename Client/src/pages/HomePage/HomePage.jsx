@@ -153,13 +153,15 @@ export default function Home(){
   return (
     <div className = "App">
       <Navbar user={backendData?.name} />
-      <Sidebar 
-        groupData = {backendGroups}
-        taskData = {backendTasks}
-        updateGroupAfterDelete = {updateGroupAfterDelete}
-        handleGroupSelection = {handleGroupSelection}
-        groupSelection = {groupSelection}
-      />
+      <div className="vertical-sidebar">
+        <Sidebar 
+          groupData = {backendGroups}
+          taskData = {backendTasks}
+          updateGroupAfterDelete = {updateGroupAfterDelete}
+          handleGroupSelection = {handleGroupSelection}
+          groupSelection = {groupSelection}
+        />
+      </div>
       <main>
         <div className = "task-section">
           <CreateTask 
@@ -176,6 +178,15 @@ export default function Home(){
             dropdownSelected = {dropdownSelected}
             selected = {selected}
           />
+          <div className="horizontal-sidebar">
+            <Sidebar 
+              groupData = {backendGroups}
+              taskData = {backendTasks}
+              updateGroupAfterDelete = {updateGroupAfterDelete}
+              handleGroupSelection = {handleGroupSelection}
+              groupSelection = {groupSelection}
+            />
+          </div>
           { newTaskMessage.state && <Alert className="alert" variant="filled" severity="success">{newTaskMessage.msg}</Alert>}
           <GroupedTask 
             groupData = {backendGroups}
