@@ -3,6 +3,20 @@
   flex-direction: column;
   background-color: white;
 }
+.created-task-container::after{
+  content: "";
+  display: flex;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(#e4eaee,#dde4e8);
+}
+.created-task p {
+  display: block !important;
+  white-space: nowrap !important;
+  overflow: hidden;
+  width: 115px;
+  text-overflow: ellipsis;
+}
 
   .created-task {
     display: flex;
@@ -97,7 +111,7 @@
       .created-task .right-box .task-elapsed-time {
         display: flex;
         width: 32%;
-        justify-content: flex-end;
+        justify-content: center;
         align-items: center;
         margin-right: 10px;
       }
@@ -130,6 +144,7 @@
 
       .created-task .group p {
         color: #03a9f4;
+        margin: 0;
       }
 
     
@@ -226,7 +241,7 @@
 
       .created-task .left-box .task-dropdown {
         width: 34%;
-        margin-top: 12px;
+        /* margin-top: 12px; */
       }
 
       .created-task .left-box .task-elapsed-time {
@@ -241,7 +256,7 @@
       flex-direction: row;
       width: 100%;
       height: 50%;
-      border: none;
+      border-top: 1px solid  rgb(215, 215, 215);
     }
 
       .created-task .right-box .task-time {
@@ -255,7 +270,7 @@
       }
   
       .created-task .right-box .task-elapsed-time {
-        display: none
+        display: none;
       }
     }
 
@@ -272,7 +287,6 @@
   }
 
   .created-task .left-box .task-dropdown {
-    height: 100%;
     width: 34%;
   }
 

@@ -3,24 +3,26 @@
   margin: 20px 20px 0px 20px;
 }
 
-
 .task-header{
   display: flex;
   justify-content: space-between;
+  align-items: center;
   background: linear-gradient(#e4eaee,#dde4e8);
   border: 1px solid #C6D2D9;
 }
 
 .task-header .left{
-  margin-left: 5px;
-  margin-top: 10px;
+  margin-left: 10px;
   text-align: left;
   flex-grow: 1;
 }
 
 .task-header .right{
   display: flex;
-  margin-top: 10px;
+  align-items: center;
+}
+.task-header p{
+  margin: 0;
 }
 
 .task-header .right img{

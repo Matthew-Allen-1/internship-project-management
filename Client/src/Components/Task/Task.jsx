@@ -211,7 +211,6 @@ export default function Task(props){
               <span className="elapsed-time">{props.elapsedTime != '0:00' ? 'Duration: ' + props.elapsedTime : ''}</span>
               <span className="elapsed-time-format">{props.elapsedTime != '0:00' ? '(hh:mm)' : ''}</span>
             </div>
-            <OptionsMenu id={task.task_id} archived={task.archived} deleteTask={deleteTask} duplicateTask={duplicateTask} archiveTask={archiveTask} />
           </div>
         </div>
         <div className="right-box">
@@ -253,8 +252,8 @@ export default function Task(props){
               <span className="elapsed-time">{props.elapsedTime != '0:00' ? 'Duration: ' + props.elapsedTime : ''}</span>
               <span className="elapsed-time-format">{props.elapsedTime != '0:00' ? '(hh:mm)' : ''}</span>
             </div>
-            <OptionsMenu id={task.task_id} archived={task.archived} deleteTask={deleteTask} duplicateTask={duplicateTask} archiveTask={archiveTask} />
           </div>
+          <OptionsMenu id={task.task_id} archived={task.archived} deleteTask={deleteTask} duplicateTask={duplicateTask} archiveTask={archiveTask} />
         </div>
       </div>
     </div>
