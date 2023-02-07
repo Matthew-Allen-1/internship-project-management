@@ -121,6 +121,9 @@ html, body {
   height: 100%;
   background-color: black;
 }
+#dark .archived-tasks-container{
+  background-color: black;
+}
 @media screen and (max-width: 900px){
   #dark nav{
     box-shadow: 0px 5px 5px -3px rgb(50, 50, 50);
