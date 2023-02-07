@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { UserContext } from './context/UserContext'
 
 // Libraries
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom"
@@ -15,8 +16,11 @@ import ArchivedTasks from './pages/ArchivedTasksPage/ArchivedTasksPage'
 import './index.css'
 
 export default function App() {
+  const {theme} = useContext(UserContext)
+  
   return (
-    <Router>
+    <div id={`${theme}`}>
+      <Router>
       <Routes>
         <Route path = "/" element = {<SignUp />} />
         <Route path = "/login" element = {<Login />} />
@@ -27,6 +31,7 @@ export default function App() {
         </Route> 
       </Routes>
     </Router>
+    </div>
   )
 }
 

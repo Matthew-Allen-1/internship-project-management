@@ -26,7 +26,7 @@ import './HomePage.css'
 
 
 export default function Home(){
-  const { currentUser, newTaskMessage }= useContext(UserContext);
+  const { currentUser, theme, newTaskMessage }= useContext(UserContext);
   const queryClient = useQueryClient();
   const { data: backendData , isLoading: backendLoading, isError: backendError , refetch} = useQuery(
     'tasks', 
@@ -151,7 +151,7 @@ export default function Home(){
   };
 
   return (
-    <div className = "App">
+    <div className ="App" id={`${theme}`}>
       <Navbar user={backendData?.name} />
       <div className="vertical-sidebar">
         <Sidebar 

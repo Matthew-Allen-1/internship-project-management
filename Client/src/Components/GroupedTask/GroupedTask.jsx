@@ -81,8 +81,7 @@ export default function GroupedTask(props){
     if (index == 0 && task.date) {return true}
     else if (task.date) {return(task.date != sortedTasks[index - 1].date)}
     else {return false}
-  })
-  .map(task => task.date)
+  }).map(task => task.date)
 
   //Create an array of task element arrays with one array of tasks for each date in dateList and one additional array for unscheduled tasks.
   const taskElementArrays = dateList.map((date, index) => [])
@@ -110,15 +109,15 @@ export default function GroupedTask(props){
     )}
   })
 
-      //Create an array of total times corresponding to the dates in dateList.
+  //Create an array of total times corresponding to the dates in dateList.
   const timeTotals = taskElementArrays.map((taskArray, index) => {
     return taskArray.reduce((runningTotal, currentTask) => {
       return (runningTotal + calcElapsedTime(currentTask.props.task))
     }, 0)
   })
 
-  function handleSelect() {
-    console.log(selectAll)
+  function handleSelect(name) {
+    console.log(name)
     setSelectAll(prevSelect => !prevSelect);
   }
 
@@ -132,12 +131,12 @@ export default function GroupedTask(props){
 
     return(
       <div key = {index} className="grouped-tasks-container">
-        <div className = "task-header">
+        <div className ="task-header">
           {selectAll && <input type="checkbox"/>}
           <p className = "left" >{dateStr}</p>
           <div className = "right">
             <p>{timeTotals[index] > 0 ? 'Total Duration: ' + convertElapsedToText(timeTotals[index]) : ''}</p>
-            <img onClick={handleSelect} src = "https://app.clockify.me/assets/ui-icons/bulk-edit.svg" alt = "" />
+            <img onClick={() => handleSelect(dateStr)} src = "https://app.clockify.me/assets/ui-icons/bulk-edit.svg" alt = "" />
           </div>
         </div>
         {taskElementArray}

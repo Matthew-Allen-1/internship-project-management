@@ -11,3 +11,116 @@ html, body {
 #root{
   text-align: center;
 }
+
+
+
+/*********** Themes ************/
+/*** Light ***/
+/* #light{
+  background-color: white;
+  color: black;
+} */
+
+
+/*** Dark ***/
+#dark{
+  background-color: black;
+  color: white;
+}
+#dark .sidebar{
+  background: rgb(30, 30, 30);
+  color: black;
+  box-shadow: 4px 0px 4px -3px rgb(50, 50, 50);
+  border-color:rgb(50, 50, 50);
+}
+#dark .horizontal-sidebar{
+  box-shadow: 4px 0px 4px -3px rgb(50, 50, 50);
+  border-color:rgb(50, 50, 50);
+}
+#dark input{
+  background-color: black;
+  color: white;
+  border-color: rgb(50, 50, 50);
+  color-scheme: dark;
+} 
+#dark .user{
+  color: white;
+}
+#dark .sidebar .group{
+  color: white;
+  border-color:rgb(50, 50, 50);
+}
+#dark .sidebar .group-options-btn{
+  color: white;
+}
+#dark .sidebar .group:hover{
+  background-color: rgb(20, 20, 20) !important;
+}
+#dark .task-header{
+  background: rgb(30, 30, 30);
+  border-color: rgb(50, 50, 50);
+}
+#dark .create-task{
+  background-color: black;
+}
+#dark #group-dropdown{
+  background-color: black;
+  border-color: rgb(50, 50, 50)
+}
+#dark .create-dropdown-group:hover{
+  background: rgb(30, 30, 30);
+}
+#dark #task-group-dropdown{
+  background-color: black;
+}
+#dark .group-list{
+  color: white;
+}
+#dark .group-list:hover{
+  background: rgb(30, 30, 30)
+}
+#dark .created-task{
+  background-color:  black;
+  border-color: rgb(50, 50, 50);
+}
+#dark .create-task-container{
+  box-shadow: 0px 5px 5px -3px rgb(50, 50, 50);
+}
+#dark .created-task-container::after{
+  background: rgb(50, 50, 50);
+}
+#dark .right-box {
+  border-color: rgb(50, 50, 50);
+}
+#dark .left-box {
+  border-color: rgb(50, 50, 50);
+}
+#dark .grouped-tasks-container{
+  box-shadow: 0px 5px 5px -3px rgb(50, 50, 50);
+}
+#dark nav{
+  background-color: black;
+  border-color: rgb(50, 50, 50);
+  box-shadow: 222px 5px 5px -3px rgb(50, 50, 50);
+}
+#dark .nav-title-url{
+  color: white;
+}
+#dark .sign-up{
+  background: linear-gradient(225deg, black, black, black, #03a9f4);
+}
+#dark .sign-up .input-field{
+  background: transparent;
+}
+#dark .login{
+  background: linear-gradient(225deg, black, black, black, #03a9f4);
+}
+#dark .login .input-field{
+  background: transparent;
+}
+@media screen and (max-width: 900px){
+  #dark nav{
+    box-shadow: 0px 5px 5px -3px rgb(50, 50, 50);
+    transition: 1s;
+  }
+}

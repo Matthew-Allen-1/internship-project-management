@@ -17,6 +17,9 @@
   width: 115px;
   text-overflow: ellipsis;
 }
+.created-task .group-list{
+  width: 100%;
+}
 
   .created-task {
     display: flex;
@@ -54,7 +57,7 @@
         justify-content: center;
       }
       .created-task .left-box .task-input .input{
-        width: 95%;
+        width: 90%;
       }
 
       .created-task .left-box .task-dropdown {

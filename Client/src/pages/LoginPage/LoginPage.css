@@ -18,6 +18,9 @@
   display: flex;
   align-items: center;
 }
+.login header .sign-up-section p{
+  margin: 0;
+}
 .login header .sign-up-section button{
   width: 90px;
   height: 40px;

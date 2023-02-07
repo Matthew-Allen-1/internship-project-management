@@ -166,7 +166,7 @@ export default function Task(props){
   // displays elements in dropdown
   const newGroupListElements = groupData.map(group => {
     if (dropdownSearch == "" || group.title.toUpperCase().indexOf(dropdownSearch.toUpperCase()) === 0) {
-      return <p key = {group.group_id} id = {group.group_id} className = {'group-list#' + task.task_id} onClick={(event) => dropdownSelected(event)}>{group.title}</p>
+      return <p key = {group.group_id} id = {group.group_id} className = {'group-list'} onClick={(event) => dropdownSelected(event)}>{group.title}</p>
     } else {return}
   });
 

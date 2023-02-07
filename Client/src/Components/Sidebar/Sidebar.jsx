@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 
 import { useMutation, useQueryClient } from 'react-query';
+import { UserContext } from '../../context/UserContext' 
 
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
@@ -12,6 +13,7 @@ import './Sidebar.css'
 
 export default function Sidebar(props) {
     const queryClient = useQueryClient();
+    const { theme } = useContext(UserContext);
     const [deleteGroupBtn, setDeleteGroupBtn] = useState(false);
 
     const { mutate: mutateDeleteGroup } = useMutation(
@@ -33,6 +35,7 @@ export default function Sidebar(props) {
         }
         setDeleteGroupBtn(false);
     }
+    console.log(theme);
 
     const groupElements = props.groupData.map(group => {
         return (
@@ -40,7 +43,7 @@ export default function Sidebar(props) {
                 <div id={group.group_id}
                     className='group'
                     onClick = {(event) => props.handleGroupSelection(event)}
-                    style = {{backgroundColor : props.groupSelection === group.group_id ? '#c4eaee':'white'}}
+                    style = {{backgroundColor : theme === 'light' ? props.groupSelection === group.group_id ? '#c4eaee':'white' : props.groupSelection === group.group_id ? '#323232':'black'}}
                 >
                     <p id={group.group_id} onClick = {(event) => props.handleGroupSelection(event)}>{group.title}</p>
                 </div>
@@ -54,7 +57,7 @@ export default function Sidebar(props) {
             <div id='default' className="group-container">
                 <div id='default' className='group'
                     onClick = {(event) => props.handleGroupSelection(event)}
-                    style = {{backgroundColor : props.groupSelection === 'default' ? '#c4eaee':'white'}}
+                    style = {{backgroundColor : theme === 'light' ? props.groupSelection === 'default' ? '#c4eaee':'white': props.groupSelection === 'default' ? '#323232':'black'}}
                 >
                     <p id='default' onClick = {(event) => props.handleGroupSelection(event)}>All Tasks</p>
                 </div>
@@ -62,7 +65,7 @@ export default function Sidebar(props) {
             <div id='unscheduled' className="group-container">
                 <div id='unscheduled' className='group'
                     onClick = {(event) => props.handleGroupSelection(event)}
-                    style = {{backgroundColor : props.groupSelection === 'unscheduled' ? '#c4eaee':'white'}}
+                    style = {{backgroundColor : theme==='light' ? props.groupSelection === 'unscheduled' ? '#c4eaee':'white' : props.groupSelection === 'unscheduled' ? '#323232':'black'}}
                 >
                     <p id='unscheduled' onClick = {(event) => props.handleGroupSelection(event)}>Unscheduled Tasks</p>
                 </div>

@@ -1,4 +1,5 @@
-import React  from 'react';
+import React, { useContext }  from 'react';
+import { UserContext } from '../../context/UserContext';
 
 //Libraries && MUI
 import { useNavigate } from 'react-router-dom'
@@ -11,6 +12,8 @@ import HomeIcon from '@mui/icons-material/Home';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import Divider from '@mui/material/Divider';
 import InventoryIcon from '@mui/icons-material/Inventory';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
 import LogoutIcon from '@mui/icons-material/Logout';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -21,49 +24,9 @@ import { clearJwt } from '../../ApiServices/JwtService'
 // Styling
 import './Dropdown.css'
 
-const StyledMenu = styled((props) => (
-  <Menu
-    elevation={0}
-    anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'right',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-    {...props}
-  />
-))(({ theme }) => ({
-  '& .MuiPaper-root': {
-    borderRadius: 6,
-    marginTop: theme.spacing(1),
-    minWidth: 180,
-    color:
-      theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
-    boxShadow:
-      'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
-    '& .MuiMenu-list': {
-      padding: '4px 0',
-    },
-    '& .MuiMenuItem-root': {
-      '& .MuiSvgIcon-root': {
-        fontSize: 18,
-        color: theme.palette.text.secondary,
-        marginRight: theme.spacing(1.5),
-      },
-      '&:active': {
-        backgroundColor: alpha(
-          theme.palette.primary.main,
-          theme.palette.action.selectedOpacity,
-        ),
-      },
-    },
-  },
-}));
-
 export default function Dropdown(props) {
   const navigate = useNavigate();
+  const {toggleTheme, theme: userTheme} = useContext(UserContext)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -82,8 +45,55 @@ export default function Dropdown(props) {
       navigate('/task-manager/archived-tasks')
     } else if(target === 'home'){
       navigate('/task-manager')
+    } else if(target === 'theme'){
+      toggleTheme()
     }
   };
+
+  const StyledMenu = styled((props) => (
+    <Menu
+      elevation={0}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      {...props}
+    />
+  ))(({ theme }) => ({
+    '& .MuiPaper-root': {
+      borderRadius: 6,
+      marginTop: theme.spacing(1),
+      minWidth: 180,
+      border: userTheme === 'dark' ? '1px solid rgb(50, 50, 50)' : 'none',
+      backgroundColor: userTheme === 'light' ? 'rgb(255, 255, 255)' : 'rgb(0, 0, 0)',
+      color:
+        userTheme === 'light' ? 'rgb(55, 65, 81)' : 'rgb(255, 255, 255)',
+      boxShadow:
+        'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
+      '& .MuiMenu-list': {
+        padding: '4px 0',
+      },
+      '& .MuiMenuItem-root': {
+        '& .MuiSvgIcon-root': {
+          fontSize: 18,
+          color: theme.palette.text.secondary,
+          marginRight: theme.spacing(1.5),
+        },
+        '&:active': {
+          backgroundColor: alpha(
+            theme.palette.primary.main,
+            theme.palette.action.selectedOpacity,
+          ),
+        },
+      },
+    },
+  }));
+
+  const styles = {color: userTheme==='dark' ? 'white' : 'black' }
 
 
   return (
@@ -99,7 +109,7 @@ export default function Dropdown(props) {
       >
         <Avatar sx={{ m: 1, bgcolor: '#ff3d00' }}></Avatar>
         <p className="user">{props.name}</p>
-        {open ? <KeyboardArrowDownIcon className="user-icon"/> : <KeyboardArrowUpIcon className="user-icon"/>}
+        {open ? <KeyboardArrowUpIcon style={styles} className="user-icon"/> : <KeyboardArrowDownIcon style={styles} className="user-icon"/>}
       </Button>
       <StyledMenu
         id="demo-customized-menu"
@@ -111,20 +121,24 @@ export default function Dropdown(props) {
         onClose={handleClose}
       >
         <MenuItem className="menuItem" name="home" onClick={(event) => handleClose(event)} disableRipple>
-          <HomeIcon />
+          <HomeIcon style={styles}/>
           Home
         </MenuItem>
         <MenuItem className="menuItem" name="profile" onClick={(event) => handleClose(event)} disableRipple>
-          <AccountBoxIcon />
+          <AccountBoxIcon style={styles} />
           Profile
         </MenuItem>
         <MenuItem className="menuItem" name="archive" onClick={(event) => handleClose(event)} disableRipple>
-          <InventoryIcon />
+          <InventoryIcon style={styles} />
           Archived Tasks
         </MenuItem>
-        <Divider sx={{ my: 0.5 }} />
+        <Divider sx={{ my: 0.5}} style={{backgroundColor: userTheme==='dark' ? 'rgb(250, 250, 250)' : 'rgb(200, 200, 200)'}} />
+        <MenuItem className="menuItem" name="theme" onClick={(event) => handleClose(event)} disableRipple>
+          {userTheme === 'light' ? <DarkModeIcon style={styles} /> : <LightModeIcon style={styles} />}
+          {userTheme === 'light' ? 'Dark Mode' : 'Light Mode'}
+        </MenuItem>
         <MenuItem className="menuItem" name="logout" onClick={(event) => handleClose(event)} disableRipple>
-          <LogoutIcon />
+          <LogoutIcon style={styles} />
           Log Out
         </MenuItem>
       </StyledMenu>
