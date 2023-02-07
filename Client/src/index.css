@@ -1,6 +1,8 @@
 html, body {
   margin: 0;
   padding: 0;
+  height: 100vh;
+  width: 100vw;
   background-color: rgb(242, 246, 248);
 }
 *{
@@ -26,6 +28,9 @@ html, body {
 #dark{
   background-color: black;
   color: white;
+}
+#dark html,body{
+  background-color: black;
 }
 #dark .sidebar{
   background: rgb(30, 30, 30);
