@@ -8,6 +8,8 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 
 import { deleteGroupRequest } from '../../ApiServices/TasksService';
 
+import { useMutationDeleteGroup } from '../../hooks/useMutationHook';
+
 // Styling
 import './Sidebar.css'
 
@@ -15,13 +17,7 @@ export default function Sidebar(props) {
     const queryClient = useQueryClient();
     const { theme } = useContext(UserContext);
     const [deleteGroupBtn, setDeleteGroupBtn] = useState(false);
-
-    const { mutate: mutateDeleteGroup } = useMutation(
-        (id) => deleteGroupRequest(id),
-        {
-          onSuccess: () => queryClient.invalidateQueries(['tasks'])
-        }
-      );
+    const { mutate: mutateDeleteGroup } = useMutationDeleteGroup();
 
     function handleOptionsClick(){
         setDeleteGroupBtn(prev => !prev);
@@ -35,7 +31,6 @@ export default function Sidebar(props) {
         }
         setDeleteGroupBtn(false);
     }
-    console.log(theme);
 
     const groupElements = props.groupData.map(group => {
         return (

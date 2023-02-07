@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef, useContext } from 'react'
 
 // Libraries
 import {nanoid} from 'nanoid'
-import { useQuery, useMutation, useQueryClient } from 'react-query'
+import { useQuery, useQueryClient } from 'react-query'
 
 // Hooks & Context
 import { UserContext } from '../../context/UserContext'
-import useMutationAddTask from '../../hooks/useMutationAddTask'
+import { useMutationAddTask, useMutationAddGroup } from '../../hooks/useMutationHook'
 
 // Components
 import Navbar from '../../Components/Navbar/Navbar'
@@ -19,7 +19,7 @@ import Alert from '@mui/material/Alert'
 import { defaultInputState } from '../../data/DefaultData'
 
 // API Requests
-import { fetchTasks, addGroupRequest } from '../../ApiServices/TasksService'
+import { fetchTasks } from '../../ApiServices/TasksService'
 
 // Styling
 import './HomePage.css'
@@ -42,7 +42,9 @@ export default function Home(){
   const [input, setInput] = useState(defaultInputState);
   const [groupSelection, setGroupSelection] = useState('default')
   const [selected, setSelected] = useState('')
-
+  const { mutate: mutateAddTask } = useMutationAddTask();  
+  const { mutate: mutateAddGroup } = useMutationAddGroup(setDropdownActive, setDropdownSearch, setInput, dropdownSearch, 'create')
+  
   // handles click outside dropdown menu
   useEffect(() =>{
     const closeDropdown = e => {
@@ -53,20 +55,6 @@ export default function Home(){
     document.body.addEventListener('click', closeDropdown);
     return () => document.body.removeEventListener('click', closeDropdown);
   }, []);
-
-  const { mutate: mutateAddTask } = useMutationAddTask();
-
-  const { mutate: mutateAddGroup } = useMutation(
-    (newGroup) => addGroupRequest(newGroup),
-    {
-      onSuccess: (data) => {
-        queryClient.invalidateQueries(['tasks']);
-        setInput(prevInput => ({...prevInput, group_title: dropdownSearch}))
-        setDropdownActive(false);
-        setDropdownSearch('');
-      }
-    }
-  );
   
   if( backendLoading ) return <p>Loading...</p>
   if(backendError) return <p>An Error occurred</p>

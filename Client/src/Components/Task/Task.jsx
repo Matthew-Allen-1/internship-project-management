@@ -5,10 +5,10 @@ import {nanoid} from 'nanoid'
 import { useMutation, useQueryClient } from 'react-query'
 
 // API Requests
-import { addGroupRequest, deleteTaskRequest, updateTaskRequest } from '../../ApiServices/TasksService'
+import { addGroupRequest, updateTaskRequest } from '../../ApiServices/TasksService'
 
 // Hooks && Context
-import useMutationAddTask from '../../hooks/useMutationAddTask';
+import { useMutationAddTask, useMutationDeleteTask, useMutationAddGroup, useMutationUpdateTask } from '../../hooks/useMutationHook';
 import { UserContext } from '../../context/UserContext'
 
 //Components
@@ -31,6 +31,9 @@ export default function Task(props){
   const [dropdownActive, setDropdownActive] = useState(false)
   const [dropdownSearch, setDropdownSearch] = useState(""); 
   const newClassList = dropdownActive ? "task-dropdown-content task-dropdown-show" : "task-dropdown-content";
+  const { mutate: mutateDeleteTask } = useMutationDeleteTask();
+  const { mutate: mutateUpdateTask } = useMutationUpdateTask();
+  const { mutate: mutateAddTask } = useMutationAddTask();
 
   useEffect(() =>{
     const closeDropdown = e => {
@@ -41,17 +44,8 @@ export default function Task(props){
     document.body.addEventListener('click', closeDropdown);
     return () => document.body.removeEventListener('click', closeDropdown);
   }, []);
-  
-  const { mutate: mutateDeleteTask } = useMutation(
-    (id) => deleteTaskRequest(id),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(['tasks'])
-        queryClient.invalidateQueries(['archived-tasks'])
-      }
-    }
-  );
 
+  // mutate Add Group
   const { mutate: mutateAddGroup } = useMutation(
     (newGroup) => addGroupRequest(newGroup),
     {
@@ -64,22 +58,6 @@ export default function Task(props){
       }
     }
   );
-
-  const { mutate: mutateUpdateTask } = useMutation(
-    (groupId) => updateTaskRequest(groupId),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(['tasks'])
-        queryClient.invalidateQueries(['archived-tasks'])
-        updateNewTaskMessage(true, 'Successfully Updated...')
-        setTimeout(() => {
-          updateNewTaskMessage(false, '')
-        }, 2000)
-      }
-    }
-  );
-
-  const { mutate: mutateAddTask } = useMutationAddTask();
 
   function deleteTask() {mutateDeleteTask(task.task_id)};
   function duplicateTask() {mutateAddTask({...defaultInputState ,...task, task_id: nanoid()})};
