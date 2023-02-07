@@ -9,7 +9,7 @@ export const HardCodedTaskData = [
         start_time: "02:49",
         end_time: "16:12",
         date: "",
-        dropdown_active: false
+        archived: false
     },
     {
         id:"456",
@@ -19,7 +19,7 @@ export const HardCodedTaskData = [
         start_time: "",
         end_time: "",
         date: "1212-12-12",
-        dropdown_active: false
+        archived: false
     },
     {
         id:"789",
@@ -29,7 +29,7 @@ export const HardCodedTaskData = [
         start_time: "14:00",
         end_time: "06:45",
         date: "1212-12-14",
-        dropdown_active: false
+        archived: false
     },
     {
         id:"444",
@@ -39,7 +39,7 @@ export const HardCodedTaskData = [
         start_time: "12:00",
         end_time: "21:00",
         date: "",
-        dropdown_active: false
+        archived: false
     },
     {
         id:"555",
@@ -49,7 +49,7 @@ export const HardCodedTaskData = [
         start_time: "",
         end_time: "",
         date: "1212-12-16",
-        dropdown_active: false
+        archived: false
     }
 ]
 

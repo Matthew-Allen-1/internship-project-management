@@ -175,25 +175,39 @@ app.get('/tasks', async (req, res) => {
   console.log('user: ', user)
 
   try {
-
-    // const [tasks] = await req.db.query(`
-    //   SELECT task_data FROM tasks
-    //   WHERE tasks.user_id = ${user.userId}`
-    // );
-
-    // const [groups] = await req.db.query(`
-    //   SELECT group_data FROM tasks
-    //   WHERE tasks.user_id = ${user.userId}`
-    // );
-
     const [tasks] = await req.db.query(`
     SELECT * FROM task_table
-    WHERE task_table.id = ${user.userId}`
+    WHERE task_table.id = ${user.userId} AND archived = 0`
   );
 
   const [groups] = await req.db.query(`
     SELECT * FROM group_table
-    WHERE group_table.id = ${user.userId}`
+    WHERE group_table.id = ${user.userId}
+    ORDER BY title`
+  );
+
+    res.json({ tasks, groups, name: user.name });
+  } catch (err) {
+    console.log(err);
+    res.json({ err });
+  }
+});
+
+app.get('/archived-tasks', async (req, res) => {
+  const [scheme, token] = req.headers.authorization.split(' ');
+  const user = jwt.verify(token, process.env.JWT_KEY)
+  console.log('user: ', user)
+
+  try {
+    const [tasks] = await req.db.query(`
+    SELECT * FROM task_table
+    WHERE task_table.id = ${user.userId} AND archived = 1`
+  );
+
+  const [groups] = await req.db.query(`
+    SELECT * FROM group_table
+    WHERE group_table.id = ${user.userId}
+    ORDER BY title`
   );
 
     res.json({ tasks, groups, name: user.name });
@@ -284,6 +298,16 @@ app.post('/update-task', async function (req, res) {
           task_id: req.body.task_id,
         }
       );
+    } else if (req.body.type === 'archive'){
+      const [task] = await req.db.query(`
+        UPDATE task_table
+        SET archived = :archived
+        WHERE task_id = :task_id`,
+        {
+          archived: req.body.archived,
+          task_id: req.body.task_id,
+        }
+      );
     }
     res.json({Success: true})
 
@@ -301,15 +325,15 @@ app.post('/add-task', async function (req, res) {
   try {
 
     const [task] = await req.db.query(`
-      INSERT INTO task_table (task_id, title, start_time, end_time, date, dropdown_active, group_title, group_id, id)
-      VALUES (:task_id, :title, :start_time, :end_time, :date, :dropdown_active, :group_title, :group_id, ${user.userId})`, 
+      INSERT INTO task_table (task_id, title, start_time, end_time, date, archived, group_title, group_id, id)
+      VALUES (:task_id, :title, :start_time, :end_time, :date, :archived, :group_title, :group_id, ${user.userId})`, 
       {
       task_id: req.body.task_id,
       title: req.body.title,
       start_time: req.body.start_time,
       end_time: req.body.end_time,
       date: req.body.date,
-      dropdown_active: req.body.dropdown_active,
+      archived: req.body.archived,
       group_title: req.body.group_title,
       group_id: req.body.group_id,
       }
@@ -331,6 +355,24 @@ app.delete('/delete-task/:id', async function (req, res) {
     const [task] = await req.db.query(`
       DELETE FROM task_table 
       WHERE task_table.task_id = '${task_id}' AND task_table.id = ${user.userId}`,{hello: 'hello'}
+    );
+    res.json({Success: true })
+
+  } catch (error){
+    console.log('error', error)
+    res.json({Success: false})
+  }
+});
+
+app.delete('/delete-group/:id', async function (req, res) {
+  const [scheme, token] = req.headers.authorization.split(' ');
+  const user = jwt.verify(token, process.env.JWT_KEY)
+  const group_id = req.params.id;
+  console.log('deleted group: ', group_id, user.userId);
+  try{
+    const [group] = await req.db.query(`
+      DELETE FROM group_table 
+      WHERE group_table.group_id = '${group_id}' AND group_table.id = ${user.userId}`,{hello: 'hello'}
     );
     res.json({Success: true })
 

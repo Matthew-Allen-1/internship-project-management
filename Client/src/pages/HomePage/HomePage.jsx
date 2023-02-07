@@ -26,7 +26,7 @@ import './HomePage.css'
 
 
 export default function Home(){
-  const { currentUser, newTaskMessage }= useContext(UserContext);
+  const { currentUser, theme, newTaskMessage }= useContext(UserContext);
   const queryClient = useQueryClient();
   const { data: backendData , isLoading: backendLoading, isError: backendError , refetch} = useQuery(
     'tasks', 
@@ -134,6 +134,11 @@ export default function Home(){
     })
   };
 
+  function updateGroupAfterDelete(){
+    setGroupSelection('default');
+    setSelected('');
+  }
+
   // adds the 'input' state into the currently selected task in 'taskData' state.
   function addTask(){
     if (input.title == '') {
@@ -141,18 +146,22 @@ export default function Home(){
     } else if ((input.start_time != '' || input.end_time != '') && input.date == ''){
       alert('You may not enter a start or end time without entering a date.')
     } else{
-      mutateAddTask({...input, task_id: nanoid(), dropdown_active: false})
+      mutateAddTask({...input, task_id: nanoid(), archived: false})
     }
   };
 
   return (
-    <div className = "App">
+    <div className ="App" id={`${theme}`}>
       <Navbar user={backendData?.name} />
-      <Sidebar 
-        groupData = {backendGroups}
-        handleGroupSelection = {handleGroupSelection}
-        groupSelection = {groupSelection}
-      />
+      <div className="vertical-sidebar">
+        <Sidebar 
+          groupData = {backendGroups}
+          taskData = {backendTasks}
+          updateGroupAfterDelete = {updateGroupAfterDelete}
+          handleGroupSelection = {handleGroupSelection}
+          groupSelection = {groupSelection}
+        />
+      </div>
       <main>
         <div className = "task-section">
           <CreateTask 
@@ -169,6 +178,15 @@ export default function Home(){
             dropdownSelected = {dropdownSelected}
             selected = {selected}
           />
+          <div className="horizontal-sidebar">
+            <Sidebar 
+              groupData = {backendGroups}
+              taskData = {backendTasks}
+              updateGroupAfterDelete = {updateGroupAfterDelete}
+              handleGroupSelection = {handleGroupSelection}
+              groupSelection = {groupSelection}
+            />
+          </div>
           { newTaskMessage.state && <Alert className="alert" variant="filled" severity="success">{newTaskMessage.msg}</Alert>}
           <GroupedTask 
             groupData = {backendGroups}

@@ -16,6 +16,7 @@ export default function useMutationAddTask(){
     {
       onSuccess: () => {
         queryClient.invalidateQueries(['tasks'])
+        queryClient.invalidateQueries(['archived-tasks'])
         updateNewTaskMessage(true, "Task Saved")
         setTimeout(() => {
           updateNewTaskMessage(false, '')

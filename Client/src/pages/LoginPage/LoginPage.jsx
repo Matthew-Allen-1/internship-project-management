@@ -118,7 +118,7 @@ export default function Login(){
 
           <button onClick={() => handleLoginClick()}>{isRefetching ? 'Loading...' : 'Log in'}</button>
         </div>
-        <p className="link">Don't have an account? <Link to="/SignUp">Sign up</Link></p>
+        <p className="link">Don't have an account? <Link to="/">Sign up</Link></p>
       </div>
     </div>
   )
