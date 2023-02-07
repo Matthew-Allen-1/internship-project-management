@@ -18,19 +18,13 @@ html, body {
 
 /*********** Themes ************/
 /*** Light ***/
-/* #light{
-  background-color: white;
-  color: black;
-} */
 
 
 /*** Dark ***/
 #dark{
   background-color: black;
   color: white;
-}
-#dark html,body{
-  background-color: black;
+  height: 100%;
 }
 #dark .sidebar{
   background: rgb(30, 30, 30);
@@ -122,6 +116,10 @@ html, body {
 }
 #dark .login .input-field{
   background: transparent;
+}
+#dark .all-groups-tasks-container{
+  height: 100%;
+  background-color: black;
 }
 @media screen and (max-width: 900px){
   #dark nav{
