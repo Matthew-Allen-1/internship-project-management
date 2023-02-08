@@ -1,10 +1,16 @@
 import React, { createContext, useState } from 'react';
 
 const UserContext = createContext(null);
+let userTheme;
+if(localStorage.getItem('taskManagerTheme') == null){
+  userTheme = 'light';
+} else{
+  userTheme = JSON.parse(localStorage.getItem('taskManagerTheme')).theme;
+}
 
 function UserProvider({children}) {
   const [currentUser, setCurrentUser] = useState(null);
-  const [theme, setTheme] = useState(JSON.parse(localStorage.getItem('taskManagerTheme')).theme || 'light');
+  const [theme, setTheme] = useState(userTheme);
   const [newTaskMessage, setNewTaskMessage] = useState({state: false, msg: ''})
 
   function loginUser(payload) {

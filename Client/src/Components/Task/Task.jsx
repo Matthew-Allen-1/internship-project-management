@@ -62,7 +62,6 @@ export default function Task(props){
   function deleteTask() {mutateDeleteTask(task.task_id)};
   function duplicateTask() {mutateAddTask({...defaultInputState ,...task, task_id: nanoid()})};
   function archiveTask(name) {
-    console.log(name);
     if(name == "Archive"){
       mutateUpdateTask({type:"archive", archived: true, task_id: task.task_id})
     } else if(name == "unArchive"){
