@@ -154,7 +154,7 @@ export default function Task(props){
       <div className="created-task">
         <div className="left-box">
           <div className="task-input">
-            {props.selectAll && <input type="checkbox"/>}
+            {props.selectAll && <input id={task.task_id} type="checkbox" onChange={(event) => props.handleCheckbox(event)}/>}
             <input
               className = "input"
               onBlur={(event) => onFocusOut(event)}

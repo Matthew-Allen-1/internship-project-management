@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 // Components
 import Task from '../Task/Task'
+import { useMutationDeleteTask } from '../../hooks/useMutationHook';
 
 //Styling
 import './GroupedTask.css'
@@ -10,13 +11,15 @@ import './GroupedTask.css'
 export default function GroupedTask(props){
   const { groupData, taskData, groupSelection } = props;
   const [selectAll, setSelectAll] = useState(false);
+  const [selectedTasks, setSelectedTasks] = useState([]);
+  const {mutate: mutateDeleteTask} = useMutationDeleteTask()
 
   //converts date object to a displayable date string
   function convertDateToString(date) {
     const newDate = new Date(date);
     const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][newDate.getDay()]
     const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][newDate.getMonth()];
-    const day = newDate.getDate()
+    const day = newDate.getDate();
 
     var daySuffix = ''
     switch(parseInt(day) % 10) {
@@ -54,6 +57,31 @@ export default function GroupedTask(props){
     return (hoursElapsed.toString() + ":" + minutesElapsed.toString())
   }
 
+  function handleSelect() {
+    if(selectAll == true){
+      setSelectedTasks([])
+    }
+    setSelectAll(prevSelect => !prevSelect);
+  }
+  function handleCheckbox(event){
+    if(selectedTasks.includes(event.target.id)){
+      console.log('twice')
+      setSelectedTasks(prevSelected => {
+        return prevSelected.filter(selected => selected !== event.target.id)
+      })
+    } else{
+      setSelectedTasks(prevSelected => ([...prevSelected, event.target.id]))
+    }
+  }
+  function handleCheckboxDelete(){
+    setSelectAll(false);
+    if(selectedTasks != []){
+      selectedTasks.map(task_id => {
+        mutateDeleteTask(task_id);
+      })
+    }
+    setSelectedTasks([])
+  }
 
   const filteredTasks = taskData.filter(task => {
     if(groupSelection === 'default'){
@@ -95,6 +123,8 @@ export default function GroupedTask(props){
         elapsedTime = {convertElapsedToText(calcElapsedTime(task))}
         groupData = {groupData}
         selectAll={selectAll}
+        selectedTasks={selectedTasks}
+        handleCheckbox={handleCheckbox}
       />
     )
   }
@@ -116,11 +146,6 @@ export default function GroupedTask(props){
     }, 0)
   })
 
-  function handleSelect(name) {
-    console.log(name)
-    setSelectAll(prevSelect => !prevSelect);
-  }
-
   //Create an array of divs corresponding to the dates in dateList
   const dateTaskElements = taskElementArrays.filter(taskElementArray => taskElementArray.length != 0)
   .map((taskElementArray, index) => {
@@ -132,11 +157,10 @@ export default function GroupedTask(props){
     return(
       <div key = {index} className="grouped-tasks-container">
         <div className ="task-header">
-          {selectAll && <input type="checkbox"/>}
           <p className = "left" >{dateStr}</p>
           <div className = "right">
             <p>{timeTotals[index] > 0 ? 'Total Duration: ' + convertElapsedToText(timeTotals[index]) : ''}</p>
-            <img onClick={() => handleSelect(dateStr)} src = "https://app.clockify.me/assets/ui-icons/bulk-edit.svg" alt = "" />
+            <img onClick={() => handleSelect()} src = "https://app.clockify.me/assets/ui-icons/bulk-edit.svg" alt = "" />
           </div>
         </div>
         {taskElementArray}
@@ -146,6 +170,7 @@ export default function GroupedTask(props){
 
   return(
     <div className="all-groups-tasks-container">
+      {selectAll && <a className="delete-all-link" href="#" onClick={() => handleCheckboxDelete()}>Delete</a>}
       {dateTaskElements}
     </div>
   )

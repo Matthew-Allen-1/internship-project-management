@@ -1,7 +1,18 @@
+.all-groups-tasks-container{
+  display: flex;
+  flex-direction: column;
+}
+
 .grouped-tasks-container{
   box-shadow: 0px 5px 5px -3px rgb(200, 200, 200);
-  margin: 20px 20px 0px 20px;
+  margin: 0px 20px 20px 20px;
   transition: 1s;
+}
+
+.delete-all-link{
+  align-self: flex-start;
+  margin-left: 30px;
+  color: #03a9f4;
 }
 
 .task-header{
@@ -33,6 +44,6 @@
 @media screen and (max-width: 550px){
   .grouped-tasks-container{
     transition: 1s;
-    margin: 20px 0px 0px 0px;
+    margin: 0px 0px 20px 0px;
   }
 }
