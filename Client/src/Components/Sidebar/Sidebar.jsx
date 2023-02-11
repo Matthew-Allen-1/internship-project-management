@@ -65,7 +65,7 @@ export default function Sidebar(props) {
                     <p id='unscheduled' onClick = {(event) => props.handleGroupSelection(event)}>Unscheduled Tasks</p>
                 </div>
             </div>
-            <h4>Tasks <MoreHorizIcon className="group-options-btn" onClick={handleOptionsClick}/></h4>
+            <h4 id='tasks-sidebar-heading'>Tasks <MoreHorizIcon className="group-options-btn" onClick={handleOptionsClick}/></h4>
             {groupElements}
         </div>
     )
