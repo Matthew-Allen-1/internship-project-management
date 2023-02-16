@@ -114,9 +114,16 @@
       .created-task .right-box .task-elapsed-time {
         display: flex;
         width: 32%;
-        justify-content: center;
+        justify-content: flex-end;
         align-items: center;
         margin-right: 10px;
+      }
+
+      .created-task .right-box .options-menu {
+        /* display: flex;
+        justify-content: center;
+        align-items: center; */
+        width: 40px;
       }
 
     .created-task .input{

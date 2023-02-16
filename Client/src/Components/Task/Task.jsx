@@ -183,6 +183,7 @@ export default function Task(props){
               {newGroupListElements}
             </div>
           </div>
+          <span className="line-divider"></span>
           <div className="task-elapsed-time">
             <div className = "elapsed-time-container">
               <span className="elapsed-time">{props.elapsedTime != '0:00' ? 'Duration: ' + props.elapsedTime : ''}</span>
@@ -230,7 +231,9 @@ export default function Task(props){
               <span className="elapsed-time-format">{props.elapsedTime != '0:00' ? '(hh:mm)' : ''}</span>
             </div>
           </div>
-          <OptionsMenu id={task.task_id} archived={task.archived} deleteTask={deleteTask} duplicateTask={duplicateTask} archiveTask={archiveTask} />
+          <div className = "options-menu">
+            <OptionsMenu  id={task.task_id} archived={task.archived} deleteTask={deleteTask} duplicateTask={duplicateTask} archiveTask={archiveTask} />
+          </div>
         </div>
       </div>
     </div>

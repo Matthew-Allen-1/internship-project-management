@@ -57,7 +57,7 @@ export default function OptionsMenu(props) {
         PaperProps={{
           style: {
             maxHeight: ITEM_HEIGHT * 4.5,
-            width: "20ch",
+            width: "12ch",
             backgroundColor: theme === 'light' ? 'rgb(255, 255, 255)' : 'rgb(0, 0, 0)'
           }
         }}
