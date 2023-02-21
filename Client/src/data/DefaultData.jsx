@@ -1,9 +1,9 @@
 export let defaultInputState = {
   title: "",
-  groupTitle: "",
-  groupId: 0,
-  startTime: "",
-  endTime: "",
+  group_title: "",
+  group_id: 0,
+  start_time: "",
+  end_time: "",
   date: ""
 }
 
@@ -26,5 +26,5 @@ export let unscheduledTasksGroupState = {
 export let defaultTaskState = {
   ...defaultInputState,
   id: 0,
-  dropdownActive: false
+  archived: false
 }

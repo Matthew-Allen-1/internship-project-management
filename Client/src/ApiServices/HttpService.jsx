@@ -51,8 +51,11 @@ export const put = async (url, headers) => {
 export const remove = async (url, headers) => {
   try {
     const res = await fetch(url, {
-      method: 'GET',
-      headers: { ...headers }
+      method: 'DELETE',
+      headers: { 
+        Authorization: `Bearer ${getJwt()}`,
+        ...headers 
+      },
     });
 
     return res.json();

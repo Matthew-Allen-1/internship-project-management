@@ -3,6 +3,7 @@
   flex-direction: column;
   width: 100vw;
   height: 100vh;
+  background: linear-gradient(225deg, white, white, white, #03a9f4);
 }
 
 .sign-up header{
@@ -16,6 +17,9 @@
 .sign-up header .log-in{
   display: flex;
   align-items: center;
+}
+.sign-up header .log-in p{
+  margin: 0;
 }
 .sign-up header .log-in button{
   width: 90px;

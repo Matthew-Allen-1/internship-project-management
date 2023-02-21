@@ -1,24 +1,49 @@
+.all-groups-tasks-container{
+  display: flex;
+  flex-direction: column;
+}
+
+.grouped-tasks-container{
+  box-shadow: 0px 5px 5px -3px rgb(200, 200, 200);
+  margin: 0px 20px 20px 20px;
+  transition: 1s;
+}
+
+.delete-all-link{
+  align-self: flex-start;
+  margin-left: 30px;
+  color: #03a9f4;
+}
+
 .task-header{
-  margin: 20px 20px 0px 20px;
-  /* padding: 15px; */
   display: flex;
   justify-content: space-between;
-  background-color: #e4eaee;
+  align-items: center;
+  background: linear-gradient(#e4eaee,#dde4e8);
   border: 1px solid #C6D2D9;
 }
 
 .task-header .left{
-  margin-left: 5px;
-  margin-top: 10px;
+  margin-left: 10px;
   text-align: left;
   flex-grow: 1;
 }
 
 .task-header .right{
   display: flex;
-  margin-top: 10px;
+  align-items: center;
+}
+.task-header p{
+  margin: 0;
 }
 
 .task-header .right img{
   margin: 10px;
+}
+
+@media screen and (max-width: 550px){
+  .grouped-tasks-container{
+    transition: 1s;
+    margin: 0px 0px 20px 0px;
+  }
 }

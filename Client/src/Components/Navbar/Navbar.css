@@ -9,6 +9,7 @@ nav {
   position: fixed;
   top: 0px;
   z-index: 2;
+  box-shadow: 222px 5px 5px -3px rgb(200, 200, 200);
 }
 
 nav img {
@@ -18,41 +19,32 @@ nav img {
   cursor: pointer;
 }
 
-.nav-menu-button {
-  width: 96px;
-  height: 44px;
-  margin: 0px 8px;
-  display: flex;
-  align-items: center;
-}
-
-.nav-menu-button::before{content: "Menu"; margin: 4px 4px 4px 0px;}
-
-.nav-title {
+nav .nav-title {
   color: black;
   font-weight: bold;
   flex: 1 1 100px;
   min-width: 320px;
 }
 
-.nav-title-url {
+nav .nav-title-url {
   font-size: 24px; 
   line-height: 24px;
+  margin: 0px; /* need to find where the 8px is coming from */
 }
 
-.user-info {
+nav .user-info {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.user-info p {
+nav .user-info p {
   margin: 0px 5px 0px 5px;
 }
-.user-info-link{
+nav .user-info-link{
   margin: 0px 20px 0px 5px;
 }
 
-.nav-button {
+nav .nav-button {
   width: 80px;
   height: 40px;
   margin: auto 10px;
@@ -61,7 +53,7 @@ nav img {
   border: 1px solid black;
 }
 
-button {
+nav button {
   font-size: 1em;
   font-weight: 512;
   font-family: Helvetica, sans-serif;
@@ -74,7 +66,14 @@ button {
   cursor: pointer;
   transition: border-color 0.16s;
 }
-button:hover {
+nav button:hover {
   border-color: black;
   transform: scale(1.04);
+}
+
+@media screen and (max-width: 900px){
+  nav{
+    box-shadow: 0px 5px 5px -3px rgb(200, 200, 200);
+    transition: 1s;
+  }
 }

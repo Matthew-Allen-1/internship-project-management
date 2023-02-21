@@ -80,7 +80,8 @@ app.post('/register', async function (req, res) {
         encodedUser = jwt.sign(
           { 
             userId: user.insertId,
-            ...req.body
+            name: user.name,
+            email: user.email
           },
           process.env.JWT_KEY
         );
@@ -101,7 +102,6 @@ app.post('/register', async function (req, res) {
 // authenticates user when they log in
 app.post('/authenticate', async function (req, res) {
   try {
-    console.log('ONE')
     const { email, password } = req.body;
     const [[user]] = await req.db.query(`SELECT * FROM users WHERE email = :email`, {  email });
 
@@ -113,6 +113,7 @@ app.post('/authenticate', async function (req, res) {
       const payload = {
         userId: user.id,
         name: user.name,
+        email: user.email,
       }
       
       const encodedUser = jwt.sign(payload, process.env.JWT_KEY);
@@ -133,7 +134,7 @@ app.get('/user', async (req, res) => {
 
 // Jwt verification checks to see if there is an authorization header with a valid jwt in it.
 app.use(async function verifyJwt(req, res, next) {
-  console.log(req.headers.authorization)
+  // console.log(req.headers.authorization)
   if (!req.headers.authorization) {
     res.json('Invalid authorization, no authorization headers');
   }
@@ -171,59 +172,217 @@ app.use(async function verifyJwt(req, res, next) {
 app.get('/tasks', async (req, res) => {
   const [scheme, token] = req.headers.authorization.split(' ');
   const user = jwt.verify(token, process.env.JWT_KEY)
-  console.log(user)
+  console.log('user: ', user)
 
   try {
-
     const [tasks] = await req.db.query(`
-      SELECT task_data FROM tasks
-      WHERE tasks.user_id = ${user.userId}`
-    );
+    SELECT * FROM task_table
+    WHERE task_table.id = ${user.userId} AND archived = 0`
+  );
 
-      res.json({ tasks, name: user.name });
+  const [groups] = await req.db.query(`
+    SELECT * FROM group_table
+    WHERE group_table.id = ${user.userId}
+    ORDER BY title`
+  );
+
+    res.json({ tasks, groups, name: user.name });
   } catch (err) {
     console.log(err);
     res.json({ err });
   }
 });
 
-// POST request to http://localhost:8080/add-task ends here
+app.get('/archived-tasks', async (req, res) => {
+  const [scheme, token] = req.headers.authorization.split(' ');
+  const user = jwt.verify(token, process.env.JWT_KEY)
+  console.log('user: ', user)
+
+  try {
+    const [tasks] = await req.db.query(`
+    SELECT * FROM task_table
+    WHERE task_table.id = ${user.userId} AND archived = 1`
+  );
+
+  const [groups] = await req.db.query(`
+    SELECT * FROM group_table
+    WHERE group_table.id = ${user.userId}
+    ORDER BY title`
+  );
+
+    res.json({ tasks, groups, name: user.name });
+  } catch (err) {
+    console.log(err);
+    res.json({ err });
+  }
+});
+
+app.post('/add-group', async function (req, res) {
+  const [scheme, token] = req.headers.authorization.split(' ');
+  const user = jwt.verify(token, process.env.JWT_KEY)
+  console.log('group added: ', req.body)
+
+  try{
+    const [group] = await req.db.query(`
+      INSERT INTO group_table (group_id, title, active_sidebar, selected, id)
+      VALUES (:group_id, :title, :active_sidebar, :selected, ${user.userId})`,
+      {
+        group_id: req.body.group_id,
+        title: req.body.title,
+        active_sidebar: req.body.activeSidebar,
+        selected: req.body.selected,
+      }
+    );
+    res.json({Success: true, group_title: req.body.title, group_id: req.body.group_id})
+
+  } catch (error){
+    console.log('error', error)
+    res.json({Success: false})
+  }
+})
+
+app.post('/update-task', async function (req, res) {
+  const [scheme, token] = req.headers.authorization.split(' ');
+  const user = jwt.verify(token, process.env.JWT_KEY)
+  console.log('group updated: ', req.body)
+
+  try{
+    if(req.body.type === 'groupSelect'){
+      const [task] = await req.db.query(`
+        UPDATE task_table
+        SET group_id = :group_id, group_title = :group_title
+        WHERE task_id = :task_id`,
+        {
+          group_id: req.body.group_id,
+          group_title: req.body.group_title,
+          task_id: req.body.task_id,
+        }
+      );
+    } else if (req.body.type === 'title'){
+      const [task] = await req.db.query(`
+        UPDATE task_table
+        SET title = :title
+        WHERE task_id = :task_id`,
+        {
+          title: req.body.title,
+          task_id: req.body.task_id,
+        }
+      );
+    } else if (req.body.type === 'start_time'){
+      const [task] = await req.db.query(`
+        UPDATE task_table
+        SET start_time = :start_time
+        WHERE task_id = :task_id`,
+        {
+          start_time: req.body.start_time,
+          task_id: req.body.task_id,
+        }
+      );
+    }else if (req.body.type === 'end_time'){
+      const [task] = await req.db.query(`
+        UPDATE task_table
+        SET end_time = :end_time
+        WHERE task_id = :task_id`,
+        {
+          end_time: req.body.end_time,
+          task_id: req.body.task_id,
+        }
+      );
+    } else if (req.body.type === 'date'){
+      const [task] = await req.db.query(`
+        UPDATE task_table
+        SET date = :date
+        WHERE task_id = :task_id`,
+        {
+          date: req.body.date,
+          task_id: req.body.task_id,
+        }
+      );
+    } else if (req.body.type === 'archive'){
+      const [task] = await req.db.query(`
+        UPDATE task_table
+        SET archived = :archived
+        WHERE task_id = :task_id`,
+        {
+          archived: req.body.archived,
+          task_id: req.body.task_id,
+        }
+      );
+    }
+    res.json({Success: true})
+
+  } catch (error){
+    console.log('error', error)
+    res.json({Success: false})
+  }
+})
+
 app.post('/add-task', async function (req, res) {
   const [scheme, token] = req.headers.authorization.split(' ');
   const user = jwt.verify(token, process.env.JWT_KEY)
+  console.log('task added: ',req.body);
 
   try {
 
-    const [tasks] = await req.db.query(`
-      INSERT INTO tasks (user_id, task_data, group_data)
-      VALUES (${user.userId}, :task_data, :group_data)
-      ON DUPLICATE KEY
-      UPDATE task_data = :task_data, group_data = :group_data;
-    `, {
-      task_data: req.body.task_data,
-      group_data: req.body.group_data,
-    });
+    const [task] = await req.db.query(`
+      INSERT INTO task_table (task_id, title, start_time, end_time, date, archived, group_title, group_id, id)
+      VALUES (:task_id, :title, :start_time, :end_time, :date, :archived, :group_title, :group_id, ${user.userId})`, 
+      {
+      task_id: req.body.task_id,
+      title: req.body.title,
+      start_time: req.body.start_time,
+      end_time: req.body.end_time,
+      date: req.body.date,
+      archived: req.body.archived,
+      group_title: req.body.group_title,
+      group_id: req.body.group_id,
+      }
+    );
+    res.json({Success: true})
 
   } catch (error) {
     console.log('error', error);
+    res.json({Success: false})
   };
 });
 
-app.delete('/delete-tasks', async function (req, res) {
+app.delete('/delete-task/:id', async function (req, res) {
   const [scheme, token] = req.headers.authorization.split(' ');
   const user = jwt.verify(token, process.env.JWT_KEY)
+  const task_id = req.params.id;
+  console.log('deleted task: ', task_id, user.userId);
+  try{
+    const [task] = await req.db.query(`
+      DELETE FROM task_table 
+      WHERE task_table.task_id = '${task_id}' AND task_table.id = ${user.userId}`,{hello: 'hello'}
+    );
+    res.json({Success: true })
+
+  } catch (error){
+    console.log('error', error)
+    res.json({Success: false})
+  }
+});
+
+app.delete('/delete-group/:id', async function (req, res) {
+  const [scheme, token] = req.headers.authorization.split(' ');
+  const user = jwt.verify(token, process.env.JWT_KEY)
+  const group_id = req.params.id;
+  console.log('deleted group: ', group_id, user.userId);
+  try{
+    const [group] = await req.db.query(`
+      DELETE FROM group_table 
+      WHERE group_table.group_id = '${group_id}' AND group_table.id = ${user.userId}`,{hello: 'hello'}
+    );
+    res.json({Success: true })
+
+  } catch (error){
+    console.log('error', error)
+    res.json({Success: false})
+  }
 });
 
 // Start the Express server
 app.listen(port, () => {
   console.log(`server started at http://localhost:${port}`);
 });
-
-
-  // const [tasks] = await req.db.query(`
-  // SELECT messages.* FROM messages,  
-  // (
-  //   SELECT from_user_id, max(date_time) AS date_time FROM messages GROUP BY from_user_id
-  // ) last_message 
-  // WHERE messages.from_user_id = last_message.from_user_id 
-  // AND messages.date_time = last_message.date_time`);

@@ -1,13 +1,17 @@
+import React,{ useState, useContext } from 'react';
+
 // Libraries
 import { useQuery } from 'react-query'
-import React,{ useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 
-// Authentication
+// Hooks & Context
+import { UserContext } from '../../context/UserContext'
+
+// API Services
 import { setJwt } from '../../ApiServices/JwtService'
 import { authenticateUser } from '../../ApiServices/AuthService'
 
-// Image Assets
+// Assets
 import eye from '../../assets/eye.svg'
 import eyeSlash from '../../assets/eye-slash.svg'
 
@@ -16,6 +20,8 @@ import './LoginPage.css'
 
 
 export default function Login(){
+  const { loginUser } = useContext(UserContext);
+
 // initialize and states
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -53,13 +59,18 @@ export default function Login(){
     }
     // refetch call
     const loginResponse  = await refetch();
+
     if (!loginResponse.isError && loginResponse.data.jwt) {
-      setJwt(loginResponse.data.jwt);
+      const token = loginResponse.data.jwt
+      setJwt(token);
+      const payload = JSON.parse(window.atob(token.split(".")[1]))
+      loginUser(payload);
       navigate('/task-manager');
     } else{
       setResponseMessage({state: true, error: 'error', msg: 'Sorry, We could not find a user with this login information'})
     }
   }
+
 
 // show password button styling
   function password(event){setShowPassword(prevPass => !prevPass);}
@@ -107,7 +118,7 @@ export default function Login(){
 
           <button onClick={() => handleLoginClick()}>{isRefetching ? 'Loading...' : 'Log in'}</button>
         </div>
-        <p className="link">Don't have an account? <Link to="/SignUp">Sign up</Link></p>
+        <p className="link">Don't have an account? <Link to="/">Sign up</Link></p>
       </div>
     </div>
   )

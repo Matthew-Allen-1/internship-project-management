@@ -1,46 +1,25 @@
-// Libraries
 import React, { useState } from 'react'
-import {nanoid} from 'nanoid'
-import { useQuery, useMutation } from 'react-query'
-
-// Api Services
-import { fetchTasks } from '../../ApiServices/TasksService'
 
 // Components
 import Task from '../Task/Task'
-import OptionsMenu from '../OptionsMenu'
+import { useMutationDeleteTask } from '../../hooks/useMutationHook';
 
 //Styling
 import './GroupedTask.css'
 
 
 export default function GroupedTask(props){
-
-  const { groupData, setGroupData, taskData, setTaskData, groupSelection, handleInputChange, 
-    dropdown, dropdownEnter, dropdownFilter, dropdownSelected, 
-    taskDropdownActive, setTaskDropdownActive, taskDropdownSearch, setTaskDropdownSearch, deleteTaskById} = props;
-
+  const { groupData, taskData, groupSelection } = props;
   const [selectAll, setSelectAll] = useState(false);
-
-  const { data, isLoading, isError } = useQuery('tasks', fetchTasks);
-  if(isLoading) return <p>Loading...</p>
-  if(isError) return <p>An Error occurred</p>
-
-  const defaultTaskData = {
-    title: 'Task that was added',
-    groupTitle: 'Group that was chosen',
-    groupId: 0,
-    startTime: '12:00',
-    endTime: '12:00',
-    date: '1/1/00'
-  }
+  const [selectedTasks, setSelectedTasks] = useState([]);
+  const {mutate: mutateDeleteTask} = useMutationDeleteTask()
 
   //converts date object to a displayable date string
   function convertDateToString(date) {
     const newDate = new Date(date);
     const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][newDate.getDay()]
     const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][newDate.getMonth()];
-    const day = newDate.getDate()
+    const day = newDate.getDate();
 
     var daySuffix = ''
     switch(parseInt(day) % 10) {
@@ -63,11 +42,11 @@ export default function GroupedTask(props){
   }
 
   function calcElapsedTime(task) {
-    if (!task.startTime || !task.endTime ) {return 0}
+    if (!task.start_time || !task.end_time ) {return 0}
     else {
-      const endTimeInMinutes = parseInt(task.endTime.slice(0, 2)) * 60 + parseInt(task.endTime.slice(3, 5))
-      const startTimeInMinutes = parseInt(task.startTime.slice(0, 2)) * 60 + parseInt(task.startTime.slice(3, 5))
-      const duration = endTimeInMinutes - startTimeInMinutes
+      const end_timeInMinutes = parseInt(task.end_time.slice(0, 2)) * 60 + parseInt(task.end_time.slice(3, 5))
+      const start_timeInMinutes = parseInt(task.start_time.slice(0, 2)) * 60 + parseInt(task.start_time.slice(3, 5))
+      const duration = end_timeInMinutes - start_timeInMinutes
       return duration < 0 ? (duration + Math.ceil(Math.abs(duration) / 1440) * 1440) : duration
     }
   }
@@ -78,17 +57,48 @@ export default function GroupedTask(props){
     return (hoursElapsed.toString() + ":" + minutesElapsed.toString())
   }
 
-//Filter task list according to the group selected in the sidebar.
-  const filteredTasks = taskData.filter((task, index) => {
-    const indexOfGroupSelection = groupData.map(group => group.id).indexOf(groupSelection)
-    if (groupSelection == 0 || index == 0) {return true}
-    else {return groupData[indexOfGroupSelection].taskIds.indexOf(task.id) >= 0}
- })
+  function handleSelect() {
+    if(selectAll == true){
+      setSelectedTasks([])
+    }
+    setSelectAll(prevSelect => !prevSelect);
+  }
+  function handleCheckbox(event){
+    if(selectedTasks.includes(event.target.id)){
+      console.log('twice')
+      setSelectedTasks(prevSelected => {
+        return prevSelected.filter(selected => selected !== event.target.id)
+      })
+    } else{
+      setSelectedTasks(prevSelected => ([...prevSelected, event.target.id]))
+    }
+  }
+  function handleCheckboxDelete(){
+    setSelectAll(false);
+    if(selectedTasks != []){
+      selectedTasks.map(task_id => {
+        mutateDeleteTask(task_id);
+      })
+    }
+    setSelectedTasks([])
+  }
+
+  const filteredTasks = taskData.filter(task => {
+    if(groupSelection === 'default'){
+      return true
+    } else if (groupSelection === 'unscheduled' && !task.date){
+      return true
+    } else if(groupSelection === task.group_id){
+     return true
+    } else{
+      return false
+    }
+  })
 
   //Sort filtered task list in ascending order by date.
   const sortedTasks = filteredTasks.sort(function(a,b){
     if (new Date(a.date) - new Date(b.date) == 0) {
-      if (a.startTime < b.startTime) {return -1}
+      if (a.start_time < b.start_time) {return -1}
       else return 1
     }
     else {return new Date(a.date) - new Date(b.date)};
@@ -96,10 +106,10 @@ export default function GroupedTask(props){
 
   //Create an array of dates for which displayed tasks are assigned (if any).
   const dateList = sortedTasks.filter((task, index) => {
-    if (index > 0 && task.date) {return(task.date != sortedTasks[index - 1].date)}
+    if (index == 0 && task.date) {return true}
+    else if (task.date) {return(task.date != sortedTasks[index - 1].date)}
     else {return false}
-  })
-  .map(task => task.date)
+  }).map(task => task.date)
 
   //Create an array of task element arrays with one array of tasks for each date in dateList and one additional array for unscheduled tasks.
   const taskElementArrays = dateList.map((date, index) => [])
@@ -108,50 +118,33 @@ export default function GroupedTask(props){
   function TaskComponent (task) {
     return(
       <Task 
-        key = {task.id} 
+        key = {task.task_id} 
         task = {task} 
         elapsedTime = {convertElapsedToText(calcElapsedTime(task))}
         groupData = {groupData}
-        handleInputChange = {handleInputChange}
-        dropdown = {dropdown}
-        dropdownFilter = {dropdownFilter}
-        dropdownEnter = {dropdownEnter}
-        dropdownSelected={dropdownSelected}
-        taskDropdownSearch={taskDropdownSearch}
-        deleteTaskById={deleteTaskById}
         selectAll={selectAll}
+        selectedTasks={selectedTasks}
+        handleCheckbox={handleCheckbox}
       />
     )
   }
 
   //Push the tasks corresponding to each date in dateList to the corresponding array element of taskElements
-  sortedTasks.forEach((task, index) => {
-    if(index > 0 && dateList.indexOf(task.date) >= 0 ) {taskElementArrays[dateList.indexOf(task.date)].push(
+  sortedTasks.forEach(task => {
+    if(dateList.indexOf(task.date) >= 0 ) {taskElementArrays[dateList.indexOf(task.date)].push(
       TaskComponent(task)
     )}
-    else if (index > 0) {taskElementArrays[taskElementArrays.length - 1].push(
+    else {taskElementArrays[taskElementArrays.length - 1].push(
       TaskComponent(task)
     )}
   })
-    // console.log('taskElementArrays', taskElementArrays)
 
-      //Create an array of total times corresponding to the dates in dateList.
+  //Create an array of total times corresponding to the dates in dateList.
   const timeTotals = taskElementArrays.map((taskArray, index) => {
-    // console.log('taskArray', taskArray)
     return taskArray.reduce((runningTotal, currentTask) => {
-      // console.log('runningTotal', runningTotal)
-      // console.log('currentTask', currentTask)
-      // console.log('elapsed current', calcElapsedTime(currentTask))
       return (runningTotal + calcElapsedTime(currentTask.props.task))
     }, 0)
   })
-
-  // console.log('timeTotals', timeTotals)
-
-  function handleSelect() {
-    console.log(selectAll)
-    setSelectAll(prevSelect => !prevSelect);
-  }
 
   //Create an array of divs corresponding to the dates in dateList
   const dateTaskElements = taskElementArrays.filter(taskElementArray => taskElementArray.length != 0)
@@ -162,13 +155,12 @@ export default function GroupedTask(props){
     // var timeStr = 
 
     return(
-      <div key = {index}>
-        <div className = "task-header">
-          {selectAll && <input type="checkbox"/>}
+      <div key = {index} className="grouped-tasks-container">
+        <div className ="task-header">
           <p className = "left" >{dateStr}</p>
           <div className = "right">
-            <p>{timeTotals[index] > 0 ? 'Total Time: ' + convertElapsedToText(timeTotals[index]) : ''}</p>
-            <img onClick={handleSelect} src = "https://app.clockify.me/assets/ui-icons/bulk-edit.svg" alt = "" />
+            <p>{timeTotals[index] > 0 ? 'Total Duration: ' + convertElapsedToText(timeTotals[index]) : ''}</p>
+            <img onClick={() => handleSelect()} src = "https://app.clockify.me/assets/ui-icons/bulk-edit.svg" alt = "" />
           </div>
         </div>
         {taskElementArray}
@@ -177,7 +169,8 @@ export default function GroupedTask(props){
   })
 
   return(
-    <div>
+    <div className="all-groups-tasks-container">
+      {selectAll && <a className="delete-all-link" href="#" onClick={() => handleCheckboxDelete()}>Delete</a>}
       {dateTaskElements}
     </div>
   )

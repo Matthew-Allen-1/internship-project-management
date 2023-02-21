@@ -4,52 +4,52 @@ export const HardCodedTaskData = [
     {
         id:"123",
         title: "Task #1",
-        groupTitle: "New Group",
-        groupId: "def789",
-        startTime: "02:49",
-        endTime: "16:12",
+        group_title: "New Group",
+        group_id: "def789",
+        start_time: "02:49",
+        end_time: "16:12",
         date: "",
-        dropdownActive: false
+        archived: false
     },
     {
         id:"456",
         title: "Task #2",
-        groupTitle: "New Group",
-        groupId: "def789",
-        startTime: "",
-        endTime: "",
+        group_title: "New Group",
+        group_id: "def789",
+        start_time: "",
+        end_time: "",
         date: "1212-12-12",
-        dropdownActive: false
+        archived: false
     },
     {
         id:"789",
         title: "Task #3",
-        groupTitle: "Other Group",
-        groupId: "xyz456",
-        startTime: "14:00",
-        endTime: "06:45",
+        group_title: "Other Group",
+        group_id: "xyz456",
+        start_time: "14:00",
+        end_time: "06:45",
         date: "1212-12-14",
-        dropdownActive: false
+        archived: false
     },
     {
         id:"444",
         title: "Task #4",
-        groupTitle: "Newest Group",
-        groupId: "abc123",
-        startTime: "12:00",
-        endTime: "21:00",
+        group_title: "Newest Group",
+        group_id: "abc123",
+        start_time: "12:00",
+        end_time: "21:00",
         date: "",
-        dropdownActive: false
+        archived: false
     },
     {
         id:"555",
         title: "Task #5",
-        groupTitle: "Newest Group",
-        groupId: "abc123",
-        startTime: "",
-        endTime: "",
+        group_title: "Newest Group",
+        group_id: "abc123",
+        start_time: "",
+        end_time: "",
         date: "1212-12-16",
-        dropdownActive: false
+        archived: false
     }
 ]
 

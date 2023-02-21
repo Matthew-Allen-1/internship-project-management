@@ -1,13 +1,17 @@
+import React, {useState, useContext} from 'react';
+
 // Libraries
-import React, {useState} from 'react';
 import { useQuery } from 'react-query';
 import {Link, useNavigate} from 'react-router-dom'
+
+// Hooks & Context
+import { UserContext } from '../../context/UserContext'
 
 // API Services
 import { setJwt } from '../../ApiServices/JwtService';
 import { registerUser } from '../../ApiServices/AuthService';
 
-// Image Assets
+// Assets
 import eye from '../../assets/eye.svg'
 import eyeSlash from '../../assets/eye-slash.svg'
 
@@ -16,6 +20,8 @@ import './SignUp.css'
 
 
 export default function Login(){
+  const { loginUser } = useContext(UserContext);
+
   // initialize, states, destructuring
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -62,7 +68,10 @@ export default function Login(){
     // refetch call
     const registerResponse = await refetch();
     if (!registerResponse.isError && registerResponse.data.jwt) {
-      setJwt(registerResponse.data.jwt);
+      const token = registerResponse.data.jwt
+      setJwt(token);
+      const payload = JSON.parse(window.atob(token.split(".")[1]))
+      loginUser(payload);
       navigate('/task-manager');
     } else{
       setResponseMessage({state: true, error: 'error', msg: 'This email is already in use.'})
@@ -81,7 +90,7 @@ export default function Login(){
         <Link to="/"><img className="logo" src = "https://upload.wikimedia.org/wikipedia/commons/8/84/Alternate_Task_Manager_icon.png" ></img></Link>
         <div className="log-in">
           <p>Already have an account?</p>
-          <Link to="/Login"><button>Log in</button></Link>
+          <Link to="/login"><button>Log in</button></Link>
         </div>
       </header>
       <div className="input-field-container">
@@ -93,13 +102,13 @@ export default function Login(){
                 <p>{responseMessage.msg}</p>
               </div>
           }
-          <label htmlFor="name">Name</label>
+          <label htmlFor="name">Username</label>
           <input 
             onChange={(event) => handleFormChange(event)} 
             id={(responseMessage.error === 'missing' && name === '') ? 'error' : 'name'} 
             name="name" 
             type="text" 
-            placeholder="Enter your name" 
+            placeholder="Enter your username" 
           />
 
           <label htmlFor="email">Email</label>
@@ -111,7 +120,7 @@ export default function Login(){
             placeholder="Enter your email" 
           />
 
-          <label htmlFor="password">password</label>
+          <label htmlFor="password">Password</label>
           <div className="password-input">
             <input 
               onChange={(event) => handleFormChange(event)} 
@@ -126,7 +135,7 @@ export default function Login(){
           <button onClick={() => handleRegisterClick()}>{isRefetching ? 'Loading...' : 'Register'}</button>
           {/* <p className='password-error-text'>{passwordMatchMsg}</p> */}
         </div>
-        <p className="link">Already have an account? <Link to="/Login">Log in</Link></p>
+        <p className="link">Already have an account? <Link to="/login">Log in</Link></p>
       </div>
     </div>
   )

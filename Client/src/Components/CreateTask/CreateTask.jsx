@@ -1,5 +1,4 @@
-// Libraries
-import React, {startTransition, useState} from 'react'
+import React from 'react'
 
 // styling
 import './CreateTask.css'
@@ -7,37 +6,30 @@ import './CreateTask.css'
 export default function CreateTask(props){
 
   const {groupData, input, handleInputChange, addTask, btnRef, 
-    dropdown, dropdownActive, dropdownEnter, dropdownFilter, dropdownSearch, dropdownSelected} = props;
+    dropdown, dropdownActive, dropdownEnter, dropdownFilter, dropdownSearch, dropdownSelected, selected} = props;
 
   const classList = dropdownActive ? "dropdown-content show" : "dropdown-content";
-
   
   // displays elements in dropdown
   const groupListElements = groupData.map(group => {
-    if(group.id != 0 && group.id != 1) {
       if(dropdownSearch == "") {
-        return <p key = {group.id} id = {group.id} className = "create-dropdown-group" onClick={() => dropdownSelected(event)}>{group.title}</p>
+        return <p key = {group.group_id} id = {group.group_id} className = "create-dropdown-group" onClick={(event) => dropdownSelected(event)}>{group.title}</p>
       } 
       else if (group.title.toUpperCase().indexOf(dropdownSearch.toUpperCase()) === 0 && group.title != "Group") {
-        return <p key = {group.id} id = {group.id} className = "create-task-dropdown-group" onClick={() => dropdownSelected(event)}>{group.title}</p>
+        return <p key = {group.group_id} id = {group.group_id} className = "create-task-dropdown-group" onClick={(event) => dropdownSelected(event)}>{group.title}</p>
       }
-    }
   })
 
-  // switches group name to name of current group selected
-  const groupElement = groupData.map(group => {
-    if(group.selected == true) {return <p key = {group.id} className = "create-task-dropdown" ref = {btnRef}>{group.title}</p>}
+  const defaultGroupElement = <p key = "default" className = "group-element" ref = {btnRef}>Group</p>
+  const groupElement = groupData.filter(group => selected === group.group_id).map(group => {
+    return <p key = {group.group_id} className = "group-element" ref = {btnRef}>{group.title}</p>
   })
 
-  // console.log('props.newTaskMessage', props.newTaskMessage)
 
   return(
     <div className="create-task-container">
-
       <div className = "create-task">
-
         <div className="left-box">
-          
           <div className = "create-task-input-container">
             <input 
               className="input create-task-input" 
@@ -46,14 +38,14 @@ export default function CreateTask(props){
               type="text"
               name="title"
               value={input.title}
-              onChange={() => handleInputChange(event)} 
+              onChange={(event) => handleInputChange(event)} 
             />
           </div>
-
+          <span className = "line-divider"></span>
           <div className = "dropdown create-task-dropdown-container" >
-            <div className = "group dropbtn create-task-dropdown" onClick = {() => dropdown(event)}>
-              <img className = "create-task-dropdown" src = "https://app.clockify.me/assets/ui-icons/plus-blue-req.svg" alt = "" />
-              {groupElement}
+            <div className = "group" onClick = {(event) => dropdown(event)}>
+              <img  src = "https://app.clockify.me/assets/ui-icons/plus-blue-req.svg" alt = "" />
+              {selected == '' ? defaultGroupElement : groupElement}
             </div>
             <div id = "group-dropdown" className = {classList} >
               <input 
@@ -63,8 +55,9 @@ export default function CreateTask(props){
                 placeholder = "Search/Create..." 
                 id = "create-dropdown-input"
                 name = "group" 
-                onChange = {() => dropdownFilter(event)} 
-                onKeyDown = {() => dropdownEnter(event)}
+                onChange = {(event) => dropdownFilter(event)} 
+                onKeyDown = {(event) => dropdownEnter(event)}
+                onClick = {(event) => dropdownSelected(event)}
               />
               {groupListElements}
             </div>
@@ -79,17 +72,17 @@ export default function CreateTask(props){
             <input 
               className = "time create-task-input"
               type = "time" 
-              name = "startTime"
-              value = {input.startTime}
-              onChange = {() => handleInputChange(event)}
+              name = "start_time"
+              value = {input.start_time}
+              onChange = {(event) => handleInputChange(event)}
             />
             <div className = "time-divider">-</div>
             <input 
               className = "time create-task-input"
               type = "time"
-              name = "endTime"
-              value = {input.endTime}
-              onChange = {() => handleInputChange(event)} 
+              name = "end_time"
+              value = {input.end_time}
+              onChange = {(event) => handleInputChange(event)} 
             />
           </div>
 
@@ -101,7 +94,7 @@ export default function CreateTask(props){
               type = "date" 
               name = "date"
               value = {input.date}
-              onChange = {() => handleInputChange(event)} 
+              onChange = {(event) => handleInputChange(event)} 
             />
           </div>
 
@@ -110,13 +103,10 @@ export default function CreateTask(props){
           <div className = "create-task-add-button-container">
             <button onClick = {() => addTask()}>ADD</button>
           </div>
-          <img className = "options" src = "https://app.clockify.me/assets/ui-icons/menu-dots-vertical.svg" alt = "" />
+          {/* <img className = "options" src = "https://app.clockify.me/assets/ui-icons/menu-dots-vertical.svg" alt = "" /> */}
         </div>
         
       </div>
-      <h4 style = {{display: props.newTaskMessage ? 'block' : 'none'}}>A new task has been created!</h4>
     </div>
   )
 }
-
-// 
