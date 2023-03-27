@@ -9,11 +9,13 @@ if(localStorage.getItem('taskManagerTheme') == null){
 }
 
 function UserProvider({children}) {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('taskManagerUser')) || {});
+  console.log(currentUser)
   const [theme, setTheme] = useState(userTheme);
   const [newTaskMessage, setNewTaskMessage] = useState({state: false, msg: ''})
 
   function loginUser(payload) {
+    localStorage.setItem('taskManagerUser', JSON.stringify({...payload}))
     setCurrentUser({ ...payload })
     localStorage.setItem('taskManagerTheme', JSON.stringify({theme: theme }))
   }

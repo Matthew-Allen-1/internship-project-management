@@ -10,6 +10,14 @@ export const fetchTasks = async () => {
   }
 }
 
+export const fetchUser = async () => {
+  try {
+    return get(`${API_URL}/user`);
+  } catch (err) {
+    return { data: [], error: err }
+  }
+}
+
 export const fetchArchivedTasks = async () => {
   try {
     return get(`${API_URL}/archived-tasks`);
@@ -55,6 +63,14 @@ export const deleteGroupRequest = async (id) => {
   try{
     return remove(`${API_URL}/delete-group/${id}`)
   }catch(err){
+    return { data: [], error: err }
+  }
+}
+
+export const updateAvatarRequest = async (newAvatar) => {
+  try{
+    return formPut(`${API_URL}/profile`, newAvatar);
+  } catch(err){
     return { data: [], error: err }
   }
 }
