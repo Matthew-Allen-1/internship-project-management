@@ -16,7 +16,8 @@ export default function GroupedTask(props){
 
   //converts date object to a displayable date string
   function convertDateToString(date) {
-    const newDate = new Date(date);
+    const newTime = date + "T00:00:00.000-08:00"
+    const newDate = new Date(newTime);
     const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][newDate.getDay()]
     const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][newDate.getMonth()];
     const day = newDate.getDate();
