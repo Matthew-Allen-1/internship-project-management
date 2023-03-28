@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 
-const profileRoute = require('./profile.cjs');
+const profileRoute = require('./routes/profile.cjs');
 
 // Allows us to access the .env
 require('dotenv').config();
@@ -263,7 +263,7 @@ app.post('/add-group', async function (req, res) {
   }
 })
 
-app.post('/update-task', async function (req, res) {
+app.put('/update-task', async function (req, res) {
   const [scheme, token] = req.headers.authorization.split(' ');
   const user = jwt.verify(token, process.env.JWT_KEY)
   console.log('group updated: ', req.body)

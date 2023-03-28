@@ -1,5 +1,5 @@
 import { API_URL } from '../environment/environment.dev';
-import { get, post, formPut, formPost, remove } from './HttpService'
+import { get, post, put, formPut, formPost, remove } from './HttpService'
 
 
 export const fetchTasks = async () => {
@@ -43,9 +43,9 @@ export const addGroupRequest = async (newGroup) => {
   }
 }
 
-export const updateTaskRequest = async (newGroup) => {
+export const updateTaskRequest = async (updatedTask) => {
   try{
-    return post(`${API_URL}/update-task`, newGroup);
+    return put(`${API_URL}/update-task`, updatedTask);
   } catch(err){
     return { data: [], error: err }
   }
