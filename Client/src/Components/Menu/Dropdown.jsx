@@ -24,9 +24,9 @@ import { clearJwt } from '../../ApiServices/JwtService'
 // Styling
 import './Dropdown.css'
 
-export default function Dropdown(props) {
+export default function Dropdown() {
   const navigate = useNavigate();
-  const {toggleTheme, theme: userTheme} = useContext(UserContext)
+  const {toggleTheme, theme: userTheme, currentUser} = useContext(UserContext)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -107,8 +107,8 @@ export default function Dropdown(props) {
         disableElevation
         onClick={handleClick}
       >
-        <Avatar sx={{ m: 1, bgcolor: '#ff3d00' }}></Avatar>
-        <p className="user">{props.name}</p>
+        <Avatar src={currentUser?.userInfo[0].avatar} sx={{ m: 1, bgcolor: '#ff3d00' }}>{currentUser?.userInfo[0].name[0]}</Avatar>
+        <p className="user">{currentUser.userInfo[0]?.name}</p>
         {open ? <KeyboardArrowUpIcon style={styles} className="user-icon"/> : <KeyboardArrowDownIcon style={styles} className="user-icon"/>}
       </Button>
       <StyledMenu

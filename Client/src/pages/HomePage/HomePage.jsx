@@ -19,20 +19,31 @@ import Alert from '@mui/material/Alert'
 import { defaultInputState } from '../../data/DefaultData'
 
 // API Requests
-import { fetchTasks } from '../../ApiServices/TasksService'
+import { fetchTasks, fetchUser } from '../../ApiServices/TasksService'
 
 // Styling
 import './HomePage.css'
 
 
 export default function Home(){
-  const { currentUser, theme, newTaskMessage }= useContext(UserContext);
+  const { currentUser, loginUser, theme, newTaskMessage }= useContext(UserContext);
   const queryClient = useQueryClient();
   const { data: backendData , isLoading: backendLoading, isError: backendError , refetch} = useQuery(
     'tasks', 
     fetchTasks,
     {
       refetchOnWindowFocus: false,
+    }
+  );
+
+  const { data: userData , isLoading: userLoading, isError: userError , refetch: userRefetch} = useQuery(
+    'user', 
+    fetchUser,
+    {
+      refetchOnWindowFocus: false,
+      onSuccess: (data) => {
+        loginUser(data)
+      },
     }
   );
 
@@ -56,7 +67,7 @@ export default function Home(){
     return () => document.body.removeEventListener('click', closeDropdown);
   }, []);
   
-  if( backendLoading ) return <p>Loading...</p>
+  if( backendLoading || userLoading) return <p>Loading...</p>
   if(backendError) return <p>An Error occurred</p>
   const backendTasks = backendData.tasks;
   const backendGroups = backendData.groups;

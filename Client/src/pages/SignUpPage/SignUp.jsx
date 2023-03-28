@@ -71,7 +71,6 @@ export default function Login(){
       const token = registerResponse.data.jwt
       setJwt(token);
       const payload = JSON.parse(window.atob(token.split(".")[1]))
-      loginUser(payload);
       navigate('/task-manager');
     } else{
       setResponseMessage({state: true, error: 'error', msg: 'This email is already in use.'})

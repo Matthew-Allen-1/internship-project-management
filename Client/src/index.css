@@ -124,6 +124,10 @@ html, body {
 #dark .archived-tasks-container{
   background-color: black;
 }
+#dark .profile-page .input-container{
+  background-color: rgb(20, 20, 20);
+  box-shadow: 0px 12px 32px rgb(50, 50, 50);
+}
 @media screen and (max-width: 900px){
   #dark nav{
     box-shadow: 0px 5px 5px -3px rgb(50, 50, 50);

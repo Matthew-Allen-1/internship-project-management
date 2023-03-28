@@ -232,7 +232,7 @@
 
 @media screen and (max-width: 550px){
   .create-task-container{
-    /* margin: 20px 0px 50px 0px; */
+    margin: 20px 0px 30px 0px;
     transition: 0.5s;
   }
 }

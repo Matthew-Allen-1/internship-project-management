@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 
+const profileRoute = require('./profile.cjs');
+
 // Allows us to access the .env
 require('dotenv').config();
 
@@ -53,35 +55,42 @@ app.use(async (req, res, next) => {
   }
 });
 
+app.use("/public", express.static("public"));
+
 app.post('/register', async function (req, res) {
   try {
     let encodedUser;
     if(Object.values(req.body).indexOf('') > -1){
       throw new Error('missing fields');
-    } //else if(registerForm.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) == null){
-      //throw new Error('Invalid Email');
-    //}
+    } else if(req.body.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) == null){
+      throw new Error('Invalid Email');
+    }
     // Hashes the password and inserts the info into the `user` table
     await bcrypt.hash(req.body.password, 10).then(async hash => {
       try {
         console.log('HASHED PASSWORD', hash);
-
+        const date_created = new Date().getTime().toString();
         const [user] = await req.db.query(`
-          INSERT INTO users (name, email, password)
-          VALUES (:name, :email, :password);
+          INSERT INTO users (name, email, password, date_created)
+          VALUES (:name, :email, :password, ${date_created});
         `, {
           name: req.body.name,
           email: req.body.email,
           password: hash
         });
 
+        const [ userInfo ] = await req.db.query(`
+        SELECT * FROM users
+        WHERE id = ${user.insertId}`)
+
         console.log('USER', user)
 
         encodedUser = jwt.sign(
           { 
             userId: user.insertId,
-            name: user.name,
-            email: user.email
+            name: userInfo[0].name,
+            email: userInfo[0].email,
+            date_created: date_created
           },
           process.env.JWT_KEY
         );
@@ -114,6 +123,7 @@ app.post('/authenticate', async function (req, res) {
         userId: user.id,
         name: user.name,
         email: user.email,
+        date_created: user.date_created,
       }
       
       const encodedUser = jwt.sign(payload, process.env.JWT_KEY);
@@ -126,10 +136,6 @@ app.post('/authenticate', async function (req, res) {
   } catch (err) {
     console.log('Error in /authenticate', err)
   }
-});
-
-app.get('/user', async (req, res) => {
-  res.json({auth: true})
 });
 
 // Jwt verification checks to see if there is an authorization header with a valid jwt in it.
@@ -166,6 +172,22 @@ app.use(async function verifyJwt(req, res, next) {
   }
 
   await next();
+});
+
+app.get('/user', async (req, res) => {
+  const [scheme, token] = req.headers.authorization.split(' ');
+  const user = jwt.verify(token, process.env.JWT_KEY)
+  console.log('user: ', user)
+  try {
+    const [userInfo] = await req.db.query(`
+    SELECT id, name, email, date_created, avatar FROM users
+    WHERE id = ${user.userId}`
+    ); 
+    res.json({ user, userInfo });
+  } catch (err) {
+    console.log(err);
+    res.json({ err });
+  }
 });
 
 // GET request to http://localhost:8080/tasks
@@ -381,6 +403,8 @@ app.delete('/delete-group/:id', async function (req, res) {
     res.json({Success: false})
   }
 });
+
+app.use("/profile", profileRoute);
 
 // Start the Express server
 app.listen(port, () => {

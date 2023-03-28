@@ -3,6 +3,16 @@
   justify-content: center;
 }
 
+.profile-page .input{
+  display: flex;
+  justify-content: center;
+}
+
+.profile-page{
+  padding-top: 60px;
+  height: 100vh;
+}
+
 .profile-page .input-container{
   display: flex;
   flex-direction: column;

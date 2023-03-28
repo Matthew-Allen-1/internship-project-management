@@ -35,6 +35,24 @@ export const post = async (url, body, headers) => {
   }
 }
 
+export const formPost = async (url, body, headers) => {
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 
+        Authorization: `Bearer ${getJwt()}`,
+        ...headers 
+      },
+      // credentials: 'include',
+      body: body
+    });
+
+    return res.json();
+  } catch (err) {
+    return ({auth: false})
+  }
+}
+
 export const put = async (url, headers) => {
   try {
     const res = await fetch(url, {
@@ -45,6 +63,23 @@ export const put = async (url, headers) => {
     return res.json();
   } catch (err) {
     
+  }
+}
+
+export const formPut = async (url, body, headers) => {
+  try {
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers: { 
+        Authorization: `Bearer ${getJwt()}`,
+        ...headers 
+      },
+      body: body,
+    });
+
+    return res.json();
+  } catch (err) {
+    return ({err})
   }
 }
 

@@ -16,8 +16,8 @@ import './ProfilePage.css'
 export default function Profile() {
   const { currentUser, loginUser } = useContext(UserContext);
   const queryClient = useQueryClient()
-  const [input, setInput] = useState({name: currentUser.name, email: currentUser.email, password:"", avatar: currentUser.avatar})
-  const [previewImage, setPreviewImage] = useState(currentUser?.avatar);
+  const [input, setInput] = useState({name: currentUser.userInfo[0].name, email: currentUser.userInfo[0].email, password:"", avatar: currentUser.userInfo[0].avatar})
+  const [previewImage, setPreviewImage] = useState(currentUser?.userInfo[0].avatar);
   const [showPassword, setShowPassword] = useState(false);
   const [changes, setChanges] = useState(false);
   const [responseMessage, setResponseMessage] = useState({state: false, error: '', msg: ''});
@@ -83,43 +83,45 @@ export default function Profile() {
   const types = showPassword ? 'text' : 'password';
 
   return(
-    <main className="profile-page">
-      <div className="App">
+    <div className="profile-page">
+      <div className="profile-page-app">
         <Navbar />
         <div className="avatar">
           <input accept="image/*" id="avatar-pic" name="avatar" onChange={(event) => avatarChange(event)}type='file' hidden></input>
           <label htmlFor="avatar-pic">
             <IconButton component="span">
-              <Avatar src={previewImage} sx={{ fontSize: 100, width: 200, height: 200, m: 1, bgcolor: '#ff3d00' }}>{currentUser.name}</Avatar>
+              <Avatar src={previewImage} sx={{ fontSize: 100, width: 200, height: 200, m: 1, bgcolor: '#ff3d00' }}>{currentUser.userInfo[0]?.name[0]}</Avatar>
             </IconButton>
           </label>
         </div>
-        <p>Member since: {new Date(Number(currentUser.date_created)).toLocaleString()}</p>
-        <div className="input-container">
-          {
-            responseMessage.state && 
-              <div className="profile-message">
-                <p>{responseMessage.msg}</p>
-              </div>
-          }
-          <div className="username">
-            <p>Username: </p>
-            <input type="text" name="name" value={input.name} onChange={(event) => inputChange(event)}></input>
-          </div>
-          <div className="email">
-            <p>Email: </p>
-          <input type="text" name="email" value={input.email} onChange={(event) => inputChange(event)}></input>
-          </div>
-          {changes && 
-            <div className="password">
-              <p>Password: </p>
-              <input name="password" value={input.password} type={types} onChange={(event) => inputChange(event)}></input>
-              <button style={styles} onClick={(event) => password(event)}></button>
+        <p>Member since: {new Date(Number(currentUser.userInfo[0].date_created)).toLocaleString()}</p>
+        <div className="input">
+          <div className="input-container">
+            {
+              responseMessage.state && 
+                <div className="profile-message">
+                  <p>{responseMessage.msg}</p>
+                </div>
+            }
+            <div className="username">
+              <p>Username: </p>
+              <input type="text" name="name" value={input.name} onChange={(event) => inputChange(event)}></input>
             </div>
-          }
-          {changes && <button className="save-avatar-btn" name="save" onClick={(event) => handleClick(event)} disabled={input.password == ''}>Save Changes</button>}
+            <div className="email">
+              <p>Email: </p>
+            <input type="text" name="email" value={input.email} onChange={(event) => inputChange(event)}></input>
+            </div>
+            {changes && 
+              <div className="password">
+                <p>Password: </p>
+                <input name="password" value={input.password} type={types} onChange={(event) => inputChange(event)}></input>
+                <button style={styles} onClick={(event) => password(event)}></button>
+              </div>
+            }
+            {changes && <button className="save-avatar-btn" name="save" onClick={(event) => handleClick(event)} disabled={input.password == ''}>Save Changes</button>}
+          </div>
         </div>
       </div>
-    </main>
+    </div>
   )
 }
