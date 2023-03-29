@@ -5,10 +5,9 @@ import {nanoid} from 'nanoid'
 // Styling
 import './Task.css'
 
-
 export default function Task(props){
 
-  const {groupData, task, handleInputChange, dropdown, dropdownEnter, dropdownFilter, dropdownSelected, taskDropdownSearch} = props;
+  const {groupData, task, handleInputChange, dropdown, dropdownEnter, dropdownFilter, dropdownSelected, taskDropdownSearch, viewResponse} = props;
 
   const taskBtnRef = React.useRef();
   const newClassList = task.dropdownActive ? "task-dropdown-content task-dropdown-show" : "task-dropdown-content";
@@ -107,8 +106,10 @@ export default function Task(props){
         onChange = {() => handleInputChange(event)} 
       />
       <span className="line-divider"></span>
-      <span>Time: {elapsedTime}</span>
-      <img className="options" src="https://app.clockify.me/assets/ui-icons/menu-dots-vertical.svg" alt="" />
+      <button id = {'response#' + task.id} onClick = {() => viewResponse(event)}>RESPONSE</button>
+      <button id = {'code#' + task.id} onClick = {() => viewResponse(event)}>CODE</button>
+      <img className = "options" src = "https://app.clockify.me/assets/ui-icons/menu-dots-vertical.svg" alt = "" />
+
     </div>
   )
 }

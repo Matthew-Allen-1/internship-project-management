@@ -30,9 +30,9 @@ export default function App() {
         <Route path = "/" element = {<SignUp />} />
         <Route path = "/Login" element = {<Login />} />
 
-        <Route element={ <PrivateRoutes/>}>
+        {/* <Route element={ <PrivateRoutes/>}> */}
           <Route path = "/task-manager" element = {<Home/>}/>
-        </Route>
+        {/* </Route> */}
       </Routes>
       {/* </UserContext.Provider> */}
     </Router>

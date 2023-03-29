@@ -21,7 +21,7 @@ export default function GroupedTask(props){
 
   const { groupData, setGroupData, taskData, setTaskData, groupSelection, handleInputChange, 
     dropdown, dropdownEnter, dropdownFilter, dropdownSelected, 
-    taskDropdownActive, setTaskDropdownActive, taskDropdownSearch, setTaskDropdownSearch} = props;
+    taskDropdownActive, setTaskDropdownActive, taskDropdownSearch, setTaskDropdownSearch, viewResponse} = props;
 
   const defaultTaskData = {
     title: 'Task that was added',
@@ -93,6 +93,7 @@ export default function GroupedTask(props){
         dropdownEnter = {dropdownEnter}
         dropdownSelected={dropdownSelected}
         taskDropdownSearch={taskDropdownSearch}
+        viewResponse={viewResponse}
       />
     )
   }
@@ -112,7 +113,7 @@ export default function GroupedTask(props){
   .map((taskElementArray, index) => {
 
     //Convert the date to a string to display
-    var dateStr = index <= dateList.length - 1 ? convertDateToString(dateList[index]) : 'Unscheduled Tasks'
+    var dateStr = index <= dateList.length - 1 ? convertDateToString(dateList[index]) : 'Undated Prompts'
 
     return(
       <div key = {index}>

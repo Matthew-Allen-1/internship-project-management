@@ -8,14 +8,16 @@ import Navbar from '../../Components/Navbar/Navbar'
 import Sidebar from '../../Components/Sidebar/Sidebar'
 import CreateTask from '../../Components/CreateTask/CreateTask'
 import GroupedTask from '../../Components/GroupedTask/GroupedTask'
+import ResponseText from '../../Components/Response/Response'
 
 // other Data
-import {HardCodedTaskData} from '../../Components/HardCodedTaskData'
-import {HardCodedGroupData} from '../../Components/HardCodedGroupData'
-import { defaultInputState, allTasksGroupState, unscheduledTasksGroupState, defaultTaskState} from '../../data/DefaultData'
+// import {HardCodedTaskData} from '../../Components/HardCodedTaskData'
+// import {HardCodedGroupData} from '../../Components/HardCodedGroupData'
+import { defaultInputState, allPromptsGroupState, undatedPromptsGroupState, defaultPromptState} from '../../data/DefaultData'
 
 // Requests functions
 import { fetchTasks,  addTaskRequest  } from '../../ApiServices/TasksService'
+import { AIPrompt  } from '../../ApiServices/AIPrompt'
 
 // Styling
 import './HomePage.css'
@@ -30,8 +32,8 @@ export default function Home(){
   const [input, setInput] = useState(defaultInputState);
 
   //The following declarations include some pre-loaded data.
-  const [groupData, setGroupData] = useState([allTasksGroupState, unscheduledTasksGroupState, ...HardCodedGroupData]);  //stores all group data. 
-  const [taskData, setTaskData] = useState([defaultTaskState, ...HardCodedTaskData]); //stores all task data.  I don't think this will work in the long run. 
+  const [groupData, setGroupData] = useState([allPromptsGroupState]);  //stores all group data. 
+  const [taskData, setTaskData] = useState([defaultPromptState]); //stores all task data.  I don't think this will work in the long run. 
   //probably need form tag around all the data in CreateTask jsx
 
   const [groupSelection, setGroupSelection] = useState(0)
@@ -39,17 +41,21 @@ export default function Home(){
   const [taskDropdownSearch, setTaskDropdownSearch] = useState('')
   const [taskDropdownActive, setTaskDropdownActive] = useState(false)
 
-  const { mutate } = useMutation((newTask) => addTaskRequest(newTask));
+  const [responseTask, setResponseTask] = useState(defaultPromptState)
+  const [viewFullResponse, setViewFullResponse] = useState(true)
+
+  // const { mutate } = useMutation((newTask) => addTaskRequest(newTask));
+
 // sends task and group data to backend when either is changed.
-  useEffect(() =>{
-    if(firstRender.current){
-      firstRender.current = false;
-    } else{
-      console.log('backend updated')
-      const task_ = { task_data: JSON.stringify(taskData), group_data: JSON.stringify(groupData) }
-      mutate(task_)
-    }
-  }, [taskData, groupData])
+  // useEffect(() =>{
+  //   if(firstRender.current){
+  //     firstRender.current = false;
+  //   } else{
+  //     console.log('backend updated')
+  //     const task_ = { task_data: JSON.stringify(taskData), group_data: JSON.stringify(groupData) }
+  //     mutate(task_)
+  //   }
+  // }, [taskData, groupData])
 
 
   // Changes the group selection in the sidebar on click.
@@ -257,23 +263,42 @@ export default function Home(){
     if (input.title == '') {alert('You must enter a task description.')}
     else {
       const newTaskId = nanoid()
-      setTaskData(prevTaskData => {
-        return([...prevTaskData, {...input, id: newTaskId, dropdownActive: false}])
+      const responseData = AIPrompt(input.title)
+      responseData.then(data => {
+        setTaskData(prevTaskData => {
+          return([...prevTaskData, {...input, response: data, id: newTaskId, dropdownActive: false}])
+        })
+        setGroupData(prevGroupData => prevGroupData.map(group => {
+          if (group.id == 1 && input.date == '') {
+            return ({...group, taskIds: [...group.taskIds, newTaskId]})
+          }
+          else if (!group.selected) {return group}
+          else {
+            return ({...group, taskIds: [...group.taskIds, newTaskId]})
+          }
+        }))
+        const currTask = taskData.filter(task => task.id == newTaskId)[0]
+        setResponseTask(taskData[taskData.length - 1])
       })
-      setGroupData(prevGroupData => prevGroupData.map(group => {
-        if (group.id == 1 && input.date == '') {
-          return ({...group, taskIds: [...group.taskIds, newTaskId]})
-        }
-        else if (!group.selected) {return group}
-        else {
-          return ({...group, taskIds: [...group.taskIds, newTaskId]})
-        }
-      }))
-
     }
-    
-    // console.log('Task Data After Add Task: ', taskData)
-    // console.log('Group Data After Add Task: ', groupData)
+  }
+
+  function viewResponse (event) {
+    console.log('Response target: ', event.target.id)
+    var currTaskId = ''
+    if (event.target.id.slice(0, 1) == 'r') {
+      currTaskId = event.target.id.slice(9)
+      setViewFullResponse(true)
+    }
+    else {
+      currTaskId = event.target.id.slice(5)
+      setViewFullResponse(false)
+    }
+    taskData.forEach(task => {
+      if (task.id == currTaskId) {
+        setResponseTask(task)
+      }
+    })
   }
 
   const { data, isLoading } = useQuery(
@@ -290,7 +315,8 @@ export default function Home(){
 
   return (
     <div className = "App">
-      <Navbar user={data?.name} />
+      {/* <Navbar user={data?.name} /> */}
+      <Navbar />
       <Sidebar 
         groupData = {groupData}
         handleGroupSelection = {handleGroupSelection}
@@ -331,8 +357,17 @@ export default function Home(){
             setTaskDropdownSearch = {setTaskDropdownSearch}
             taskDropdownActive = {taskDropdownActive}
             setTaskDropdownActive = {setTaskDropdownActive}
+
+            viewResponse = {viewResponse}
           />
+          <div className = 'response-section'>
+            <ResponseText
+              responseTask = {responseTask}
+              viewFullResponse = {viewFullResponse}
+            />
+          </div>
         </div>
+      
       </main>
     </div>
   )

@@ -33,7 +33,7 @@ export default function CreateTask(props){
       <input 
         className="input create-task-input" 
         id="create-task-title-input"
-        placeholder="Input task here..."
+        placeholder="Input coding prompt here..."
         type="text"
         name="title"
         value={input.title}
@@ -85,7 +85,7 @@ export default function CreateTask(props){
         onChange = {() => handleInputChange(event)} 
       />
       <span className = "line-divider"></span>
-      <button onClick = {() => addTask()}>ADD</button>
+      <button onClick = {() => addTask()}>SEND</button>
       <img className = "options" src = "https://app.clockify.me/assets/ui-icons/menu-dots-vertical.svg" alt = "" />
     </div>
   )

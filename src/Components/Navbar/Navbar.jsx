@@ -11,7 +11,7 @@ import './Navbar.css'
 export default function NavBar (props) {
     return (
         <nav id = "nav">
-            <img id = "task-manager-icon" src = "https://upload.wikimedia.org/wikipedia/commons/8/84/Alternate_Task_Manager_icon.png" />
+            <img id = "task-manager-icon" src = "https://upload.wikimedia.org/wikipedia/commons/f/fb/Adobe_Illustrator_CC_icon.svg" />
             <div className = "nav-menu">
                 <button className = "button nav-menu-button" data-bs-toggle = "collapse" data-bs-target = "#collapse-nav-menu" aria-expanded = "false" aria-controls = "menu">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false">
@@ -23,7 +23,7 @@ export default function NavBar (props) {
                 </div>
             </div>
             <div className = "nav-title">
-                <h4 className = "nav-title-url">BVTCA Task Manager</h4>
+                <h4 className = "nav-title-url">Bay Valley Tech AI Code Repository</h4>
             </div>
             <div className = "user-info">
                 <p>Welcome, {props.user}</p>

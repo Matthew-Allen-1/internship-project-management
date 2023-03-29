@@ -7,7 +7,7 @@ export let defaultInputState = {
   date: ""
 }
 
-export let allTasksGroupState = {
+export let allPromptsGroupState = {
   id: 0, 
   title: "Group", 
   taskIds: [], 
@@ -15,16 +15,17 @@ export let allTasksGroupState = {
   activeSidebar: true
 }
 
-export let unscheduledTasksGroupState = {
+export let undatedPromptsGroupState = {
   id: 1, 
-  title: "Unscheduled Tasks", 
+  title: "Undated Prompts", 
   taskIds: ['000', '123'], 
   selected: false,
   activeSidebar: false
 }
 
-export let defaultTaskState = {
+export let defaultPromptState = {
   ...defaultInputState,
   id: 0,
   dropdownActive: false,
+  response: ''
 }
