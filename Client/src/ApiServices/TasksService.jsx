@@ -1,14 +1,5 @@
 import { API_URL } from '../environment/environment.dev';
-import { get, post, put, formPut, formPost, remove } from './HttpService'
-
-
-export const fetchTasks = async () => {
-  try {
-    return get(`${API_URL}/tasks`);
-  } catch (err) {
-    return { data: [], error: err }
-  }
-}
+import { get, post, put, formPut, remove } from './HttpService'
 
 export const fetchUser = async () => {
   try {
@@ -18,34 +9,25 @@ export const fetchUser = async () => {
   }
 }
 
-export const fetchArchivedTasks = async () => {
+export const fetchTasks = async () => {
   try {
-    return get(`${API_URL}/archived-tasks`);
+    return get(`${API_URL}/task`);
   } catch (err) {
     return { data: [], error: err }
   }
 }
 
-
 export const addTaskRequest = async (newTask) => {
   try{
-    return post(`${API_URL}/add-task`, newTask);
+    return post(`${API_URL}/task`, newTask);
   } catch(err){
     return { data: [], error: err }
   }
 }
 
-export const addGroupRequest = async (newGroup) => {
-  try{
-    return post(`${API_URL}/add-group`, newGroup);
-  } catch(err){
-    return { data: [], error: err } 
-  }
-}
-
 export const updateTaskRequest = async (updatedTask) => {
   try{
-    return put(`${API_URL}/update-task`, updatedTask);
+    return put(`${API_URL}/task`, updatedTask);
   } catch(err){
     return { data: [], error: err }
   }
@@ -53,7 +35,23 @@ export const updateTaskRequest = async (updatedTask) => {
 
 export const deleteTaskRequest = async (id) => {
   try{
-    return remove(`${API_URL}/delete-task/${id}`);
+    return remove(`${API_URL}/task/${id}`);
+  } catch(err){
+    return { data: [], error: err } 
+  }
+}
+
+export const fetchArchivedTasks = async () => {
+  try {
+    return get(`${API_URL}/task/archive`);
+  } catch (err) {
+    return { data: [], error: err }
+  }
+}
+
+export const addGroupRequest = async (newGroup) => {
+  try{
+    return post(`${API_URL}/group`, newGroup);
   } catch(err){
     return { data: [], error: err } 
   }
@@ -61,7 +59,7 @@ export const deleteTaskRequest = async (id) => {
 
 export const deleteGroupRequest = async (id) => {
   try{
-    return remove(`${API_URL}/delete-group/${id}`)
+    return remove(`${API_URL}/group/${id}`)
   }catch(err){
     return { data: [], error: err }
   }
